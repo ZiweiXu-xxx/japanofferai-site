@@ -1,206 +1,804 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Live Jobs | JapanOffer AI</title>
-  <meta name="description" content="Search public ATS job postings and rank them with JapanOffer AI match scores." />
+  <title>职位推荐 | JapanOffer AI</title>
   <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <header class="topbar">
-    <a class="brand" href="index.html" aria-label="JapanOffer AI home">
-      <span class="brand-mark">J</span>
-      <span class="brand-copy">
-        <strong>JapanOffer AI</strong>
-        <small>Cross-border Talent Network</small>
-      </span>
-    </a>
-
-    <div class="top-search" aria-label="Global platform search">
-      <span>⌕</span>
-      <input value="Search roles, talent or companies" aria-label="Search roles, talent or companies" />
-    </div>
-
-    <nav class="nav" aria-label="Main navigation">
-      <a href="index.html#network">Network</a>
-      <a href="jobs.html">Jobs</a>
-      <a href="talent.html">Talent</a>
-      <a href="companies.html">Companies</a>
-      <a href="employers.html">Employers</a>
-    </nav>
-
-    <div class="auth-links"><a class="signin-link" href="login.html">Sign in</a><a class="nav-cta" href="signup.html">Sign up</a></div>
-  </header>
-
-  <main>
-    <section class="page-hero">
-      <p class="eyebrow">Live job search beta</p>
-      <h1>Search public company job feeds and rank them by cross-border fit.</h1>
-      <p>
-        This beta does not scrape LinkedIn. It uses public ATS job-board APIs where available, then adds JapanOffer AI-style match scoring for role fit, market fit and visa/language risk.
-      </p>
-    </section>
-
-    <section class="wide-panel">
-      <p class="eyebrow">Search roles</p>
-      <h2>Find roles from public company feeds</h2>
-
-      <form class="job-search-form" id="jobSearchForm">
-        <label>
-          Role or keyword
-          <input id="queryInput" value="legal compliance business" />
-        </label>
-
-        <label>
-          Market
-          <input id="marketInput" value="Japan Singapore Hong Kong Remote" />
-        </label>
-
-        <button class="btn primary" type="submit">Search live jobs</button>
-      </form>
-
-      <p class="source-note" id="sourceNote">
-        Sources: public Greenhouse / Lever job-board APIs where available. More sources can be added later.
-      </p>
-    </section>
-
-    <section class="wide-panel results-panel">
-      <div class="results-top">
-        <div>
-          <p class="eyebrow">Results</p>
-          <h2 id="resultsTitle">Live job matches</h2>
-        </div>
-        <span id="resultCount">Loading...</span>
-      </div>
-
-      <div class="jobs-results" id="jobsResults">
-        <div class="loading-card">Loading public job feeds...</div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <strong>JapanOffer AI</strong>
-    <span>Cross-border talent matching network.</span>
-  </footer>
-
-  <script>
-    const form = document.getElementById("jobSearchForm");
-    const queryInput = document.getElementById("queryInput");
-    const marketInput = document.getElementById("marketInput");
-    const jobsResults = document.getElementById("jobsResults");
-    const resultCount = document.getElementById("resultCount");
-    const sourceNote = document.getElementById("sourceNote");
-
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("query")) queryInput.value = params.get("query");
-    if (params.get("market")) marketInput.value = params.get("market");
-
-    function escapeHtml(str) {
-      return String(str || "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+  <style>
+    :root {
+      --blue: #0a66c2;
+      --blue-dark: #003f88;
+      --ink: #061a33;
+      --muted: #607086;
+      --line: rgba(7,27,54,.10);
+      --card: rgba(255,255,255,.84);
+      --soft: rgba(247,250,255,.92);
+      --shadow: 0 24px 80px rgba(10,35,68,.10);
+      --green: #0f8a5f;
+      --orange: #b76b00;
+      --red: #b42318;
     }
 
-    function renderJob(job) {
-      const score = Number(job.matchScore || 0);
-      const scoreClass = score >= 82 ? "score-high" : score >= 65 ? "score-mid" : "score-low";
-      return `
-        <article class="live-job-card">
-          <div class="live-job-main">
-            <div>
-              <h3>${escapeHtml(job.title)}</h3>
-              <p>${escapeHtml(job.company)} · ${escapeHtml(job.location)}</p>
-            </div>
-            <div class="live-score ${scoreClass}">
-              <strong>${score}%</strong>
-              <span>${escapeHtml(job.priority || "Review")}</span>
-            </div>
-          </div>
+    * { box-sizing: border-box; }
 
-          <p class="live-desc">${escapeHtml(job.shortDescription || job.description || "No description preview available.")}</p>
-
-          <div class="live-tags">
-            <span>${escapeHtml(job.source || "Public source")}</span>
-            <span>Visa risk: ${escapeHtml(job.visaRisk || "Unknown")}</span>
-            <span>JapanOffer match score</span>
-          </div>
-
-          <div class="live-actions">
-            <a class="btn secondary" href="${escapeHtml(job.url)}" target="_blank" rel="noopener">View original job</a>
-            <button class="btn secondary save-job-btn" type="button" data-job-title="${escapeHtml(job.title)}" data-job-url="${escapeHtml(job.url)}">Save role</button><a class="btn primary" href="report.html">Check my fit</a>
-          </div>
-        </article>
-      `;
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 8% 8%, rgba(10,102,194,.13), transparent 32%),
+        radial-gradient(circle at 90% 0%, rgba(80,167,255,.13), transparent 30%),
+        linear-gradient(135deg, #f7fbff 0%, #ffffff 46%, #edf5ff 100%);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
     }
 
-    async function loadJobs() {
-      const query = queryInput.value.trim();
-      const market = marketInput.value.trim();
-      jobsResults.innerHTML = '<div class="loading-card">Loading public job feeds...</div>';
-      resultCount.textContent = "Loading...";
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      min-height: 76px;
+      display: grid;
+      grid-template-columns: auto minmax(230px, 390px) 1fr auto;
+      gap: 18px;
+      align-items: center;
+      padding: 15px 30px;
+      background: rgba(255,255,255,.86);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(18px);
+    }
 
-      try {
-        const response = await fetch(`/api/jobs?query=${encodeURIComponent(query)}&market=${encodeURIComponent(market)}`);
-        const data = await response.json();
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: inherit;
+      text-decoration: none;
+      min-width: 0;
+    }
 
-        resultCount.textContent = `${data.count || 0} results`;
-        sourceNote.textContent = data.note || "Live job sources loaded.";
+    .logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 950;
+      font-size: 23px;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      box-shadow: 0 14px 34px rgba(10,102,194,.24);
+    }
 
-        if (!data.jobs || data.jobs.length === 0) {
-          jobsResults.innerHTML = '<div class="loading-card">No jobs found. Try a broader keyword like business, legal, compliance or remote.</div>';
-          return;
-        }
+    .brand strong {
+      display: block;
+      font-size: 18px;
+      letter-spacing: -.035em;
+    }
 
-        jobsResults.innerHTML = data.jobs.map(renderJob).join("");
-      } catch (error) {
-        resultCount.textContent = "Demo mode";
-        jobsResults.innerHTML = '<div class="loading-card">The live API is not available yet. Make sure api/jobs.js is uploaded inside your GitHub api folder.</div>';
+    .brand small {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 760;
+    }
+
+    .search {
+      height: 44px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.76);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 8px;
+    }
+
+    .search input {
+      border: 0;
+      outline: 0;
+      background: transparent;
+      width: 100%;
+      color: var(--ink);
+      font: inherit;
+      font-size: 14px;
+      font-weight: 720;
+    }
+
+    .search input::placeholder {
+      color: var(--muted);
+    }
+
+    .nav {
+      display: flex;
+      justify-content: flex-end;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .nav a {
+      color: #243650;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .nav a.active {
+      color: var(--blue);
+    }
+
+    .primary-link {
+      color: #fff !important;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      padding: 11px 16px;
+      border-radius: 999px;
+      box-shadow: 0 12px 26px rgba(10,102,194,.22);
+    }
+
+    main {
+      width: min(1220px, calc(100% - 44px));
+      margin: 0 auto;
+      padding: 50px 0 92px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(340px, 430px);
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .hero-card,
+    .profile-card,
+    .job-card,
+    .panel,
+    .saved-card,
+    .apply-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .hero-card {
+      border-radius: 36px;
+      padding: 38px;
+      min-height: 360px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: -45%;
+      background:
+        radial-gradient(circle at 22% 28%, rgba(10,102,194,.14), transparent 30%),
+        radial-gradient(circle at 76% 24%, rgba(255,255,255,.86), transparent 28%);
+      animation: breathe 12s ease-in-out infinite alternate;
+      z-index: -1;
+    }
+
+    .eyebrow {
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      font-size: 12px;
+      font-weight: 950;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(44px, 5.8vw, 76px);
+      line-height: .96;
+      letter-spacing: -.075em;
+      font-weight: 950;
+    }
+
+    h1 span {
+      display: block;
+      color: var(--blue);
+    }
+
+    .hero-card p {
+      margin: 22px 0 0;
+      max-width: 760px;
+      color: #52647a;
+      font-size: 17px;
+      line-height: 1.75;
+      font-weight: 680;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .btn {
+      min-height: 44px;
+      border-radius: 999px;
+      padding: 0 16px;
+      border: 1px solid rgba(10,102,194,.18);
+      background: rgba(255,255,255,.78);
+      color: var(--blue);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font: inherit;
+      font-weight: 920;
+      font-size: 14px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .btn.primary {
+      color: #fff;
+      border-color: transparent;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      box-shadow: 0 16px 36px rgba(10,102,194,.24);
+    }
+
+    .btn.green {
+      color: #fff;
+      border-color: transparent;
+      background: linear-gradient(135deg, #0f8a5f, #047857);
+    }
+
+    .btn.danger {
+      color: var(--red);
+      border-color: rgba(180,35,24,.22);
+    }
+
+    .profile-card {
+      border-radius: 36px;
+      padding: 28px;
+    }
+
+    .profile-card h2,
+    .panel h2,
+    .apply-card h2 {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.05;
+      letter-spacing: -.055em;
+    }
+
+    .profile-card p,
+    .panel p,
+    .apply-card p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+      font-weight: 650;
+    }
+
+    .profile-grid {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .profile-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      padding: 13px 14px;
+      border-radius: 18px;
+      background: var(--soft);
+      border: 1px solid rgba(7,27,54,.08);
+      color: #26374d;
+      font-size: 13px;
+      font-weight: 780;
+    }
+
+    .profile-row span {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin: 28px 0 20px;
+    }
+
+    .filter {
+      border-radius: 22px;
+      background: rgba(255,255,255,.82);
+      border: 1px solid var(--line);
+      padding: 14px;
+      box-shadow: 0 12px 34px rgba(10,35,68,.06);
+    }
+
+    .filter span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 850;
+      margin-bottom: 7px;
+    }
+
+    .filter select {
+      width: 100%;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--ink);
+      font: inherit;
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 390px);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 14px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(30px, 3.4vw, 46px);
+      line-height: 1;
+      letter-spacing: -.06em;
+    }
+
+    .section-head p {
+      margin: 0;
+      max-width: 460px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+      font-weight: 680;
+      text-align: right;
+    }
+
+    .jobs-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .job-card {
+      border-radius: 30px;
+      padding: 22px;
+      min-height: 360px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+
+    .job-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 28px 90px rgba(10,35,68,.14);
+    }
+
+    .job-top {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .company-mark {
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 950;
+      background: linear-gradient(135deg, var(--ink), var(--blue));
+      box-shadow: 0 12px 28px rgba(7,27,54,.16);
+      flex: 0 0 auto;
+    }
+
+    .job-card h3 {
+      margin: 0;
+      font-size: 21px;
+      line-height: 1.13;
+      letter-spacing: -.045em;
+    }
+
+    .meta {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+      font-weight: 780;
+    }
+
+    .score {
+      margin-left: auto;
+      text-align: right;
+      min-width: 58px;
+    }
+
+    .score strong {
+      display: block;
+      color: var(--blue);
+      font-size: 30px;
+      line-height: .95;
+      letter-spacing: -.06em;
+    }
+
+    .score span {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-top: 5px;
+    }
+
+    .job-desc {
+      margin: 16px 0 0;
+      color: #52647a;
+      font-size: 13px;
+      line-height: 1.68;
+      font-weight: 650;
+    }
+
+    .pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 15px;
+    }
+
+    .pill {
+      display: inline-flex;
+      min-height: 30px;
+      align-items: center;
+      border-radius: 999px;
+      padding: 0 10px;
+      background: rgba(10,102,194,.09);
+      color: #064b93;
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .job-reasons {
+      display: grid;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .reason {
+      padding: 10px 12px;
+      border-radius: 15px;
+      background: rgba(247,250,255,.86);
+      border: 1px solid rgba(7,27,54,.07);
+      color: #41546d;
+      font-size: 12px;
+      line-height: 1.5;
+      font-weight: 700;
+    }
+
+    .job-actions {
+      display: flex;
+      gap: 9px;
+      margin-top: auto;
+      padding-top: 18px;
+    }
+
+    .job-actions .btn {
+      flex: 1;
+      min-height: 42px;
+      font-size: 13px;
+    }
+
+    .side {
+      display: grid;
+      gap: 16px;
+      position: sticky;
+      top: 94px;
+    }
+
+    .panel,
+    .saved-card,
+    .apply-card {
+      border-radius: 30px;
+      padding: 24px;
+    }
+
+    .saved-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .saved-item {
+      padding: 13px;
+      border-radius: 18px;
+      background: var(--soft);
+      border: 1px solid rgba(7,27,54,.08);
+    }
+
+    .saved-item strong {
+      display: block;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .saved-item span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .status {
+      display: none;
+      margin-top: 12px;
+      padding: 13px 15px;
+      border-radius: 16px;
+      font-size: 13px;
+      line-height: 1.55;
+      font-weight: 820;
+    }
+
+    .status.show { display: block; }
+    .status.success { color: var(--green); background: rgba(16,185,129,.10); }
+    .status.error { color: var(--red); background: rgba(180,35,24,.10); }
+    .status.info { color: #064b93; background: rgba(10,102,194,.09); }
+
+    .apply-output {
+      display: none;
+      margin-top: 14px;
+      padding: 15px;
+      border-radius: 20px;
+      background: rgba(247,250,255,.92);
+      border: 1px solid rgba(7,27,54,.08);
+      color: #334761;
+      font-size: 13px;
+      line-height: 1.7;
+      font-weight: 650;
+      white-space: pre-wrap;
+    }
+
+    .apply-output.show {
+      display: block;
+    }
+
+    .empty {
+      padding: 24px;
+      border-radius: 24px;
+      background: rgba(255,255,255,.72);
+      border: 1px dashed rgba(7,27,54,.18);
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+      font-weight: 700;
+    }
+
+    .disclaimer {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.65;
+      font-weight: 640;
+    }
+
+    @keyframes breathe {
+      from { transform: translate3d(-1%, -1%, 0) scale(1); }
+      to { transform: translate3d(1%, 1%, 0) scale(1.04); }
+    }
+
+    @media (max-width: 1100px) {
+      .layout,
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .side {
+        position: static;
+      }
+
+      .toolbar {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
-    form.addEventListener("submit", function (event) {
-      event.preventDefault();
-      document.addEventListener("click", function (event) {
-      const button = event.target.closest(".save-job-btn");
-      if (!button) return;
-      const saved = JSON.parse(localStorage.getItem("japanoffer_saved_roles") || "[]");
-      saved.push({
-        title: button.dataset.jobTitle,
-        url: button.dataset.jobUrl,
-        savedAt: new Date().toISOString()
-      });
-      localStorage.setItem("japanoffer_saved_roles", JSON.stringify(saved));
-      button.textContent = "Saved";
-    });
+    @media (max-width: 760px) {
+      .topbar {
+        grid-template-columns: auto 1fr auto;
+        padding: 13px 16px;
+      }
 
-    loadJobs();
-    });
+      .search {
+        display: none;
+      }
 
-    document.addEventListener("click", function (event) {
-      const button = event.target.closest(".save-job-btn");
-      if (!button) return;
-      const saved = JSON.parse(localStorage.getItem("japanoffer_saved_roles") || "[]");
-      saved.push({
-        title: button.dataset.jobTitle,
-        url: button.dataset.jobUrl,
-        savedAt: new Date().toISOString()
-      });
-      localStorage.setItem("japanoffer_saved_roles", JSON.stringify(saved));
-      button.textContent = "Saved";
-    });
+      .brand small,
+      .nav a:nth-child(n+4) {
+        display: none;
+      }
 
-    loadJobs();
-  </script>
-  <script src="effects.js"></script>
+      main {
+        width: min(100% - 28px, 1220px);
+        padding: 38px 0 70px;
+      }
+
+      .hero-card,
+      .profile-card,
+      .panel,
+      .saved-card,
+      .apply-card,
+      .job-card {
+        border-radius: 26px;
+        padding: 22px;
+      }
+
+      h1 {
+        font-size: 46px;
+      }
+
+      .toolbar,
+      .jobs-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-head {
+        display: block;
+      }
+
+      .section-head p {
+        text-align: left;
+        margin-top: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <span class="logo">J</span>
+      <span>
+        <strong>JapanOffer AI</strong>
+        <small>AI Job Recommendation</small>
+      </span>
+    </a>
+
+    <label class="search">
+      <span>⌕</span>
+      <input id="searchInput" placeholder="搜索岗位、公司、国家或技能" />
+    </label>
+
+    <nav class="nav">
+      <a href="index.html">首页</a>
+      <a href="network.html">人脉</a>
+      <a class="active" href="jobs.html">职位</a>
+      <a href="match.html">AI 匹配</a>
+      <a href="companies.html">公司</a>
+      <a class="primary-link" href="profile.html">我的主页</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-card">
+        <div class="eyebrow">AI-ranked job library</div>
+        <h1>不只是看岗位。<span>而是知道先投哪一个。</span></h1>
+        <p>
+          JapanOffer AI 会读取你的个人主页和 CV 记录，把职位库里的岗位按适配度重新排序。用户可以保存岗位，并生成申请理由、Cover Letter 方向和 CV 修改建议。
+        </p>
+        <div class="hero-actions">
+          <button class="btn primary" id="rankWithProfileButton" type="button">用我的 Profile / CV 重新排序</button>
+          <a class="btn" href="profile.html">上传或更新 CV</a>
+        </div>
+        <div class="disclaimer">
+          当前职位库是 MVP curated role targets，用来验证匹配逻辑和用户行为。之后可以接入真实 ATS / API / 手动后台职位发布。
+        </div>
+      </div>
+
+      <aside class="profile-card">
+        <h2>你的匹配资料</h2>
+        <p>登录后系统会读取你的个人主页和 CV 文件记录。资料越完整，推荐排序越准确。</p>
+        <div class="profile-grid">
+          <div class="profile-row"><span>登录状态</span><strong id="profileAuth">检查中</strong></div>
+          <div class="profile-row"><span>方向</span><strong id="profileCareer">未读取</strong></div>
+          <div class="profile-row"><span>目标市场</span><strong id="profileMarket">未读取</strong></div>
+          <div class="profile-row"><span>语言</span><strong id="profileLanguages">未读取</strong></div>
+          <div class="profile-row"><span>CV</span><strong id="profileCv">未读取</strong></div>
+        </div>
+        <div class="status info show" id="profileStatus">正在检查你的账号资料...</div>
+      </aside>
+    </section>
+
+    <section class="toolbar">
+      <label class="filter">
+        <span>目标市场</span>
+        <select id="marketFilter">
+          <option value="all">全部市场</option>
+          <option value="Japan">日本</option>
+          <option value="Hong Kong">香港</option>
+          <option value="Singapore">新加坡</option>
+          <option value="UK">英国</option>
+        </select>
+      </label>
+
+      <label class="filter">
+        <span>职业方向</span>
+        <select id="categoryFilter">
+          <option value="all">全部方向</option>
+          <option value="Legal / Compliance">法律 / 合规</option>
+          <option value="Finance / AML">金融 / AML</option>
+          <option value="Web3 / Risk">Web3 / 风控</option>
+          <option value="Business / Strategy">商务 / 战略</option>
+          <option value="Data / Operations">数据 / 运营</option>
+        </select>
+      </label>
+
+      <label class="filter">
+        <span>语言要求</span>
+        <select id="languageFilter">
+          <option value="all">全部语言</option>
+          <option value="English">English</option>
+          <option value="Japanese">Japanese</option>
+          <option value="Mandarin">Mandarin</option>
+        </select>
+      </label>
+
+      <label class="filter">
+        <span>排序方式</span>
+        <select id="sortFilter">
+          <option value="match">按 AI 匹配度</option>
+          <option value="visa">签证友好优先</option>
+          <option value="entry">Entry-level 优先</option>
+          <option value="market">目标市场优先</option>
+        </select>
+      </label>
+    </section>
+
+    <section class="layout">
+      <div>
+        <div class="section-head">
+          <h2>推荐岗位</h2>
+          <p>分数不是录取概率，而是申请优先级。70+ 可以优先研究，60 左右适合作为探索方向。</p>
+        </div>
+        <div class="jobs-grid" id="jobsGrid"></div>
+      </div>
+
+      <aside class="side">
+        <section class="saved-card">
+          <h2>已保存岗位</h2>
+          <p>登录后保存的岗位会进入账号记录，之后可以继续做申请材料。</p>
+          <div class="saved-list" id="savedList">
+            <div class="empty">还没有保存岗位。</div>
+          </div>
+          <div class="status" id="saveStatus"></div>
+        </section>
+
+        <section class="apply-card">
+          <h2>申请建议生成器</h2>
+          <p>选择一个岗位后，系统会基于你的 Profile / CV 生成申请理由和下一步准备方向。</p>
+          <div class="apply-output" id="applyOutput"></div>
+          <div class="status" id="applyStatus"></div>
+        </section>
+      </aside>
+    </section>
+  </main>
+
   <script src="auth-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="auth.js"></script>
-  <script src="analytics.js"></script>
-  <script src="platform-actions.js"></script>
+  <script src="jobs.js"></script>
 </body>
 </html>
