@@ -1,0 +1,769 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>申请中心 | JapanOffer AI</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    :root {
+      --blue: #0a66c2;
+      --blue-dark: #003f88;
+      --ink: #061a33;
+      --muted: #607086;
+      --line: rgba(7,27,54,.10);
+      --card: rgba(255,255,255,.84);
+      --soft: rgba(247,250,255,.92);
+      --shadow: 0 24px 80px rgba(10,35,68,.10);
+      --green: #0f8a5f;
+      --orange: #b76b00;
+      --red: #b42318;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 8% 8%, rgba(10,102,194,.13), transparent 32%),
+        radial-gradient(circle at 90% 0%, rgba(80,167,255,.13), transparent 30%),
+        linear-gradient(135deg, #f7fbff 0%, #ffffff 46%, #edf5ff 100%);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      min-height: 76px;
+      display: grid;
+      grid-template-columns: auto minmax(230px, 390px) 1fr auto;
+      gap: 18px;
+      align-items: center;
+      padding: 15px 30px;
+      background: rgba(255,255,255,.86);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: inherit;
+      text-decoration: none;
+      min-width: 0;
+    }
+
+    .logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 950;
+      font-size: 23px;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      box-shadow: 0 14px 34px rgba(10,102,194,.24);
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 18px;
+      letter-spacing: -.035em;
+    }
+
+    .brand small {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 760;
+    }
+
+    .search {
+      height: 44px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.76);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 8px;
+    }
+
+    .search input {
+      border: 0;
+      outline: 0;
+      background: transparent;
+      width: 100%;
+      color: var(--ink);
+      font: inherit;
+      font-size: 14px;
+      font-weight: 720;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: flex-end;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .nav a {
+      color: #243650;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .nav a.active {
+      color: var(--blue);
+    }
+
+    .primary-link {
+      color: #fff !important;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      padding: 11px 16px;
+      border-radius: 999px;
+      box-shadow: 0 12px 26px rgba(10,102,194,.22);
+    }
+
+    main {
+      width: min(1240px, calc(100% - 44px));
+      margin: 0 auto;
+      padding: 50px 0 92px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(340px, 440px);
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .hero-card,
+    .profile-card,
+    .panel,
+    .job-list-card,
+    .editor-card,
+    .draft-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .hero-card {
+      border-radius: 36px;
+      padding: 38px;
+      min-height: 350px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: -45%;
+      background:
+        radial-gradient(circle at 22% 28%, rgba(10,102,194,.14), transparent 30%),
+        radial-gradient(circle at 76% 24%, rgba(255,255,255,.86), transparent 28%);
+      animation: breathe 12s ease-in-out infinite alternate;
+      z-index: -1;
+    }
+
+    .eyebrow {
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      font-size: 12px;
+      font-weight: 950;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(44px, 5.8vw, 76px);
+      line-height: .96;
+      letter-spacing: -.075em;
+      font-weight: 950;
+    }
+
+    h1 span {
+      display: block;
+      color: var(--blue);
+    }
+
+    .hero-card p {
+      margin: 22px 0 0;
+      max-width: 760px;
+      color: #52647a;
+      font-size: 17px;
+      line-height: 1.75;
+      font-weight: 680;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .btn {
+      min-height: 44px;
+      border-radius: 999px;
+      padding: 0 16px;
+      border: 1px solid rgba(10,102,194,.18);
+      background: rgba(255,255,255,.78);
+      color: var(--blue);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font: inherit;
+      font-weight: 920;
+      font-size: 14px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .btn.primary {
+      color: #fff;
+      border-color: transparent;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      box-shadow: 0 16px 36px rgba(10,102,194,.24);
+    }
+
+    .btn.green {
+      color: #fff;
+      border-color: transparent;
+      background: linear-gradient(135deg, #0f8a5f, #047857);
+    }
+
+    .btn.danger {
+      color: var(--red);
+      border-color: rgba(180,35,24,.22);
+    }
+
+    .profile-card {
+      border-radius: 36px;
+      padding: 28px;
+    }
+
+    .profile-card h2,
+    .panel h2,
+    .job-list-card h2,
+    .editor-card h2,
+    .draft-card h2 {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.05;
+      letter-spacing: -.055em;
+    }
+
+    .profile-card p,
+    .panel p,
+    .job-list-card p,
+    .editor-card p,
+    .draft-card p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+      font-weight: 650;
+    }
+
+    .profile-grid {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .profile-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      padding: 13px 14px;
+      border-radius: 18px;
+      background: var(--soft);
+      border: 1px solid rgba(7,27,54,.08);
+      color: #26374d;
+      font-size: 13px;
+      font-weight: 780;
+    }
+
+    .profile-row span {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .workflow {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin: 28px 0;
+    }
+
+    .step-card {
+      padding: 20px;
+      border-radius: 28px;
+      background: rgba(255,255,255,.82);
+      border: 1px solid var(--line);
+      box-shadow: 0 14px 44px rgba(10,35,68,.07);
+    }
+
+    .step-card span {
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 950;
+      letter-spacing: .12em;
+    }
+
+    .step-card strong {
+      display: block;
+      margin-top: 24px;
+      font-size: 19px;
+      line-height: 1.1;
+      letter-spacing: -.04em;
+    }
+
+    .step-card p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+      font-weight: 650;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .left-col,
+    .right-col {
+      display: grid;
+      gap: 16px;
+    }
+
+    .job-list-card,
+    .editor-card,
+    .draft-card,
+    .panel {
+      border-radius: 30px;
+      padding: 24px;
+    }
+
+    .saved-jobs {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .job-item {
+      width: 100%;
+      text-align: left;
+      border: 1px solid rgba(7,27,54,.08);
+      background: rgba(247,250,255,.92);
+      border-radius: 20px;
+      padding: 14px;
+      color: var(--ink);
+      font: inherit;
+      cursor: pointer;
+      transition: transform .16s ease, border-color .16s ease, background .16s ease;
+    }
+
+    .job-item:hover,
+    .job-item.active {
+      transform: translateY(-1px);
+      border-color: rgba(10,102,194,.32);
+      background: rgba(239,247,255,.96);
+    }
+
+    .job-item strong {
+      display: block;
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .job-item span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+      font-weight: 650;
+    }
+
+    .status-pill {
+      display: inline-flex !important;
+      width: fit-content;
+      min-height: 24px;
+      align-items: center;
+      margin-top: 8px !important;
+      padding: 0 9px;
+      border-radius: 999px;
+      background: rgba(10,102,194,.09);
+      color: #064b93 !important;
+      font-size: 11px !important;
+      font-weight: 850 !important;
+    }
+
+    .field-grid {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    label.field span {
+      display: block;
+      margin-bottom: 8px;
+      color: #26374d;
+      font-size: 13px;
+      font-weight: 880;
+    }
+
+    .input,
+    .textarea,
+    .select {
+      width: 100%;
+      border: 1px solid rgba(7,27,54,.12);
+      border-radius: 18px;
+      background: rgba(255,255,255,.90);
+      color: var(--ink);
+      font: inherit;
+      font-size: 14px;
+      font-weight: 650;
+      outline: none;
+      padding: 13px 14px;
+    }
+
+    .textarea {
+      min-height: 160px;
+      resize: vertical;
+      line-height: 1.65;
+    }
+
+    .textarea.large {
+      min-height: 320px;
+    }
+
+    .input:focus,
+    .textarea:focus,
+    .select:focus {
+      border-color: rgba(10,102,194,.48);
+      box-shadow: 0 0 0 4px rgba(10,102,194,.10);
+    }
+
+    .insight-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .insight {
+      padding: 14px;
+      border-radius: 20px;
+      background: var(--soft);
+      border: 1px solid rgba(7,27,54,.08);
+    }
+
+    .insight span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 780;
+    }
+
+    .insight strong {
+      display: block;
+      margin-top: 7px;
+      font-size: 24px;
+      line-height: 1;
+      color: var(--blue);
+      letter-spacing: -.05em;
+    }
+
+    .draft-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .draft-item {
+      padding: 13px;
+      border-radius: 18px;
+      background: var(--soft);
+      border: 1px solid rgba(7,27,54,.08);
+    }
+
+    .draft-item strong {
+      display: block;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .draft-item span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .empty {
+      padding: 24px;
+      border-radius: 24px;
+      background: rgba(255,255,255,.72);
+      border: 1px dashed rgba(7,27,54,.18);
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+      font-weight: 700;
+    }
+
+    .status {
+      display: none;
+      margin-top: 12px;
+      padding: 13px 15px;
+      border-radius: 16px;
+      font-size: 13px;
+      line-height: 1.55;
+      font-weight: 820;
+    }
+
+    .status.show { display: block; }
+    .status.success { color: var(--green); background: rgba(16,185,129,.10); }
+    .status.error { color: var(--red); background: rgba(180,35,24,.10); }
+    .status.info { color: #064b93; background: rgba(10,102,194,.09); }
+
+    @keyframes breathe {
+      from { transform: translate3d(-1%, -1%, 0) scale(1); }
+      to { transform: translate3d(1%, 1%, 0) scale(1.04); }
+    }
+
+    @media (max-width: 1100px) {
+      .hero,
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .workflow {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .topbar {
+        grid-template-columns: auto 1fr auto;
+        padding: 13px 16px;
+      }
+
+      .search {
+        display: none;
+      }
+
+      .brand small,
+      .nav a:nth-child(n+4) {
+        display: none;
+      }
+
+      main {
+        width: min(100% - 28px, 1240px);
+        padding: 38px 0 70px;
+      }
+
+      .hero-card,
+      .profile-card,
+      .panel,
+      .job-list-card,
+      .editor-card,
+      .draft-card {
+        border-radius: 26px;
+        padding: 22px;
+      }
+
+      h1 {
+        font-size: 46px;
+      }
+
+      .workflow,
+      .insight-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <span class="logo">J</span>
+      <span>
+        <strong>JapanOffer AI</strong>
+        <small>Application Hub</small>
+      </span>
+    </a>
+
+    <label class="search">
+      <span>⌕</span>
+      <input id="searchInput" placeholder="搜索已保存岗位或公司" />
+    </label>
+
+    <nav class="nav">
+      <a href="index.html">首页</a>
+      <a href="network.html">人脉</a>
+      <a href="jobs.html">职位</a>
+      <a class="active" href="applications.html">申请</a>
+      <a href="match.html">AI 匹配</a>
+      <a class="primary-link" href="profile.html">我的主页</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-card">
+        <div class="eyebrow">Application workspace</div>
+        <h1>从保存岗位，<span>到真正开始申请。</span></h1>
+        <p>
+          这里把用户保存的岗位变成申请工作台：选择岗位，生成申请理由、Cover Letter 初稿、CV 修改方向，并记录申请状态。
+        </p>
+        <div class="btn-row">
+          <a class="btn primary" href="jobs.html">回到职位推荐</a>
+          <a class="btn" href="profile.html">更新 CV / Profile</a>
+        </div>
+      </div>
+
+      <aside class="profile-card">
+        <h2>你的申请资料</h2>
+        <p>系统会基于你的 Profile、CV 文件记录和已保存岗位生成申请材料。</p>
+        <div class="profile-grid">
+          <div class="profile-row"><span>登录状态</span><strong id="profileAuth">检查中</strong></div>
+          <div class="profile-row"><span>方向</span><strong id="profileCareer">未读取</strong></div>
+          <div class="profile-row"><span>目标市场</span><strong id="profileMarket">未读取</strong></div>
+          <div class="profile-row"><span>CV</span><strong id="profileCv">未读取</strong></div>
+        </div>
+        <div class="status info show" id="profileStatus">正在读取你的申请资料...</div>
+      </aside>
+    </section>
+
+    <section class="workflow">
+      <div class="step-card">
+        <span>01</span>
+        <strong>保存岗位</strong>
+        <p>先在职位页保存你感兴趣的岗位。</p>
+      </div>
+      <div class="step-card">
+        <span>02</span>
+        <strong>选择目标</strong>
+        <p>在申请中心选择一个岗位作为当前申请。</p>
+      </div>
+      <div class="step-card">
+        <span>03</span>
+        <strong>生成材料</strong>
+        <p>自动生成申请理由、Cover Letter 和 CV 修改方向。</p>
+      </div>
+      <div class="step-card">
+        <span>04</span>
+        <strong>追踪状态</strong>
+        <p>保存草稿并记录 saved、draft、applied、interview。</p>
+      </div>
+    </section>
+
+    <section class="layout">
+      <div class="left-col">
+        <section class="job-list-card">
+          <h2>已保存岗位</h2>
+          <p>先选择一个岗位，右侧会自动生成申请材料。</p>
+          <div class="saved-jobs" id="savedJobsList">
+            <div class="empty">正在读取已保存岗位...</div>
+          </div>
+          <div class="status" id="savedStatus"></div>
+        </section>
+
+        <section class="draft-card">
+          <h2>申请进度</h2>
+          <p>这里显示已生成或已保存的申请草稿。</p>
+          <div class="draft-list" id="draftList">
+            <div class="empty">还没有申请草稿。</div>
+          </div>
+        </section>
+      </div>
+
+      <div class="right-col">
+        <section class="panel">
+          <h2 id="selectedTitle">选择一个岗位</h2>
+          <p id="selectedSubtitle">从左侧选择已保存岗位后，这里会显示申请分析。</p>
+
+          <div class="insight-grid">
+            <div class="insight">
+              <span>匹配分</span>
+              <strong id="matchScore">--</strong>
+            </div>
+            <div class="insight">
+              <span>市场</span>
+              <strong id="marketLabel">--</strong>
+            </div>
+            <div class="insight">
+              <span>状态</span>
+              <strong id="statusLabel">--</strong>
+            </div>
+          </div>
+
+          <div class="field-grid">
+            <label class="field">
+              <span>申请状态</span>
+              <select class="select" id="applicationStatus">
+                <option value="saved">已保存</option>
+                <option value="drafting">准备材料中</option>
+                <option value="ready">可以投递</option>
+                <option value="applied">已投递</option>
+                <option value="interview">面试中</option>
+                <option value="rejected">未通过</option>
+                <option value="offer">拿到 Offer</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>个人备注</span>
+              <textarea class="textarea" id="notesInput" placeholder="例如：先研究公司业务，修改 CV，把合规项目经历写得更清楚。"></textarea>
+            </label>
+
+            <div class="btn-row">
+              <button class="btn primary" id="generateButton" type="button">生成申请材料</button>
+              <button class="btn green" id="saveDraftButton" type="button">保存申请草稿</button>
+            </div>
+            <div class="status" id="editorStatus"></div>
+          </div>
+        </section>
+
+        <section class="editor-card">
+          <h2>Cover Letter / 申请理由</h2>
+          <p>这里先做 MVP 版本。之后可以接 OpenAI API，把内容升级成更完整的英文申请信。</p>
+          <div class="field-grid">
+            <label class="field">
+              <span>生成内容</span>
+              <textarea class="textarea large" id="coverLetterOutput" placeholder="点击“生成申请材料”后，这里会出现申请理由、Cover Letter 初稿和 CV 修改方向。"></textarea>
+            </label>
+            <div class="btn-row">
+              <button class="btn" id="copyButton" type="button">复制内容</button>
+              <button class="btn" id="clearButton" type="button">清空</button>
+            </div>
+            <div class="status" id="copyStatus"></div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script src="auth-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="applications.js"></script>
+</body>
+</html>

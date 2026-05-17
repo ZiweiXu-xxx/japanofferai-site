@@ -1,5 +1,4 @@
-// JapanOffer AI - Step 30 Homepage route cards for job recommendation
-// Keeps homepage platform path aligned with the new jobs system.
+// JapanOffer AI - Step 31 Homepage route cards with Application Hub
 
 (function () {
   function cleanText(value) {
@@ -12,8 +11,8 @@
       el.setAttribute("href", href);
       return;
     }
-    if (el.dataset.jo30Bound === "1") return;
-    el.dataset.jo30Bound = "1";
+    if (el.dataset.jo31Bound === "1") return;
+    el.dataset.jo31Bound = "1";
     el.addEventListener("click", function (event) {
       event.preventDefault();
       window.location.href = href;
@@ -27,7 +26,7 @@
 
   function removeOldInjectedBlocks() {
     document.querySelectorAll(
-      ".jo24-platform-nav, .jo23-focus-bar, .jo24-focus-bar, .jo25-focus-bar, .jo26-focus-bar, .jo28-platform-section, .jo29-platform-section, .jo29-motion-rail, .jo30-platform-section"
+      ".jo24-platform-nav, .jo23-focus-bar, .jo24-focus-bar, .jo25-focus-bar, .jo26-focus-bar, .jo28-platform-section, .jo29-platform-section, .jo29-motion-rail, .jo30-platform-section, .jo31-platform-section"
     ).forEach((el) => el.remove());
   }
 
@@ -43,42 +42,49 @@
       if (["Network", "Talent", "人脉", "会员", "进入人脉网络"].includes(text)) {
         el.textContent = "人脉";
         setLink(el, "network.html");
-        el.classList.add("jo30-nav-link");
+        el.classList.add("jo31-nav-link");
         return;
       }
 
       if (["Jobs", "岗位", "职位", "Find jobs"].includes(text)) {
         el.textContent = "职位";
         setLink(el, "jobs.html");
-        el.classList.add("jo30-nav-link", "jo30-nav-active");
+        el.classList.add("jo31-nav-link");
         return;
       }
 
       if (["Report", "AI Report", "AI 报告", "AI 匹配"].includes(text)) {
         el.textContent = "AI 匹配";
         setLink(el, "match.html");
-        el.classList.add("jo30-nav-link");
+        el.classList.add("jo31-nav-link");
+        return;
+      }
+
+      if (["Applications", "申请", "申请中心"].includes(text)) {
+        el.textContent = "申请";
+        setLink(el, "applications.html");
+        el.classList.add("jo31-nav-link", "jo31-nav-active");
         return;
       }
 
       if (["Companies", "Explore companies", "公司"].includes(text)) {
         el.textContent = "公司";
         setLink(el, "companies.html");
-        el.classList.add("jo30-nav-link");
+        el.classList.add("jo31-nav-link");
         return;
       }
 
       if (["Feedback", "反馈", "反馈与用户调研"].includes(text)) {
         el.textContent = "反馈";
         setLink(el, "feedback.html");
-        el.classList.add("jo30-nav-link");
+        el.classList.add("jo31-nav-link");
         return;
       }
 
       if (["Sign in", "Sign up", "注册", "登录", "Create account"].includes(text)) {
         el.textContent = "我的主页";
         setLink(el, "profile.html");
-        el.classList.add("jo30-profile-link");
+        el.classList.add("jo31-profile-link");
       }
     });
   }
@@ -98,7 +104,7 @@
       ) {
         el.textContent = "开始中文 AI 岗位匹配";
         setLink(el, "match.html");
-        el.classList.add("jo30-primary-cta");
+        el.classList.add("jo31-primary-cta");
         return;
       }
 
@@ -109,28 +115,28 @@
       if (text === "Find talent" || text === "Talent" || text === "进入人脉网络") {
         el.textContent = "人脉网络";
         setLink(el, "network.html");
-        el.classList.add("jo30-clean-tab");
+        el.classList.add("jo31-clean-tab");
         return;
       }
 
       if (text === "Explore companies" || text === "Companies") {
         el.textContent = "公司库";
         setLink(el, "companies.html");
-        el.classList.add("jo30-clean-tab");
+        el.classList.add("jo31-clean-tab");
         return;
       }
 
       if (includesAny(text, ["english auto report", "english report", "英文报告"])) {
         el.textContent = "AI 匹配报告";
         setLink(el, "match.html");
-        el.classList.add("jo30-secondary-cta");
+        el.classList.add("jo31-secondary-cta");
         return;
       }
 
       if (text === "反馈与用户调研" || text === "反馈问卷" || text === "Feedback") {
         el.textContent = "反馈问卷";
         setLink(el, "feedback.html");
-        el.classList.add("jo30-secondary-cta");
+        el.classList.add("jo31-secondary-cta");
       }
     });
   }
@@ -156,44 +162,44 @@
       broken.setAttribute("aria-hidden", "true");
     }
 
-    if (document.querySelector(".jo30-platform-section")) return;
+    if (document.querySelector(".jo31-platform-section")) return;
 
     const main = document.querySelector("main") || document.body;
     const anchor = broken || main.querySelector("section:nth-of-type(2)") || main.firstElementChild;
 
     const section = document.createElement("section");
-    section.className = "jo30-platform-section";
+    section.className = "jo31-platform-section";
     section.innerHTML = `
-      <div class="jo30-platform-head">
+      <div class="jo31-platform-head">
         <span>Career platform loop</span>
-        <h2>上传 CV，AI 匹配，再直接看到可投岗位。</h2>
-        <p>这一步之后，JapanOffer AI 不再只是报告工具，而是有职位库、保存岗位和申请建议的求职平台。</p>
+        <h2>从匹配到申请，形成真正的求职闭环。</h2>
+        <p>用户上传 CV，AI 推荐岗位，保存岗位，再在申请中心生成材料和追踪进度。</p>
       </div>
 
-      <div class="jo30-route-grid">
-        <a class="jo30-route-card jo30-route-primary" href="jobs.html">
-          <span class="jo30-route-num">01</span>
+      <div class="jo31-route-grid">
+        <a class="jo31-route-card jo31-route-primary" href="jobs.html">
+          <span class="jo31-route-num">01</span>
           <h3>AI 推荐岗位</h3>
-          <p>读取 Profile / CV 后，直接把岗位按适配度排序，告诉用户先投哪一个。</p>
+          <p>读取 Profile / CV 后，把岗位按适配度排序，告诉用户先投哪一个。</p>
           <strong>查看推荐岗位 →</strong>
         </a>
 
-        <a class="jo30-route-card" href="profile.html">
-          <span class="jo30-route-num">02</span>
+        <a class="jo31-route-card" href="applications.html">
+          <span class="jo31-route-num">02</span>
+          <h3>申请中心</h3>
+          <p>把已保存岗位转化为 Cover Letter、CV 修改方向和申请状态追踪。</p>
+          <strong>进入申请中心 →</strong>
+        </a>
+
+        <a class="jo31-route-card" href="profile.html">
+          <span class="jo31-route-num">03</span>
           <h3>我的主页 / CV</h3>
           <p>保存个人资料和履历。之后申请岗位和生成报告时，不需要反复填写。</p>
           <strong>上传 CV →</strong>
         </a>
 
-        <a class="jo30-route-card" href="match.html">
-          <span class="jo30-route-num">03</span>
-          <h3>中文 AI 匹配</h3>
-          <p>输入背景或调用已保存资料，生成岗位方向、目标市场和路线判断。</p>
-          <strong>开始匹配 →</strong>
-        </a>
-
-        <a class="jo30-route-card" href="network.html">
-          <span class="jo30-route-num">04</span>
+        <a class="jo31-route-card" href="network.html">
+          <span class="jo31-route-num">04</span>
           <h3>人脉网络</h3>
           <p>连接相似背景的求职者、公司方向和未来招聘联系人。</p>
           <strong>进入人脉 →</strong>
@@ -209,10 +215,10 @@
   }
 
   function addStyles() {
-    if (document.getElementById("jo30-homepage-style")) return;
+    if (document.getElementById("jo31-homepage-style")) return;
 
     const style = document.createElement("style");
-    style.id = "jo30-homepage-style";
+    style.id = "jo31-homepage-style";
     style.textContent = `
       header { overflow: visible !important; }
 
@@ -223,7 +229,7 @@
         flex-wrap: nowrap !important;
       }
 
-      .jo30-nav-link {
+      .jo31-nav-link {
         border: 0 !important;
         outline: 0 !important;
         box-shadow: none !important;
@@ -237,9 +243,9 @@
         min-height: auto !important;
       }
 
-      .jo30-nav-active { color: #0a66c2 !important; }
+      .jo31-nav-active { color: #0a66c2 !important; }
 
-      .jo30-profile-link {
+      .jo31-profile-link {
         color: #fff !important;
         background: linear-gradient(135deg, #0a66c2, #003f88) !important;
         border-radius: 999px !important;
@@ -250,25 +256,25 @@
         box-shadow: 0 14px 30px rgba(10,102,194,.22) !important;
       }
 
-      .jo30-primary-cta, .jo30-secondary-cta {
+      .jo31-primary-cta, .jo31-secondary-cta {
         border-radius: 999px !important;
       }
 
-      .jo30-primary-cta {
+      .jo31-primary-cta {
         background: linear-gradient(135deg, #0a66c2, #003f88) !important;
         color: #fff !important;
         border-color: transparent !important;
         box-shadow: 0 18px 44px rgba(10,102,194,.26) !important;
       }
 
-      .jo30-secondary-cta {
+      .jo31-secondary-cta {
         background: rgba(255,255,255,.78) !important;
         color: #0a66c2 !important;
         border: 1px solid rgba(10,102,194,.18) !important;
         box-shadow: none !important;
       }
 
-      .jo30-clean-tab {
+      .jo31-clean-tab {
         border: 0 !important;
         outline: 0 !important;
         box-shadow: none !important;
@@ -276,13 +282,13 @@
         white-space: nowrap !important;
       }
 
-      .jo30-platform-section {
+      .jo31-platform-section {
         width: min(1180px, calc(100% - 44px));
         margin: 42px auto 0;
         padding: 0;
       }
 
-      .jo30-platform-head {
+      .jo31-platform-head {
         display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(240px, 430px);
         gap: 22px;
@@ -290,7 +296,7 @@
         margin-bottom: 18px;
       }
 
-      .jo30-platform-head span {
+      .jo31-platform-head span {
         grid-column: 1 / -1;
         display: inline-flex;
         color: #0a66c2;
@@ -300,7 +306,7 @@
         font-weight: 950;
       }
 
-      .jo30-platform-head h2 {
+      .jo31-platform-head h2 {
         margin: 0;
         color: #061a33;
         font-size: clamp(32px, 4vw, 54px);
@@ -309,7 +315,7 @@
         font-weight: 950;
       }
 
-      .jo30-platform-head p {
+      .jo31-platform-head p {
         margin: 0;
         color: #53667d;
         font-size: 14px;
@@ -317,13 +323,13 @@
         font-weight: 680;
       }
 
-      .jo30-route-grid {
+      .jo31-route-grid {
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 16px;
       }
 
-      .jo30-route-card {
+      .jo31-route-card {
         min-height: 250px;
         display: flex;
         flex-direction: column;
@@ -340,28 +346,28 @@
         transition: transform .18s ease, box-shadow .18s ease;
       }
 
-      .jo30-route-card:hover {
+      .jo31-route-card:hover {
         transform: translateY(-4px);
         box-shadow: 0 30px 90px rgba(10,35,68,.15);
       }
 
-      .jo30-route-primary {
+      .jo31-route-primary {
         background: linear-gradient(135deg, rgba(10,102,194,.98), rgba(0,63,136,.96));
         color: #fff;
       }
 
-      .jo30-route-num {
+      .jo31-route-num {
         color: #0a66c2;
         font-size: 13px;
         font-weight: 950;
         letter-spacing: .12em;
       }
 
-      .jo30-route-primary .jo30-route-num {
+      .jo31-route-primary .jo31-route-num {
         color: rgba(255,255,255,.78);
       }
 
-      .jo30-route-card h3 {
+      .jo31-route-card h3 {
         margin: 44px 0 12px;
         font-size: 24px;
         line-height: 1.08;
@@ -369,7 +375,7 @@
         font-weight: 950;
       }
 
-      .jo30-route-card p {
+      .jo31-route-card p {
         margin: 0;
         color: #53667d;
         font-size: 13px;
@@ -377,11 +383,11 @@
         font-weight: 650;
       }
 
-      .jo30-route-primary p {
+      .jo31-route-primary p {
         color: rgba(255,255,255,.78);
       }
 
-      .jo30-route-card strong {
+      .jo31-route-card strong {
         display: block;
         margin-top: auto;
         padding-top: 18px;
@@ -390,13 +396,13 @@
         font-weight: 950;
       }
 
-      .jo30-route-primary strong {
+      .jo31-route-primary strong {
         color: #fff;
       }
 
       @media (max-width: 1000px) {
-        .jo30-route-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        .jo30-platform-head { grid-template-columns: 1fr; }
+        .jo31-route-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .jo31-platform-head { grid-template-columns: 1fr; }
       }
 
       @media (max-width: 640px) {
@@ -406,10 +412,10 @@
           display: none !important;
         }
 
-        .jo30-platform-section { width: min(100% - 28px, 1180px); }
-        .jo30-route-grid { grid-template-columns: 1fr; }
-        .jo30-route-card { min-height: auto; }
-        .jo30-route-card h3 { margin-top: 28px; }
+        .jo31-platform-section { width: min(100% - 28px, 1180px); }
+        .jo31-route-grid { grid-template-columns: 1fr; }
+        .jo31-route-card { min-height: auto; }
+        .jo31-route-card h3 { margin-top: 28px; }
       }
     `;
     document.head.appendChild(style);
