@@ -1,6 +1,6 @@
-// JapanOffer AI - Step 24 Homepage + Navigation Focus
-// Main product: Chinese AI matching.
-// Platform structure: Home / Network / Jobs / AI Match / Companies / Feedback.
+// JapanOffer AI - Step 25 Homepage Navigation Fix
+// Fixes the duplicate/ugly navigation created in Step 24.
+// Keeps the homepage clean and makes AI Match the main CTA.
 
 (function () {
   function cleanText(value) {
@@ -15,6 +15,9 @@
       return;
     }
 
+    if (el.dataset.jo25Bound === "1") return;
+    el.dataset.jo25Bound = "1";
+
     el.addEventListener("click", function (event) {
       event.preventDefault();
       window.location.href = href;
@@ -26,21 +29,86 @@
     el.textContent = text;
   }
 
-  function textIncludes(text, words) {
-    return words.some((word) => text.toLowerCase().includes(word.toLowerCase()));
+  function includesAny(text, words) {
+    const lower = text.toLowerCase();
+    return words.some((word) => lower.includes(String(word).toLowerCase()));
   }
 
-  function upgradeButtons() {
+  function isInsideHeader(el) {
+    return Boolean(el.closest("header"));
+  }
+
+  function removeOldInjectedNav() {
+    // Remove the Step 24 injected nav that caused duplicate top navigation.
+    document.querySelectorAll(".jo24-platform-nav, .jo23-focus-bar, .jo24-focus-bar").forEach((el) => {
+      el.remove();
+    });
+  }
+
+  function fixHeaderNavigation() {
+    const header = document.querySelector("header");
+    if (!header) return;
+
+    const links = Array.from(header.querySelectorAll("a, button"));
+
+    links.forEach((el) => {
+      const text = cleanText(el.textContent);
+      if (!text) return;
+
+      // Keep brand/logo untouched
+      if (el.closest(".brand, .match-brand, .jo22-brand, .jo24-brand")) return;
+
+      if (text === "Network" || text === "Talent" || text === "人脉" || text === "会员" || text === "进入人脉网络") {
+        setText(el, "人脉");
+        setLink(el, "network.html");
+        el.classList.add("jo25-nav-link");
+        return;
+      }
+
+      if (text === "Jobs" || text === "岗位" || text === "职位" || text === "Find jobs") {
+        setText(el, "职位");
+        setLink(el, "jobs.html");
+        el.classList.add("jo25-nav-link");
+        return;
+      }
+
+      if (text === "Report" || text === "AI Report" || text === "AI 报告" || text === "AI 匹配") {
+        setText(el, "AI 匹配");
+        setLink(el, "match.html");
+        el.classList.add("jo25-nav-link", "jo25-nav-active");
+        return;
+      }
+
+      if (text === "Companies" || text === "Explore companies" || text === "公司") {
+        setText(el, "公司");
+        setLink(el, "companies.html");
+        el.classList.add("jo25-nav-link");
+        return;
+      }
+
+      if (text === "Feedback" || text === "反馈" || text === "反馈与用户调研") {
+        setText(el, "反馈");
+        setLink(el, "feedback.html");
+        el.classList.add("jo25-nav-link");
+        return;
+      }
+    });
+  }
+
+  function fixHeroButtons() {
     const clickable = Array.from(document.querySelectorAll("a, button"));
 
     clickable.forEach((el) => {
+      if (isInsideHeader(el)) return;
+
       const text = cleanText(el.textContent);
       if (!text) return;
 
       if (
-        textIncludes(text, [
+        includesAny(text, [
           "中文版",
-          "中文",
+          "中文 ai",
+          "中文AI",
           "match now",
           "generate report",
           "生成 ai",
@@ -53,94 +121,59 @@
       ) {
         setText(el, "开始中文 AI 岗位匹配");
         setLink(el, "match.html");
-        el.classList.add("jo24-primary-cta");
+        el.classList.add("jo25-primary-cta");
         return;
       }
 
-      if (textIncludes(text, ["find talent", "talent", "人脉", "会员", "network"])) {
-        setText(el, "进入人脉网络");
+      // Do not create long text like “进入人脉网络” inside small tab buttons.
+      if (text === "Find talent" || text === "Talent" || text === "进入人脉网络") {
+        setText(el, "人脉网络");
         setLink(el, "network.html");
-        el.classList.add("jo24-secondary-cta");
+        el.classList.add("jo25-clean-tab");
         return;
       }
 
-      if (textIncludes(text, ["english auto report", "english report", "英文报告"])) {
-        setText(el, "英文报告辅助入口");
-        setLink(el, "report.html");
-        el.classList.add("jo24-secondary-cta");
-        return;
-      }
-
-      if (textIncludes(text, ["反馈", "问卷", "survey", "feedback"])) {
-        setText(el, "反馈与用户调研");
-        setLink(el, "feedback.html");
-        el.classList.add("jo24-secondary-cta");
-        return;
-      }
-
-      if (text === "Jobs" || text === "岗位" || textIncludes(text, ["find jobs", "找岗位", "职位"])) {
-        setLink(el, "jobs.html");
-        return;
-      }
-
-      if (text === "Companies" || text === "公司" || textIncludes(text, ["explore companies", "公司库"])) {
+      if (text === "Explore companies" || text === "Companies") {
+        setText(el, "公司库");
         setLink(el, "companies.html");
+        el.classList.add("jo25-clean-tab");
         return;
       }
 
-      if (text === "Employers" || text === "企业" || textIncludes(text, ["employer"])) {
-        setLink(el, "employers.html");
+      if (includesAny(text, ["english auto report", "english report", "英文报告"])) {
+        setText(el, "英文报告");
+        setLink(el, "report.html");
+        el.classList.add("jo25-secondary-cta");
+        return;
+      }
+
+      if (text === "反馈与用户调研" || text === "反馈问卷" || text === "Feedback") {
+        setText(el, "反馈问卷");
+        setLink(el, "feedback.html");
+        el.classList.add("jo25-secondary-cta");
       }
     });
   }
 
-  function upgradeNavigation() {
-    const existingHeader = document.querySelector("header");
-    if (!existingHeader || existingHeader.querySelector(".jo24-platform-nav")) return;
-
-    const nav = document.createElement("nav");
-    nav.className = "jo24-platform-nav";
-    nav.innerHTML = `
-      <a href="index.html">首页</a>
-      <a href="network.html">人脉</a>
-      <a href="jobs.html">职位</a>
-      <a href="match.html">AI 匹配</a>
-      <a href="companies.html">公司</a>
-      <a href="feedback.html">反馈</a>
-    `;
-
-    existingHeader.appendChild(nav);
-
-    const oldLinks = Array.from(existingHeader.querySelectorAll("a"))
-      .filter((a) => !a.closest(".jo24-platform-nav"));
-
-    oldLinks.forEach((a) => {
-      const text = cleanText(a.textContent);
-      if (text === "Network") a.style.display = "none";
-      if (text === "AI Report" || text === "Report") a.style.display = "none";
-      if (text === "Talent") a.style.display = "none";
-    });
-  }
-
-  function injectFocusBar() {
-    if (document.querySelector(".jo24-focus-bar")) return;
+  function injectCleanFocusBar() {
+    if (document.querySelector(".jo25-focus-bar")) return;
 
     const main = document.querySelector("main") || document.body;
     const firstSection = main.querySelector("section") || main.firstElementChild;
 
     const bar = document.createElement("section");
-    bar.className = "jo24-focus-bar";
+    bar.className = "jo25-focus-bar";
     bar.innerHTML = `
-      <div class="jo24-focus-inner">
+      <div class="jo25-focus-inner">
         <div>
-          <span class="jo24-kicker">Platform structure</span>
+          <span class="jo25-kicker">Main product entrance</span>
           <h2>先 AI 匹配，再看职位、人脉和公司。</h2>
-          <p>JapanOffer AI 不只是报告工具。它正在成为一个跨境求职网络：用户输入背景，获得岗位排序，然后进入人脉、职位和公司路径。</p>
+          <p>JapanOffer AI 的主入口是中文 AI 岗位匹配。用户先输入背景，获得岗位排序、目标公司和跨境申请路线，再进入职位、人脉和公司页面。</p>
         </div>
-        <div class="jo24-focus-actions">
-          <a class="jo24-focus-primary" href="match.html">开始中文 AI 岗位匹配</a>
-          <a class="jo24-focus-secondary" href="network.html">进入人脉网络</a>
-          <a class="jo24-focus-secondary" href="jobs.html">查看职位</a>
+        <div class="jo25-focus-actions">
+          <a class="jo25-focus-primary" href="match.html">开始中文 AI 岗位匹配</a>
+          <a class="jo25-focus-secondary" href="network.html">浏览人脉网络</a>
+          <a class="jo25-focus-secondary" href="jobs.html">查看职位</a>
         </div>
       </div>
     `;
@@ -153,52 +186,78 @@
   }
 
   function addStyles() {
-    if (document.getElementById("jo24-platform-style")) return;
+    if (document.getElementById("jo25-homepage-fix-style")) return;
 
     const style = document.createElement("style");
-    style.id = "jo24-platform-style";
+    style.id = "jo25-homepage-fix-style";
     style.textContent = `
-      .jo24-platform-nav {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 18px;
-        margin-left: auto;
+      header {
+        overflow: visible !important;
       }
 
-      .jo24-platform-nav a {
+      header nav,
+      header .nav,
+      header .header-nav {
+        display: flex !important;
+        align-items: center !important;
+        gap: 18px !important;
+        flex-wrap: nowrap !important;
+      }
+
+      .jo25-nav-link {
+        border: 0 !important;
+        outline: 0 !important;
+        box-shadow: none !important;
+        background: transparent !important;
         color: #243650 !important;
         text-decoration: none !important;
         font-size: 14px !important;
         font-weight: 850 !important;
-        white-space: nowrap;
+        white-space: nowrap !important;
+        padding: 0 !important;
+        min-height: auto !important;
       }
 
-      .jo24-platform-nav a:nth-child(4) {
+      .jo25-nav-active {
         color: #0a66c2 !important;
       }
 
-      .jo24-primary-cta,
-      .jo24-focus-primary {
+      .jo25-primary-cta,
+      .jo25-focus-primary {
         background: linear-gradient(135deg, #0a66c2, #003f88) !important;
         color: #fff !important;
         border-color: transparent !important;
         box-shadow: 0 18px 44px rgba(10,102,194,.26) !important;
       }
 
-      .jo24-secondary-cta {
-        background: rgba(255,255,255,.72) !important;
+      .jo25-secondary-cta {
+        background: rgba(255,255,255,.78) !important;
         color: #0a66c2 !important;
         border: 1px solid rgba(10,102,194,.18) !important;
+        box-shadow: none !important;
       }
 
-      .jo24-focus-bar {
+      .jo25-clean-tab {
+        border: 0 !important;
+        outline: 0 !important;
+        box-shadow: none !important;
+        text-decoration: none !important;
+        white-space: nowrap !important;
+      }
+
+      .jo25-clean-tab:focus,
+      .jo25-clean-tab:active {
+        outline: none !important;
+        box-shadow: none !important;
+      }
+
+      .jo25-focus-bar {
         width: min(1180px, calc(100% - 44px));
         margin: 28px auto 0;
         padding: 0;
       }
 
-      .jo24-focus-inner {
+      .jo25-focus-inner {
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
         gap: 24px;
@@ -206,14 +265,14 @@
         padding: 26px;
         border-radius: 30px;
         background:
-          linear-gradient(135deg, rgba(255,255,255,.86), rgba(238,246,255,.86)),
+          linear-gradient(135deg, rgba(255,255,255,.88), rgba(238,246,255,.88)),
           radial-gradient(circle at right, rgba(10,102,194,.14), transparent 34%);
         border: 1px solid rgba(7,27,54,.10);
         box-shadow: 0 24px 80px rgba(10,35,68,.10);
         backdrop-filter: blur(16px);
       }
 
-      .jo24-kicker {
+      .jo25-kicker {
         display: inline-flex;
         color: #0a66c2;
         text-transform: uppercase;
@@ -223,7 +282,7 @@
         margin-bottom: 9px;
       }
 
-      .jo24-focus-inner h2 {
+      .jo25-focus-inner h2 {
         margin: 0;
         color: #061a33;
         font-size: clamp(26px, 3vw, 42px);
@@ -232,7 +291,7 @@
         font-weight: 950;
       }
 
-      .jo24-focus-inner p {
+      .jo25-focus-inner p {
         max-width: 720px;
         margin: 12px 0 0;
         color: #53667d;
@@ -241,14 +300,14 @@
         font-weight: 680;
       }
 
-      .jo24-focus-actions {
+      .jo25-focus-actions {
         display: grid;
         gap: 10px;
         min-width: 230px;
       }
 
-      .jo24-focus-primary,
-      .jo24-focus-secondary {
+      .jo25-focus-primary,
+      .jo25-focus-secondary {
         min-height: 44px;
         display: inline-flex;
         align-items: center;
@@ -261,37 +320,27 @@
         white-space: nowrap;
       }
 
-      .jo24-focus-secondary {
+      .jo25-focus-secondary {
         color: #0a66c2;
         background: rgba(255,255,255,.76);
         border: 1px solid rgba(10,102,194,.18);
       }
 
-      @media (max-width: 920px) {
-        .jo24-platform-nav a:nth-child(n+5) {
-          display: none;
-        }
-
-        .jo24-focus-inner {
+      @media (max-width: 900px) {
+        .jo25-focus-inner {
           grid-template-columns: 1fr;
         }
 
-        .jo24-focus-actions {
+        .jo25-focus-actions {
           min-width: 0;
         }
       }
 
       @media (max-width: 640px) {
-        .jo24-platform-nav {
-          gap: 12px;
-        }
-
-        .jo24-platform-nav a {
-          font-size: 13px !important;
-        }
-
-        .jo24-platform-nav a:nth-child(n+4) {
-          display: none;
+        header nav a:nth-child(n+5),
+        header .nav a:nth-child(n+5),
+        header .header-nav a:nth-child(n+5) {
+          display: none !important;
         }
       }
     `;
@@ -301,9 +350,10 @@
 
   function run() {
     addStyles();
-    upgradeNavigation();
-    upgradeButtons();
-    injectFocusBar();
+    removeOldInjectedNav();
+    fixHeaderNavigation();
+    fixHeroButtons();
+    injectCleanFocusBar();
   }
 
   if (document.readyState === "loading") {
