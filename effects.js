@@ -1,7 +1,10 @@
-// JapanOffer AI ultra premium motion system
+// JapanOffer AI refined premium motion system
+// Step 13: smoother motion, no distracting score counter.
+
 (function () {
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   document.documentElement.classList.add("js-ready");
+
   if (reduceMotion) {
     document.documentElement.classList.add("reduce-motion");
     return;
@@ -13,7 +16,7 @@
 
   revealTargets.forEach((el, index) => {
     el.classList.add("reveal");
-    el.style.setProperty("--reveal-delay", `${Math.min(index % 7, 6) * 80}ms`);
+    el.style.setProperty("--reveal-delay", `${Math.min(index % 6, 5) * 65}ms`);
   });
 
   const observer = new IntersectionObserver((entries) => {
@@ -35,8 +38,8 @@
       const rect = card.getBoundingClientRect();
       const x = (event.clientX - rect.left) / rect.width - 0.5;
       const y = (event.clientY - rect.top) / rect.height - 0.5;
-      card.style.setProperty("--tilt-x", `${(-y * 4).toFixed(2)}deg`);
-      card.style.setProperty("--tilt-y", `${(x * 5).toFixed(2)}deg`);
+      card.style.setProperty("--tilt-x", `${(-y * 2.2).toFixed(2)}deg`);
+      card.style.setProperty("--tilt-y", `${(x * 2.8).toFixed(2)}deg`);
       card.style.setProperty("--glow-x", `${event.clientX - rect.left}px`);
       card.style.setProperty("--glow-y", `${event.clientY - rect.top}px`);
       card.classList.add("is-tilting");
@@ -49,41 +52,18 @@
     });
   });
 
-  const scores = document.querySelectorAll(".cinema-card strong, .report-score strong, .match-score strong, .live-score strong");
-  const scoreObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      const el = entry.target;
-      const raw = el.textContent.trim();
-      const target = parseInt(raw.replace("%", ""), 10);
-      if (!Number.isFinite(target)) {
-        scoreObserver.unobserve(el);
-        return;
-      }
-
-      const start = performance.now();
-      const duration = 950;
-      function tick(now) {
-        const p = Math.min((now - start) / duration, 1);
-        const eased = 1 - Math.pow(1 - p, 3);
-        el.textContent = `${Math.round(target * eased)}%`;
-        if (p < 1) requestAnimationFrame(tick);
-      }
-      el.textContent = "0%";
-      requestAnimationFrame(tick);
-      scoreObserver.unobserve(el);
-    });
-  }, { threshold: 0.65 });
-
-  scores.forEach((el) => scoreObserver.observe(el));
-
-  // Subtle parallax only on the premium hero
-  const hero = document.querySelector(".premium-hero");
+  // Very subtle hero parallax only. No animated score numbers.
   const product = document.querySelector(".product-cinema");
-  if (hero && product) {
+  if (product) {
+    let ticking = false;
     window.addEventListener("scroll", () => {
-      const y = Math.min(window.scrollY, 700);
-      product.style.setProperty("--hero-parallax", `${y * -0.025}px`);
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const y = Math.min(window.scrollY, 700);
+        product.style.setProperty("--hero-parallax", `${y * -0.018}px`);
+        ticking = false;
+      });
     }, { passive: true });
   }
 })();

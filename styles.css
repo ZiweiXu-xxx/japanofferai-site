@@ -3285,3 +3285,251 @@ main::before {
     border-radius: 30px;
   }
 }
+
+
+/* Step 13: premium refinement - nav, typography, calmer motion */
+
+.premium-topbar,
+.topbar {
+  grid-template-columns: auto minmax(220px, 340px) minmax(420px, 1fr) auto;
+  gap: 14px;
+}
+
+.nav {
+  gap: 2px;
+  min-width: 0;
+}
+
+.nav a {
+  white-space: nowrap;
+  font-size: 13px;
+  padding: 10px 10px;
+  letter-spacing: -0.01em;
+}
+
+.auth-links {
+  flex-shrink: 0;
+}
+
+.hero-stage {
+  grid-template-columns: minmax(0, 0.92fr) minmax(500px, 0.9fr);
+  gap: 46px;
+}
+
+.hero-copy h1 {
+  max-width: 680px;
+  margin-bottom: 22px;
+  font-size: clamp(48px, 5.8vw, 84px);
+  line-height: 0.96;
+  letter-spacing: -0.072em;
+  font-weight: 850;
+}
+
+.hero-copy h1 span {
+  margin-top: 6px;
+  font-size: clamp(44px, 5.2vw, 76px);
+  line-height: 0.98;
+  letter-spacing: -0.07em;
+  font-weight: 850;
+  background: linear-gradient(135deg, #0a66c2 0%, #004182 72%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+}
+
+.hero-lede {
+  max-width: 660px;
+  font-size: 16.5px;
+  line-height: 1.72;
+}
+
+.premium-search-card {
+  max-width: 760px;
+  margin-top: 26px;
+  border-radius: 24px;
+}
+
+.premium-search-row {
+  grid-template-columns: 1.15fr 0.95fr auto;
+}
+
+.premium-search-row label {
+  min-height: 62px;
+  border-radius: 16px;
+}
+
+.premium-search-row input {
+  font-size: 14px;
+}
+
+.premium-search-button {
+  min-height: 62px;
+  border-radius: 16px;
+  padding: 0 20px;
+}
+
+.product-cinema {
+  transform: translateY(var(--hero-parallax, 0)) scale(0.96);
+  transform-origin: center right;
+}
+
+.cinema-window {
+  border-radius: 30px;
+  box-shadow:
+    0 26px 76px rgba(9, 33, 61, 0.15),
+    inset 0 1px 0 rgba(255,255,255,.8);
+}
+
+.cinema-layout {
+  grid-template-columns: 112px 1fr;
+  gap: 14px;
+  padding: 18px;
+}
+
+.cinema-sidebar {
+  min-height: 450px;
+}
+
+.cinema-card {
+  padding: 16px;
+  border-radius: 20px;
+}
+
+.cinema-card h3 {
+  font-size: 16px;
+}
+
+.cinema-card p {
+  font-size: 12px;
+}
+
+.cinema-card strong {
+  font-size: 25px;
+  min-width: 52px;
+  text-align: right;
+}
+
+.cinema-tags span {
+  padding: 7px 9px;
+  font-size: 11px;
+}
+
+.candidate-glass {
+  padding: 15px;
+  border-radius: 20px;
+}
+
+.floating-proof {
+  display: none;
+}
+
+/* Calmer, less "moving around" animation */
+.orb {
+  opacity: 0.45;
+  filter: blur(48px);
+}
+
+.grid-glow {
+  opacity: 0.18;
+  animation-duration: 42s;
+}
+
+.marquee-track {
+  animation-duration: 48s;
+}
+
+.match-card.best,
+.role-row:first-of-type,
+.live-job-card:first-child {
+  animation: none !important;
+}
+
+.company-icon,
+.candidate-avatar,
+.profile-avatar,
+.shortlist-row span,
+.mini-avatar {
+  animation: none !important;
+  box-shadow: none !important;
+}
+
+.cinema-card strong,
+.report-score strong,
+.match-score strong,
+.live-score strong {
+  animation: none !important;
+  transition: none !important;
+}
+
+.is-tilting {
+  transform:
+    perspective(1000px)
+    rotateX(var(--tilt-x, 0deg))
+    rotateY(var(--tilt-y, 0deg))
+    translateY(-2px);
+}
+
+/* More refined section typography */
+.narrative-grid h2,
+.showcase-copy h2,
+.final-card h2 {
+  font-size: clamp(36px, 4.3vw, 62px);
+  line-height: 1.02;
+  letter-spacing: -0.058em;
+  font-weight: 850;
+}
+
+.studio-card h3 {
+  font-weight: 850;
+}
+
+@media (max-width: 1180px) {
+  .premium-topbar,
+  .topbar {
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .top-search {
+    display: none;
+  }
+
+  .nav {
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 1100px) {
+  .hero-stage {
+    grid-template-columns: 1fr;
+  }
+
+  .product-cinema {
+    transform: none;
+    max-width: 720px;
+  }
+}
+
+@media (max-width: 760px) {
+  .nav {
+    display: none;
+  }
+
+  .hero-copy h1 {
+    font-size: 44px;
+    letter-spacing: -0.06em;
+  }
+
+  .hero-copy h1 span {
+    font-size: 40px;
+    letter-spacing: -0.06em;
+  }
+
+  .premium-search-row {
+    grid-template-columns: 1fr;
+  }
+}
