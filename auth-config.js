@@ -4,5 +4,7 @@
 // Step 3: Replace the two values below with your Project URL and anon public key.
 // The anon public key is designed to be used in browser apps. Do NOT paste your service_role key here.
 
-window.JAPANOFFER_SUPABASE_URL = "PASTE_YOUR_SUPABASE_PROJECT_URL_HERE";
-window.JAPANOFFER_SUPABASE_ANON_KEY = "PASTE_YOUR_SUPABASE_ANON_PUBLIC_KEY_HERE";
+// JapanOffer AI Auth Configuration
+
+window.JAPANOFFER_SUPABASE_URL = "https://ojpoegtnksfumvepxdpj.supabase.co";
+window.JAPANOFFER_SUPABASE_ANON_KEY = "sb_publishable_8f1e2cJN7xKZMiWAaqVRYQ_mqOP_Es5";
