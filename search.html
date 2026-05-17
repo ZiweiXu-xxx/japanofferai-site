@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>搜索 | JapanOffer AI</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    :root {
+      --blue:#0a66c2;
+      --blue-dark:#003f88;
+      --ink:#061a33;
+      --muted:#607086;
+      --line:rgba(7,27,54,.10);
+      --card:rgba(255,255,255,.84);
+      --shadow:0 24px 80px rgba(10,35,68,.10);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin:0;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 8% 8%, rgba(10,102,194,.13), transparent 32%),
+        radial-gradient(circle at 90% 0%, rgba(80,167,255,.13), transparent 30%),
+        linear-gradient(135deg, #f7fbff 0%, #ffffff 46%, #edf5ff 100%);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      min-height: 76px;
+      display: grid;
+      grid-template-columns: auto minmax(260px, 520px) 1fr;
+      gap: 18px;
+      align-items: center;
+      padding: 15px 30px;
+      background: rgba(255,255,255,.86);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display:inline-flex;
+      align-items:center;
+      gap:12px;
+      color:inherit;
+      text-decoration:none;
+    }
+
+    .logo {
+      width:44px;
+      height:44px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      color:#fff;
+      font-weight:950;
+      font-size:23px;
+      background:linear-gradient(135deg,var(--blue),var(--blue-dark));
+      box-shadow:0 14px 34px rgba(10,102,194,.24);
+    }
+
+    .brand strong { display:block;font-size:18px;letter-spacing:-.035em; }
+    .brand small { display:block;color:var(--muted);font-size:12px;font-weight:760; }
+
+    .searchbox {
+      height: 48px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.82);
+      display:flex;
+      align-items:center;
+      padding:0 18px;
+      gap:10px;
+    }
+
+    .searchbox input {
+      border:0;
+      outline:0;
+      background:transparent;
+      width:100%;
+      color:var(--ink);
+      font:inherit;
+      font-weight:760;
+    }
+
+    .nav {
+      display:flex;
+      justify-content:flex-end;
+      gap:18px;
+      align-items:center;
+    }
+
+    .nav a {
+      color:#243650;
+      text-decoration:none;
+      font-size:14px;
+      font-weight:850;
+      white-space:nowrap;
+    }
+
+    main {
+      width:min(1180px, calc(100% - 44px));
+      margin:0 auto;
+      padding:54px 0 90px;
+    }
+
+    .hero {
+      border-radius:36px;
+      background:var(--card);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      padding:38px;
+      backdrop-filter:blur(16px);
+      margin-bottom:24px;
+    }
+
+    .eyebrow {
+      color:var(--blue);
+      text-transform:uppercase;
+      letter-spacing:.18em;
+      font-size:12px;
+      font-weight:950;
+      margin-bottom:14px;
+    }
+
+    h1 {
+      margin:0;
+      font-size:clamp(42px,5vw,72px);
+      line-height:.96;
+      letter-spacing:-.075em;
+      font-weight:950;
+    }
+
+    h1 span { color:var(--blue); }
+
+    .hero p {
+      margin:20px 0 0;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.7;
+      font-weight:680;
+    }
+
+    .tabs {
+      display:flex;
+      flex-wrap:wrap;
+      gap:9px;
+      margin:20px 0;
+    }
+
+    .tab {
+      min-height:38px;
+      border-radius:999px;
+      border:1px solid rgba(10,102,194,.18);
+      background:rgba(255,255,255,.78);
+      color:var(--blue);
+      padding:0 14px;
+      font:inherit;
+      font-size:13px;
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    .tab.active {
+      color:#fff;
+      border-color:transparent;
+      background:linear-gradient(135deg,var(--blue),var(--blue-dark));
+    }
+
+    .results {
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:16px;
+    }
+
+    .result {
+      display:flex;
+      flex-direction:column;
+      min-height:230px;
+      padding:24px;
+      border-radius:30px;
+      background:var(--card);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      color:var(--ink);
+      text-decoration:none;
+      backdrop-filter:blur(16px);
+      transition:transform .18s ease, box-shadow .18s ease;
+    }
+
+    .result:hover {
+      transform:translateY(-3px);
+      box-shadow:0 30px 90px rgba(10,35,68,.15);
+    }
+
+    .result-top {
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:flex-start;
+    }
+
+    .badge {
+      display:inline-flex;
+      min-height:30px;
+      align-items:center;
+      border-radius:999px;
+      padding:0 10px;
+      background:rgba(10,102,194,.09);
+      color:#064b93;
+      font-size:12px;
+      font-weight:900;
+      white-space:nowrap;
+    }
+
+    .result h2 {
+      margin:22px 0 8px;
+      font-size:25px;
+      line-height:1.08;
+      letter-spacing:-.05em;
+    }
+
+    .result p {
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.65;
+      font-weight:650;
+    }
+
+    .result strong {
+      margin-top:auto;
+      padding-top:18px;
+      color:var(--blue);
+      font-size:14px;
+      font-weight:950;
+    }
+
+    .empty {
+      grid-column:1/-1;
+      padding:28px;
+      border-radius:28px;
+      background:rgba(255,255,255,.78);
+      border:1px dashed rgba(7,27,54,.16);
+      color:var(--muted);
+      line-height:1.7;
+      font-weight:700;
+    }
+
+    @media (max-width: 820px) {
+      .topbar { grid-template-columns:1fr; }
+      .nav { justify-content:flex-start; overflow:auto; }
+      .results { grid-template-columns:1fr; }
+      main { width:min(100% - 28px, 1180px); padding-top:34px; }
+      .hero { border-radius:28px; padding:24px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <span class="logo">J</span>
+      <span>
+        <strong>JapanOffer AI</strong>
+        <small>Global Search</small>
+      </span>
+    </a>
+
+    <label class="searchbox">
+      <span>⌕</span>
+      <input id="searchPageInput" placeholder="搜索职位、公司、人脉或功能" autofocus />
+    </label>
+
+    <nav class="nav">
+      <a href="index.html">首页</a>
+      <a href="jobs.html">职位</a>
+      <a href="applications.html">申请</a>
+      <a href="network.html">人脉</a>
+      <a href="profile.html">我的主页</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="eyebrow">Search everything</div>
+      <h1>搜索职位、公司、<span>人脉和申请工具。</span></h1>
+      <p id="summary">输入关键词后，系统会从 JapanOffer AI 的职位库、公司库、人脉路线和核心功能里找结果。</p>
+    </section>
+
+    <div class="tabs">
+      <button class="tab active" data-type="all">全部</button>
+      <button class="tab" data-type="job">职位</button>
+      <button class="tab" data-type="company">公司</button>
+      <button class="tab" data-type="network">人脉</button>
+      <button class="tab" data-type="page">页面</button>
+    </div>
+
+    <section class="results" id="results"></section>
+  </main>
+
+  <script src="search-data.js"></script>
+  <script src="global-search.js"></script>
+  <script>
+    (function () {
+      const input = document.getElementById("searchPageInput");
+      const resultsEl = document.getElementById("results");
+      const summary = document.getElementById("summary");
+      const tabs = Array.from(document.querySelectorAll(".tab"));
+      let activeType = "all";
+
+      function typeLabel(type) {
+        return { job: "职位", company: "公司", network: "人脉", page: "页面" }[type] || "结果";
+      }
+
+      function escapeHtml(value) {
+        return String(value ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function render() {
+        const q = input.value.trim();
+        let list = window.JAPANOFFER_SEARCH?.search(q, 50) || [];
+
+        if (!q) {
+          list = (window.JAPANOFFER_SEARCH_INDEX || []).slice(0, 12).map((item) => ({ ...item, _score: item.score || 0 }));
+        }
+
+        if (activeType !== "all") {
+          list = list.filter((item) => item.type === activeType);
+        }
+
+        summary.textContent = q
+          ? `搜索「${q}」：找到 ${list.length} 个结果。`
+          : "你可以搜索 legal、web3、Japan、Hong Kong AML、CV、申请中心等关键词。";
+
+        if (!list.length) {
+          resultsEl.innerHTML = `<div class="empty">没有找到结果。可以换成岗位方向、国家、公司类型或技能关键词。</div>`;
+          return;
+        }
+
+        resultsEl.innerHTML = list.map((item) => `
+          <a class="result" href="${escapeHtml(item.href)}">
+            <div class="result-top">
+              <span class="badge">${escapeHtml(typeLabel(item.type))}</span>
+              <span class="badge">${escapeHtml(item.market || "Global")}</span>
+            </div>
+            <h2>${escapeHtml(item.title)}</h2>
+            <p>${escapeHtml(item.subtitle || item.description || "")}</p>
+            <strong>打开 →</strong>
+          </a>
+        `).join("");
+      }
+
+      input.addEventListener("input", render);
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          activeType = tab.dataset.type;
+          tabs.forEach((item) => item.classList.toggle("active", item === tab));
+          render();
+        });
+      });
+
+      const params = new URLSearchParams(window.location.search);
+      input.value = params.get("q") || "";
+      render();
+    })();
+  </script>
+</body>
+</html>
