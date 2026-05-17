@@ -378,7 +378,7 @@
             <button class="btn ${saved ? "green" : ""}" data-action="save" data-id="${escapeHtml(job.id)}">
               ${saved ? "已保存" : "保存岗位"}
             </button>
-            <button class="btn primary" data-action="apply" data-id="${escapeHtml(job.id)}">申请建议</button>
+            <button class="btn primary" data-action="apply" data-id="${escapeHtml(job.id)}">进入申请</button>
           </div>
         </article>
       `;
@@ -526,61 +526,46 @@
     logEvent("job_saved", job.id);
   }
 
-  function generateApplicationAdvice(jobId) {
+  async function generateApplicationAdvice(jobId) {
     const job = jobs.find((item) => item.id === jobId);
     if (!job) return;
 
-    const score = calculateScore(job);
-    const name = currentProfile?.full_name || "你";
-    const profileLine = [
-      currentProfile?.headline,
-      currentProfile?.career_direction,
-      currentProfile?.target_market,
-      currentProfile?.languages
-    ].filter(Boolean).join(" · ");
-
-    const strengths = getReasons(job, score);
-    const gaps = [];
-
-    if (job.market === "Japan" && !normalize(currentProfile?.languages).includes("japanese") && !normalize(currentProfile?.languages).includes("日")) {
-      gaps.push("如果目标是日本岗位，需要补充日语能力或说明可以用英文工作。");
+    if (!supabaseClient || !currentUser) {
+      showStatus(applyStatus, "请先登录，再进入申请中心。", "error");
+      return;
     }
 
-    if (job.category.includes("Finance") && !profileText().includes("aml") && !profileText().includes("kyc")) {
-      gaps.push("建议在 CV 中突出 AML / KYC / due diligence / risk review 相关关键词。");
+    showStatus(applyStatus, "正在保存岗位，并跳转到申请中心...", "info");
+
+    const payload = {
+      user_id: currentUser.id,
+      job_id: job.id,
+      job_title: job.title,
+      company_name: job.company,
+      market: job.market,
+      category: job.category,
+      match_score: calculateScore(job),
+      job_snapshot: job,
+      updated_at: new Date().toISOString()
+    };
+
+    const { error } = await supabaseClient
+      .from("saved_jobs")
+      .upsert(payload, { onConflict: "user_id,job_id" });
+
+    if (error) {
+      showStatus(applyStatus, `保存岗位失败：${error.message}`, "error");
+      return;
     }
 
-    if (job.category.includes("Web3") && !profileText().includes("web3") && !profileText().includes("crypto")) {
-      gaps.push("建议补充 Web3、交易所、区块链合规或虚拟资产监管相关项目经历。");
-    }
+    savedJobIds.add(job.id);
+    renderJobs();
+    renderSavedJobs();
+    logEvent("enter_application_hub", job.id);
 
-    if (!gaps.length) {
-      gaps.push("目前主要问题不是方向不匹配，而是需要把经历写得更像岗位要求。");
-    }
-
-    const output = [
-      `岗位：${job.title}`,
-      `公司方向：${job.company}`,
-      `市场：${job.market} / ${job.city}`,
-      `你的匹配分：${score}`,
-      "",
-      `申请定位：`,
-      `${name} 可以把自己定位为「${job.category} 方向的跨境候选人」。${profileLine ? `当前资料显示：${profileLine}。` : ""}`,
-      "",
-      `可以强调的优势：`,
-      ...strengths.map((item) => `- ${item}`),
-      "",
-      `需要补强的地方：`,
-      ...gaps.map((item) => `- ${item}`),
-      "",
-      `Cover Letter 开头可以这样写：`,
-      `I am interested in the ${job.title} route because my background combines international legal/business training, multilingual communication, and a clear interest in ${job.category.toLowerCase()}. I am particularly interested in roles where cross-border understanding, compliance awareness and practical execution are valued.`
-    ].join("\n");
-
-    applyOutput.textContent = output;
-    applyOutput.classList.add("show");
-    showStatus(applyStatus, "已生成申请建议。之后可以升级成完整 Cover Letter 和 CV 修改版。", "success");
-    logEvent("application_advice_generated", job.id);
+    setTimeout(() => {
+      window.location.href = `applications.html?job=${encodeURIComponent(job.id)}`;
+    }, 350);
   }
 
   async function logEvent(eventName, jobId) {

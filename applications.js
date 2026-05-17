@@ -398,7 +398,12 @@
     renderSavedJobs();
     renderDrafts();
 
-    if (savedJobs.length) {
+    const params = new URLSearchParams(window.location.search);
+    const preferredJobId = params.get("job");
+
+    if (preferredJobId && savedJobs.some((job) => job.job_id === preferredJobId)) {
+      selectJob(preferredJobId);
+    } else if (savedJobs.length) {
       selectJob(savedJobs[0].job_id);
     }
   }
