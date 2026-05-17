@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>我的主页 | JapanOffer AI</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    :root {
+      --blue: #0a66c2;
+      --blue-dark: #003f88;
+      --ink: #071b36;
+      --muted: #607086;
+      --line: rgba(7,27,54,.10);
+      --card: rgba(255,255,255,.82);
+      --shadow: 0 24px 80px rgba(10,35,68,.10);
+      --green: #0f8a5f;
+      --red: #b42318;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 8% 10%, rgba(10,102,194,.14), transparent 34%),
+        radial-gradient(circle at 92% 4%, rgba(80,167,255,.15), transparent 32%),
+        linear-gradient(135deg, #f7fbff 0%, #ffffff 48%, #edf5ff 100%);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: grid;
+      grid-template-columns: auto minmax(220px, 360px) 1fr auto;
+      align-items: center;
+      gap: 18px;
+      min-height: 76px;
+      padding: 15px 30px;
+      background: rgba(255,255,255,.86);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: inherit;
+      text-decoration: none;
+      min-width: 0;
+    }
+
+    .logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 950;
+      font-size: 23px;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      box-shadow: 0 14px 34px rgba(10,102,194,.24);
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 18px;
+      letter-spacing: -.035em;
+    }
+
+    .brand small {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 760;
+    }
+
+    .search {
+      height: 44px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.76);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 760;
+      min-width: 0;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: flex-end;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .nav a {
+      color: #243650;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .nav a.active {
+      color: var(--blue);
+    }
+
+    .primary-link {
+      color: #fff !important;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      padding: 11px 16px;
+      border-radius: 999px;
+      box-shadow: 0 12px 26px rgba(10,102,194,.22);
+    }
+
+    main {
+      width: min(1180px, calc(100% - 44px));
+      margin: 0 auto;
+      padding: 54px 0 90px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, .95fr) minmax(360px, 520px);
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .hero-card,
+    .panel,
+    .upload-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .hero-card {
+      border-radius: 34px;
+      padding: 38px;
+      min-height: 390px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .eyebrow {
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      font-size: 12px;
+      font-weight: 950;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(44px, 5.8vw, 74px);
+      line-height: .96;
+      letter-spacing: -.074em;
+      font-weight: 950;
+    }
+
+    h1 span {
+      display: block;
+      color: var(--blue);
+    }
+
+    .hero-card p {
+      margin: 22px 0 0;
+      max-width: 760px;
+      color: #52647a;
+      font-size: 17px;
+      line-height: 1.75;
+      font-weight: 680;
+    }
+
+    .upload-card {
+      border-radius: 34px;
+      padding: 28px;
+      min-height: 390px;
+    }
+
+    .upload-card h2,
+    .panel h2 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: -.05em;
+      line-height: 1.05;
+    }
+
+    .upload-card p,
+    .panel p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+      font-weight: 650;
+    }
+
+    .auth-box {
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(247,250,255,.92);
+      border: 1px solid rgba(7,27,54,.08);
+      margin: 18px 0;
+    }
+
+    .auth-box strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .auth-box span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+      font-weight: 650;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .btn {
+      min-height: 44px;
+      border-radius: 999px;
+      padding: 0 16px;
+      border: 1px solid rgba(10,102,194,.18);
+      background: rgba(255,255,255,.80);
+      color: var(--blue);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font: inherit;
+      font-weight: 920;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .btn.primary {
+      color: #fff;
+      border-color: transparent;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      box-shadow: 0 16px 36px rgba(10,102,194,.24);
+    }
+
+    .btn.danger {
+      color: var(--red);
+      border-color: rgba(180,35,24,.22);
+    }
+
+    .upload-drop {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-height: 154px;
+      padding: 22px;
+      border: 1.5px dashed rgba(10,102,194,.34);
+      border-radius: 24px;
+      background: rgba(247,250,255,.88);
+      text-align: center;
+      cursor: pointer;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+
+    .upload-drop:hover {
+      transform: translateY(-1px);
+      border-color: rgba(10,102,194,.58);
+      background: rgba(239,247,255,.96);
+    }
+
+    .upload-drop input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .upload-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 950;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      box-shadow: 0 14px 30px rgba(10,102,194,.2);
+      margin: 0 auto 12px;
+    }
+
+    .upload-drop strong {
+      display: block;
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+
+    .upload-drop span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+      font-weight: 650;
+    }
+
+    .cv-card {
+      display: none;
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.86);
+      border: 1px solid rgba(7,27,54,.09);
+    }
+
+    .cv-card.show {
+      display: block;
+    }
+
+    .cv-card strong {
+      display: block;
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .cv-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+      font-weight: 650;
+    }
+
+    .panel-grid {
+      display: grid;
+      grid-template-columns: .9fr 1.1fr;
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .panel {
+      border-radius: 30px;
+      padding: 26px;
+    }
+
+    .field-grid {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    label.field span {
+      display: block;
+      margin-bottom: 8px;
+      color: #26374d;
+      font-size: 13px;
+      font-weight: 880;
+    }
+
+    .input,
+    .textarea,
+    .select {
+      width: 100%;
+      border: 1px solid rgba(7,27,54,.12);
+      border-radius: 18px;
+      background: rgba(255,255,255,.90);
+      color: var(--ink);
+      font: inherit;
+      font-size: 14px;
+      font-weight: 650;
+      outline: none;
+      padding: 13px 14px;
+    }
+
+    .textarea {
+      min-height: 112px;
+      resize: vertical;
+      line-height: 1.65;
+    }
+
+    .input:focus,
+    .textarea:focus,
+    .select:focus {
+      border-color: rgba(10,102,194,.48);
+      box-shadow: 0 0 0 4px rgba(10,102,194,.10);
+    }
+
+    .profile-summary {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(247,250,255,.92);
+      border: 1px solid rgba(7,27,54,.08);
+      color: #26374d;
+      font-size: 13px;
+      font-weight: 780;
+    }
+
+    .summary-row span {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .status {
+      display: none;
+      margin-top: 14px;
+      padding: 13px 15px;
+      border-radius: 16px;
+      font-size: 13px;
+      line-height: 1.55;
+      font-weight: 820;
+    }
+
+    .status.show {
+      display: block;
+    }
+
+    .status.success {
+      color: var(--green);
+      background: rgba(16,185,129,.10);
+    }
+
+    .status.error {
+      color: var(--red);
+      background: rgba(180,35,24,.10);
+    }
+
+    .locked {
+      opacity: .58;
+      pointer-events: none;
+    }
+
+    @media (max-width: 980px) {
+      .topbar {
+        grid-template-columns: auto 1fr auto;
+      }
+
+      .search {
+        display: none;
+      }
+
+      .hero,
+      .panel-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .topbar {
+        padding: 13px 16px;
+      }
+
+      .brand small,
+      .nav a:nth-child(n+4) {
+        display: none;
+      }
+
+      main {
+        width: min(100% - 28px, 1180px);
+        padding: 40px 0 68px;
+      }
+
+      .hero-card,
+      .upload-card,
+      .panel {
+        border-radius: 26px;
+        padding: 22px;
+      }
+
+      h1 {
+        font-size: 46px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <span class="logo">J</span>
+      <span>
+        <strong>JapanOffer AI</strong>
+        <small>Personal Career Profile</small>
+      </span>
+    </a>
+
+    <div class="search">搜索职位、公司、人脉或目标市场</div>
+
+    <nav class="nav">
+      <a href="index.html">首页</a>
+      <a href="network.html">人脉</a>
+      <a href="jobs.html">职位</a>
+      <a href="match.html">AI 匹配</a>
+      <a href="companies.html">公司</a>
+      <a class="active" href="profile.html">我的主页</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-card">
+        <div class="eyebrow">Personal profile</div>
+        <h1>保存你的履历。<span>一键用于申请。</span></h1>
+        <p>
+          用户注册后，可以在这里保存个人主页、目标市场、职业方向和 CV。之后申请岗位、生成 AI 匹配报告、联系企业时，都可以直接调用这份资料。
+        </p>
+        <div class="btn-row">
+          <a class="btn primary" href="match.html">用我的资料做 AI 匹配</a>
+          <a class="btn" href="jobs.html">查看职位</a>
+        </div>
+      </div>
+
+      <aside class="upload-card">
+        <h2>上传 CV / Resume</h2>
+        <p>支持 PDF、DOC、DOCX。登录后文件会保存到你的账号下，不会因为刷新页面消失。</p>
+
+        <div class="auth-box" id="authBox">
+          <strong>正在检查登录状态...</strong>
+          <span>如果没有登录，请先注册或登录，再上传 CV。</span>
+        </div>
+
+        <label class="upload-drop" id="uploadDrop">
+          <input id="cvInput" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+          <div>
+            <div class="upload-icon">CV</div>
+            <strong>点击这里选择文件</strong>
+            <span>最大建议 5MB。文件会保存到 Supabase Storage。</span>
+          </div>
+        </label>
+
+        <div class="cv-card" id="cvCard">
+          <strong id="cvName">还没有上传 CV</strong>
+          <span id="cvMeta">上传后会显示文件名和保存时间。</span>
+          <div class="btn-row">
+            <button class="btn" id="downloadCvButton" type="button">打开 CV</button>
+            <button class="btn danger" id="deleteCvButton" type="button">删除 CV</button>
+          </div>
+        </div>
+
+        <div class="status" id="uploadStatus"></div>
+      </aside>
+    </section>
+
+    <section class="panel-grid">
+      <div class="panel">
+        <h2>个人资料</h2>
+        <p>这里会成为用户的个人主页基础资料。先做 MVP 保存，之后可以升级成公开/私密 Profile。</p>
+
+        <div class="field-grid" id="profileForm">
+          <label class="field">
+            <span>姓名</span>
+            <input class="input" id="fullName" placeholder="例如：Ziwei Xu" />
+          </label>
+
+          <label class="field">
+            <span>当前身份</span>
+            <input class="input" id="headline" placeholder="例如：LLB student · Legal / Compliance target" />
+          </label>
+
+          <label class="field">
+            <span>目标市场</span>
+            <select class="select" id="targetMarket">
+              <option value="">请选择</option>
+              <option>日本</option>
+              <option>香港</option>
+              <option>新加坡</option>
+              <option>英国</option>
+              <option>多个市场</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>职业方向</span>
+            <select class="select" id="careerDirection">
+              <option value="">请选择</option>
+              <option>法律 / 合规</option>
+              <option>金融 / 合规</option>
+              <option>Web3 / 金融合规</option>
+              <option>国际业务</option>
+              <option>数据 / 分析</option>
+              <option>市场 / 运营</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>语言能力</span>
+            <input class="input" id="languages" placeholder="例如：中文 / English / 日本語" />
+          </label>
+
+          <label class="field">
+            <span>个人简介</span>
+            <textarea class="textarea" id="bio" placeholder="简单写一下你的背景、优势和目标岗位。"></textarea>
+          </label>
+
+          <button class="btn primary" id="saveProfileButton" type="button">保存个人资料</button>
+          <div class="status" id="profileStatus"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>申请资料概览</h2>
+        <p>之后用户申请岗位时，就可以直接用这里保存的资料和 CV。</p>
+
+        <div class="profile-summary">
+          <div class="summary-row"><span>账号状态</span><strong id="summaryAuth">检查中</strong></div>
+          <div class="summary-row"><span>姓名</span><strong id="summaryName">未填写</strong></div>
+          <div class="summary-row"><span>方向</span><strong id="summaryCareer">未选择</strong></div>
+          <div class="summary-row"><span>市场</span><strong id="summaryMarket">未选择</strong></div>
+          <div class="summary-row"><span>语言</span><strong id="summaryLanguages">未填写</strong></div>
+          <div class="summary-row"><span>CV</span><strong id="summaryCv">未上传</strong></div>
+        </div>
+
+        <div class="btn-row">
+          <a class="btn primary" href="match.html">生成匹配报告</a>
+          <a class="btn" href="network.html">进入人脉网络</a>
+          <a class="btn" href="jobs.html">用资料申请岗位</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="auth-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="profile.js"></script>
+</body>
+</html>
