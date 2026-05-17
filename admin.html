@@ -6,58 +6,425 @@
   <title>Admin Dashboard | JapanOffer AI</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
-    .admin-shell { width: min(1200px, calc(100% - 40px)); margin: 0 auto; padding: 54px 0 90px; }
-    .admin-head { display: flex; justify-content: space-between; gap: 18px; align-items: end; margin-bottom: 24px; }
-    .admin-head h1 { margin: 0; color: var(--navy); font-size: clamp(38px, 5vw, 68px); line-height: 1; letter-spacing: -0.06em; }
-    .admin-login { display: flex; gap: 10px; padding: 14px; border: 1px solid var(--line); border-radius: 20px; background: white; box-shadow: var(--soft-shadow); }
-    .admin-login input { min-height: 46px; border: 1px solid var(--line); border-radius: 14px; padding: 0 14px; }
-    .admin-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 24px 0; }
-    .admin-card, .admin-panel { border: 1px solid var(--line); border-radius: 24px; background: white; box-shadow: var(--soft-shadow); }
-    .admin-card { padding: 22px; }
-    .admin-card span { display: block; color: var(--muted); font-size: 12px; font-weight: 950; text-transform: uppercase; letter-spacing: .12em; }
-    .admin-card strong { display: block; margin-top: 14px; color: var(--blue); font-size: 38px; letter-spacing: -0.06em; }
-    .admin-panels { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .admin-panel { padding: 24px; }
-    .admin-panel h2 { margin: 0 0 18px; color: var(--navy); font-size: 26px; letter-spacing: -0.04em; }
-    .bar-row { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; margin: 12px 0; color: var(--muted); }
-    .bar { grid-column: 1 / -1; height: 8px; border-radius: 999px; background: #eef6ff; overflow: hidden; }
-    .bar i { display: block; height: 100%; border-radius: inherit; background: var(--blue); }
-    .recent-list { display: grid; gap: 10px; }
-    .recent-item { padding: 14px; border: 1px solid var(--line); border-radius: 16px; background: #f8fbff; }
-    .recent-item strong { display: block; color: var(--navy); }
-    .recent-item span { color: var(--muted); font-size: 13px; }
-    .admin-error { padding: 14px; border-radius: 16px; background: #fff0f0; color: #9b1c1c; font-weight: 850; }
-    @media (max-width: 900px) { .admin-grid, .admin-panels { grid-template-columns: 1fr; } .admin-head { display: block; } .admin-login { margin-top: 18px; flex-direction: column; } }
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #f4f8ff 0%, #ffffff 48%, #edf5ff 100%);
+      color: #071b36;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .admin-shell {
+      min-height: 100vh;
+    }
+
+    .admin-topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: grid;
+      grid-template-columns: auto minmax(220px, 360px) 1fr auto;
+      align-items: center;
+      gap: 18px;
+      padding: 18px 28px;
+      background: rgba(255,255,255,.82);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(9, 33, 61, .08);
+    }
+
+    .admin-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+      min-width: 0;
+    }
+
+    .admin-brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 900;
+      font-size: 22px;
+      background: linear-gradient(135deg, #0a66c2, #004182);
+      box-shadow: 0 14px 30px rgba(10,102,194,.2);
+    }
+
+    .admin-brand strong {
+      display: block;
+      font-size: 18px;
+      letter-spacing: -.03em;
+    }
+
+    .admin-brand small {
+      display: block;
+      color: #637083;
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    .admin-search {
+      height: 44px;
+      border-radius: 999px;
+      border: 1px solid rgba(9, 33, 61, .1);
+      background: rgba(255,255,255,.72);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      color: #637083;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .admin-nav {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .admin-nav a {
+      color: #26374d;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .admin-main {
+      width: min(1180px, calc(100% - 44px));
+      margin: 0 auto;
+      padding: 74px 0 90px;
+    }
+
+    .admin-hero {
+      display: grid;
+      grid-template-columns: 1fr minmax(320px, 410px);
+      gap: 34px;
+      align-items: end;
+      margin-bottom: 28px;
+    }
+
+    .admin-eyebrow {
+      color: #0a66c2;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      font-size: 12px;
+      font-weight: 950;
+      margin-bottom: 12px;
+    }
+
+    .admin-hero h1 {
+      margin: 0;
+      font-size: clamp(44px, 6vw, 78px);
+      line-height: .95;
+      letter-spacing: -.07em;
+      font-weight: 900;
+    }
+
+    .admin-hero p {
+      max-width: 680px;
+      color: #5a6a7f;
+      font-size: 17px;
+      line-height: 1.72;
+      font-weight: 650;
+    }
+
+    .admin-login-card {
+      padding: 18px;
+      border-radius: 26px;
+      background: rgba(255,255,255,.74);
+      border: 1px solid rgba(9,33,61,.1);
+      box-shadow: 0 22px 70px rgba(9,33,61,.1);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+    }
+
+    .admin-login-card input {
+      min-height: 52px;
+      border-radius: 16px;
+      border: 1px solid rgba(9,33,61,.12);
+      padding: 0 16px;
+      font: inherit;
+      font-weight: 750;
+      outline: none;
+      background: rgba(255,255,255,.88);
+    }
+
+    .admin-login-card button {
+      border: 0;
+      border-radius: 16px;
+      padding: 0 20px;
+      background: linear-gradient(135deg, #0a66c2, #004182);
+      color: #fff;
+      font-weight: 900;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 14px 28px rgba(10,102,194,.22);
+    }
+
+    .admin-error {
+      display: none;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: #fff0f0;
+      color: #a01818;
+      border: 1px solid rgba(210, 60, 60, .2);
+      font-weight: 800;
+      margin: 18px 0;
+      white-space: pre-wrap;
+    }
+
+    .admin-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .metric-card,
+    .admin-panel {
+      background: rgba(255,255,255,.72);
+      border: 1px solid rgba(9,33,61,.09);
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(9,33,61,.08);
+    }
+
+    .metric-card {
+      padding: 22px;
+    }
+
+    .metric-card span {
+      display: block;
+      color: #637083;
+      font-weight: 850;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .metric-card strong {
+      display: block;
+      font-size: 40px;
+      line-height: 1;
+      letter-spacing: -.05em;
+      color: #071b36;
+    }
+
+    .admin-two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .admin-panel {
+      padding: 24px;
+      overflow: hidden;
+    }
+
+    .admin-panel h2 {
+      margin: 0 0 18px;
+      font-size: 22px;
+      letter-spacing: -.04em;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: minmax(110px, 1fr) 2fr auto;
+      gap: 12px;
+      align-items: center;
+      margin: 12px 0;
+      color: #26374d;
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .bar {
+      height: 9px;
+      background: rgba(10,102,194,.1);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar i {
+      display: block;
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #0a66c2, #50a7ff);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px 10px;
+      border-bottom: 1px solid rgba(9,33,61,.08);
+      vertical-align: top;
+    }
+
+    th {
+      color: #637083;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    td {
+      color: #26374d;
+      font-weight: 700;
+    }
+
+    .admin-muted {
+      color: #637083;
+    }
+
+    .loading {
+      opacity: .65;
+      pointer-events: none;
+    }
+
+    @media (max-width: 880px) {
+      .admin-topbar {
+        grid-template-columns: auto 1fr auto;
+      }
+
+      .admin-search {
+        display: none;
+      }
+
+      .admin-hero,
+      .admin-two-col,
+      .admin-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .admin-login-card {
+        grid-template-columns: 1fr;
+      }
+
+      .admin-nav a:nth-child(n+3) {
+        display: none;
+      }
+    }
   </style>
 </head>
-<body class="premium-home">
-  <header class="topbar premium-topbar">
-    <a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-copy"><strong>JapanOffer AI</strong><small>Admin Dashboard</small></span></a>
-    <div class="top-search"><span>⌕</span><input value="User data dashboard" /></div>
-    <nav class="nav"><a href="index.html">Home</a><a href="jobs.html">Jobs</a><a href="report.html">Report</a></nav>
-    <div class="auth-links"><a class="signin-link" href="login.html">Sign in</a></div>
-  </header>
+<body>
+  <div class="admin-shell">
+    <header class="admin-topbar">
+      <a class="admin-brand" href="index.html">
+        <span class="admin-brand-mark">J</span>
+        <span>
+          <strong>JapanOffer AI</strong>
+          <small>Admin Dashboard</small>
+        </span>
+      </a>
 
-  <main class="admin-shell">
-    <section class="admin-head">
-      <div>
-        <p class="eyebrow">Private dashboard</p>
-        <h1>User data summary.</h1>
-      </div>
-      <form class="admin-login" id="adminLogin">
-        <input id="adminPassword" type="password" placeholder="Admin password" />
-        <button class="btn primary" type="submit">Load dashboard</button>
-      </form>
-    </section>
+      <div class="admin-search">⌕ User data dashboard</div>
 
-    <section id="adminOutput">
-      <div class="admin-panel">
-        <h2>What this dashboard shows</h2>
-        <p style="color: var(--muted); line-height: 1.7;">It summarizes report submissions, page views, user interests, target markets, career directions and recent beta activity. Data will appear after users generate reports or browse the site.</p>
-      </div>
-    </section>
-  </main>
+      <nav class="admin-nav">
+        <a href="index.html">Home</a>
+        <a href="jobs.html">Jobs</a>
+        <a href="report.html">Report</a>
+      </nav>
+    </header>
 
+    <main class="admin-main">
+      <section class="admin-hero">
+        <div>
+          <div class="admin-eyebrow">Private dashboard</div>
+          <h1>User data summary.</h1>
+          <p>
+            Track early usage, report generation, target markets, career direction and user behavior from JapanOffer AI.
+          </p>
+        </div>
+
+        <form class="admin-login-card" id="adminForm">
+          <input id="adminPassword" type="password" autocomplete="current-password" placeholder="Admin password" />
+          <button type="submit">Load dashboard</button>
+        </form>
+      </section>
+
+      <div class="admin-error" id="adminError"></div>
+
+      <section class="admin-grid" id="metrics" hidden>
+        <div class="metric-card">
+          <span>Total reports</span>
+          <strong id="totalReports">0</strong>
+        </div>
+        <div class="metric-card">
+          <span>Page events</span>
+          <strong id="totalEvents">0</strong>
+        </div>
+        <div class="metric-card">
+          <span>Unique visitors</span>
+          <strong id="uniqueVisitors">0</strong>
+        </div>
+        <div class="metric-card">
+          <span>Average score</span>
+          <strong id="averageScore">0</strong>
+        </div>
+      </section>
+
+      <section class="admin-two-col" id="charts" hidden>
+        <div class="admin-panel">
+          <h2>Target markets</h2>
+          <div id="marketBars"></div>
+        </div>
+        <div class="admin-panel">
+          <h2>Career directions</h2>
+          <div id="careerBars"></div>
+        </div>
+      </section>
+
+      <section class="admin-two-col" id="tables" hidden>
+        <div class="admin-panel">
+          <h2>Recent reports</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Market</th>
+                  <th>Career</th>
+                  <th>Score</th>
+                </tr>
+              </thead>
+              <tbody id="recentReports"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="admin-panel">
+          <h2>Recent events</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Event</th>
+                  <th>Page</th>
+                </tr>
+              </thead>
+              <tbody id="recentEvents"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="auth-config.js"></script>
   <script src="admin.js"></script>
 </body>
 </html>
