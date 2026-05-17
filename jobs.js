@@ -24,7 +24,7 @@
   let currentProfile = null;
   let savedJobIds = new Set();
 
-  const jobs = [
+  let jobs = [
     {
       id: "jp-legal-compliance-analyst",
       title: "Legal Compliance Analyst",
@@ -290,6 +290,57 @@
     return reasons.slice(0, 3);
   }
 
+  function mapPlatformJob(row) {
+    return {
+      id: row.slug,
+      title: row.title,
+      company: row.company_name || row.subtitle || "Unknown company",
+      companyInitials: String(row.company_name || row.title || "JO")
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((word) => word[0])
+        .join("")
+        .toUpperCase(),
+      market: row.market || "Global",
+      city: row.city || row.market || "",
+      category: row.category || "Other",
+      seniority: row.seniority || "Role target",
+      visa: row.visa || "Visa risk unknown",
+      visaScore: row.visa_score ?? 60,
+      entryScore: row.entry_score ?? 60,
+      languages: Array.isArray(row.languages) ? row.languages : [],
+      skills: Array.isArray(row.skills) ? row.skills : [],
+      description: row.description || "",
+      baseScore: row.match_base ?? row.score ?? 60
+    };
+  }
+
+  async function loadJobsFromDatabase() {
+    if (!supabaseClient) return false;
+
+    try {
+      const { data, error } = await supabaseClient
+        .from("platform_items")
+        .select("*")
+        .eq("item_type", "job")
+        .eq("is_active", true)
+        .order("sort_order", { ascending: true })
+        .order("score", { ascending: false });
+
+      if (error) throw error;
+
+      if (Array.isArray(data) && data.length) {
+        jobs = data.map(mapPlatformJob);
+        return true;
+      }
+    } catch (error) {
+      console.warn("Could not load jobs from platform_items. Static jobs are used.", error);
+    }
+
+    return false;
+  }
+
   function filteredJobs() {
     const q = normalize(searchInput.value);
     const market = marketFilter.value;
@@ -424,6 +475,8 @@
     }
 
     supabaseClient = window.supabase.createClient(config.url, config.key);
+
+    await loadJobsFromDatabase();
 
     const { data, error } = await supabaseClient.auth.getUser();
 

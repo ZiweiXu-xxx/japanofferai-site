@@ -303,6 +303,8 @@
     <section class="results" id="results"></section>
   </main>
 
+  <script src="auth-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="search-data.js"></script>
   <script src="global-search.js"></script>
   <script>
@@ -361,6 +363,7 @@
       }
 
       input.addEventListener("input", render);
+      window.addEventListener("japanoffer-search-ready", render);
 
       tabs.forEach((tab) => {
         tab.addEventListener("click", () => {

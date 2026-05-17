@@ -1,8 +1,10 @@
-// JapanOffer AI - Step 33 Global Search
-// Makes the header search actually searchable.
+// JapanOffer AI - Step 34 Database-backed Global Search
+// Loads search data from Supabase platform_items when available.
+// Falls back to search-data.js static index if database is not ready.
 
 (function () {
-  const index = window.JAPANOFFER_SEARCH_INDEX || [];
+  let index = Array.isArray(window.JAPANOFFER_SEARCH_INDEX) ? window.JAPANOFFER_SEARCH_INDEX : [];
+  let loadedFromDatabase = false;
 
   function clean(value) {
     return String(value || "").replace(/\s+/g, " ").trim();
@@ -28,6 +30,68 @@
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#039;");
+  }
+
+  function getConfig() {
+    const url = String(window.JAPANOFFER_SUPABASE_URL || window.SUPABASE_URL || "").replace(/\/+$/, "");
+    const key = String(
+      window.JAPANOFFER_SUPABASE_ANON_KEY ||
+      window.JAPANOFFER_SUPABASE_PUBLISHABLE_KEY ||
+      window.SUPABASE_ANON_KEY ||
+      window.SUPABASE_PUBLISHABLE_KEY ||
+      ""
+    ).trim();
+
+    if (!url || !key || !window.supabase?.createClient) return null;
+    return { url, key };
+  }
+
+  function mapPlatformItem(row) {
+    return {
+      type: row.item_type,
+      title: row.title,
+      subtitle: row.subtitle || [row.company_name, row.city || row.market, row.seniority].filter(Boolean).join(" · "),
+      market: row.market || "Global",
+      tags: Array.from(new Set([...(row.tags || []), ...(row.skills || []), ...(row.languages || []), row.category, row.market].filter(Boolean))),
+      href: row.href || (row.item_type === "job" ? `jobs.html?q=${encodeURIComponent(row.title)}` : "#"),
+      score: row.score || row.match_base || 60,
+      description: row.description || "",
+      raw: row
+    };
+  }
+
+  async function refreshIndexFromSupabase() {
+    const config = getConfig();
+    if (!config) {
+      window.dispatchEvent(new CustomEvent("japanoffer-search-ready", { detail: { source: "static", count: index.length } }));
+      return index;
+    }
+
+    try {
+      const client = window.supabase.createClient(config.url, config.key);
+      const { data, error } = await client
+        .from("platform_items")
+        .select("*")
+        .eq("is_active", true)
+        .order("sort_order", { ascending: true })
+        .order("score", { ascending: false });
+
+      if (error) throw error;
+
+      if (Array.isArray(data) && data.length) {
+        index = data.map(mapPlatformItem);
+        window.JAPANOFFER_SEARCH_INDEX = index;
+        loadedFromDatabase = true;
+        window.dispatchEvent(new CustomEvent("japanoffer-search-ready", { detail: { source: "database", count: index.length } }));
+      } else {
+        window.dispatchEvent(new CustomEvent("japanoffer-search-ready", { detail: { source: "static", count: index.length } }));
+      }
+    } catch (error) {
+      console.warn("JapanOffer search database load failed. Static fallback is used.", error);
+      window.dispatchEvent(new CustomEvent("japanoffer-search-ready", { detail: { source: "static", count: index.length, error: error.message } }));
+    }
+
+    return index;
   }
 
   function scoreItem(item, query) {
@@ -89,21 +153,21 @@
   }
 
   function addStyle() {
-    if (document.getElementById("jo33-global-search-style")) return;
+    if (document.getElementById("jo34-global-search-style")) return;
 
     const style = document.createElement("style");
-    style.id = "jo33-global-search-style";
+    style.id = "jo34-global-search-style";
     style.textContent = `
-      .jo33-search-wrap {
+      .jo33-search-wrap, .jo34-search-wrap {
         position: relative !important;
         z-index: 100;
       }
 
-      .jo33-search-panel {
+      .jo33-search-panel, .jo34-search-panel {
         position: absolute;
         top: calc(100% + 10px);
         left: 0;
-        width: min(520px, calc(100vw - 34px));
+        width: min(540px, calc(100vw - 34px));
         max-height: min(560px, calc(100vh - 120px));
         overflow: auto;
         background: rgba(255,255,255,.94);
@@ -115,12 +179,12 @@
         display: none;
       }
 
-      .jo33-search-panel.show {
+      .jo33-search-panel.show, .jo34-search-panel.show {
         display: block;
-        animation: jo33SearchIn .18s ease-out;
+        animation: jo34SearchIn .18s ease-out;
       }
 
-      .jo33-search-head {
+      .jo34-search-head {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -131,12 +195,12 @@
         font-weight: 850;
       }
 
-      .jo33-search-head strong {
+      .jo34-search-head strong {
         color: #061a33;
         font-size: 13px;
       }
 
-      .jo33-result {
+      .jo34-result {
         display: grid;
         grid-template-columns: 42px minmax(0, 1fr) auto;
         gap: 12px;
@@ -148,13 +212,13 @@
         border: 1px solid transparent;
       }
 
-      .jo33-result:hover,
-      .jo33-result.active {
+      .jo34-result:hover,
+      .jo34-result.active {
         background: rgba(10,102,194,.08);
         border-color: rgba(10,102,194,.14);
       }
 
-      .jo33-icon {
+      .jo34-icon {
         width: 42px;
         height: 42px;
         border-radius: 14px;
@@ -166,14 +230,14 @@
         background: linear-gradient(135deg, #0a66c2, #003f88);
       }
 
-      .jo33-result h4 {
+      .jo34-result h4 {
         margin: 0;
         font-size: 14px;
         line-height: 1.25;
         letter-spacing: -.02em;
       }
 
-      .jo33-result p {
+      .jo34-result p {
         margin: 4px 0 0;
         color: #607086;
         font-size: 12px;
@@ -181,7 +245,7 @@
         font-weight: 650;
       }
 
-      .jo33-badge {
+      .jo34-badge {
         display: inline-flex;
         min-height: 26px;
         align-items: center;
@@ -194,7 +258,7 @@
         white-space: nowrap;
       }
 
-      .jo33-empty {
+      .jo34-empty {
         padding: 18px;
         border-radius: 18px;
         background: rgba(247,250,255,.92);
@@ -204,14 +268,14 @@
         font-weight: 700;
       }
 
-      .jo33-quick {
+      .jo34-quick {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
         padding: 8px 10px 12px;
       }
 
-      .jo33-chip {
+      .jo34-chip {
         border: 1px solid rgba(10,102,194,.16);
         background: rgba(255,255,255,.78);
         color: #0a66c2;
@@ -222,13 +286,13 @@
         cursor: pointer;
       }
 
-      @keyframes jo33SearchIn {
+      @keyframes jo34SearchIn {
         from { opacity: 0; transform: translateY(8px) scale(.98); }
         to { opacity: 1; transform: translateY(0) scale(1); }
       }
 
       @media (max-width: 720px) {
-        .jo33-search-panel {
+        .jo33-search-panel, .jo34-search-panel {
           position: fixed;
           left: 14px;
           right: 14px;
@@ -241,41 +305,47 @@
   }
 
   function wrapInput(input) {
-    if (input.dataset.jo33SearchBound === "1") return;
-    input.dataset.jo33SearchBound = "1";
+    if (input.dataset.jo34SearchBound === "1") return;
+    input.dataset.jo34SearchBound = "1";
 
     const originalParent = input.parentElement;
     if (!originalParent) return;
 
-    let wrap = originalParent;
-    wrap.classList.add("jo33-search-wrap");
+    const wrap = originalParent;
+    wrap.classList.add("jo34-search-wrap");
 
     const panel = document.createElement("div");
-    panel.className = "jo33-search-panel";
+    panel.className = "jo34-search-panel";
     panel.innerHTML = `
-      <div class="jo33-search-head">
+      <div class="jo34-search-head">
         <strong>Search JapanOffer AI</strong>
-        <span>Enter 查看全部</span>
+        <span class="jo34-source">Loading data...</span>
       </div>
-      <div class="jo33-results"></div>
-      <div class="jo33-quick">
-        <button class="jo33-chip" type="button" data-query="legal compliance">Legal compliance</button>
-        <button class="jo33-chip" type="button" data-query="web3 compliance">Web3 compliance</button>
-        <button class="jo33-chip" type="button" data-query="japan">Japan</button>
-        <button class="jo33-chip" type="button" data-query="hong kong aml">Hong Kong AML</button>
+      <div class="jo34-results"></div>
+      <div class="jo34-quick">
+        <button class="jo34-chip" type="button" data-query="legal compliance">Legal compliance</button>
+        <button class="jo34-chip" type="button" data-query="web3 compliance">Web3 compliance</button>
+        <button class="jo34-chip" type="button" data-query="japan">Japan</button>
+        <button class="jo34-chip" type="button" data-query="hong kong aml">Hong Kong AML</button>
       </div>
     `;
     wrap.appendChild(panel);
 
-    const resultsBox = panel.querySelector(".jo33-results");
+    const resultsBox = panel.querySelector(".jo34-results");
+    const sourceLabel = panel.querySelector(".jo34-source");
+
+    function updateSourceLabel() {
+      sourceLabel.textContent = loadedFromDatabase ? "Database search" : "MVP search";
+    }
 
     function render() {
+      updateSourceLabel();
       const query = input.value.trim();
       const results = search(query);
 
       if (!query) {
         resultsBox.innerHTML = `
-          <div class="jo33-empty">
+          <div class="jo34-empty">
             试试搜索：legal compliance、web3、Japan、Hong Kong AML、CV、申请中心。
           </div>
         `;
@@ -285,7 +355,7 @@
 
       if (!results.length) {
         resultsBox.innerHTML = `
-          <div class="jo33-empty">
+          <div class="jo34-empty">
             暂时没有找到「${escapeHtml(query)}」。可以换成岗位方向、国家、公司类型或技能关键词。
           </div>
         `;
@@ -294,13 +364,13 @@
       }
 
       resultsBox.innerHTML = results.map((item) => `
-        <a class="jo33-result" href="${escapeHtml(item.href)}">
-          <span class="jo33-icon">${escapeHtml(typeLabel(item.type).slice(0, 2))}</span>
+        <a class="jo34-result" href="${escapeHtml(item.href)}">
+          <span class="jo34-icon">${escapeHtml(typeLabel(item.type).slice(0, 2))}</span>
           <span>
             <h4>${escapeHtml(item.title)}</h4>
             <p>${escapeHtml(item.subtitle || item.description || "")}</p>
           </span>
-          <span class="jo33-badge">${escapeHtml(typeLabel(item.type))}</span>
+          <span class="jo34-badge">${escapeHtml(typeLabel(item.type))}</span>
         </a>
       `).join("");
 
@@ -323,7 +393,7 @@
       }
     });
 
-    panel.querySelectorAll(".jo33-chip").forEach((button) => {
+    panel.querySelectorAll(".jo34-chip").forEach((button) => {
       button.addEventListener("click", () => {
         input.value = button.dataset.query || "";
         render();
@@ -336,6 +406,8 @@
         panel.classList.remove("show");
       }
     });
+
+    window.addEventListener("japanoffer-search-ready", render);
   }
 
   function init() {
@@ -343,11 +415,21 @@
     findSearchInputs().forEach(wrapInput);
   }
 
-  window.JAPANOFFER_SEARCH = { search, init };
+  window.JAPANOFFER_SEARCH = {
+    search,
+    init,
+    refreshIndexFromSupabase,
+    getIndex: () => index,
+    isDatabaseLoaded: () => loadedFromDatabase
+  };
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
+    document.addEventListener("DOMContentLoaded", () => {
+      init();
+      refreshIndexFromSupabase();
+    });
   } else {
     init();
+    refreshIndexFromSupabase();
   }
 })();
