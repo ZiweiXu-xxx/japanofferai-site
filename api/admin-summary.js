@@ -1,19 +1,21 @@
 // JapanOffer AI admin summary API
-// Step 16: robust Supabase REST reader with better key handling and diagnostics.
-// Environment variables needed in Vercel:
-// SUPABASE_URL
-// SUPABASE_SERVICE_ROLE_KEY
-// ADMIN_PASSWORD
+// Step 17: bypass possible stale/corrupted Vercel env var by reading a new variable first.
+// Add this new Vercel Environment Variable:
+// SUPABASE_LEGACY_SERVICE_ROLE_KEY
+// Value: Supabase API Keys (Legacy) -> service_role -> Copy
 
 function clean(value) {
   return String(value || "")
     .trim()
     .replace(/^['"]|['"]$/g, "")
-    .replace(/\s+/g, "");
+    .replace(/\r?\n|\r/g, "")
+    .replace(/\s/g, "");
 }
 
 function cleanUrl(value) {
-  return clean(value).replace(/\/rest\/v1\/?$/i, "").replace(/\/+$/g, "");
+  return clean(value)
+    .replace(/\/rest\/v1\/?$/i, "")
+    .replace(/\/+$/g, "");
 }
 
 function json(res, status, data) {
@@ -23,12 +25,37 @@ function json(res, status, data) {
   res.end(JSON.stringify(data));
 }
 
+function keyType(key) {
+  if (!key) return "missing";
+  if (key.startsWith("eyJ")) return "legacy_service_role_jwt_expected";
+  if (key.startsWith("sb_secret_")) return "new_secret_key_may_not_work_with_this_rest_call";
+  if (key.startsWith("sb_publishable_")) return "publishable_key_wrong_for_admin";
+  return "unknown_format";
+}
+
 async function supabaseGet(path, params = "") {
   const supabaseUrl = cleanUrl(process.env.SUPABASE_URL);
-  const key = clean(process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY);
+
+  // New variable name first, to avoid Vercel keeping an old/corrupted value under the old name.
+  const key = clean(
+    process.env.SUPABASE_LEGACY_SERVICE_ROLE_KEY ||
+    process.env.SUPABASE_SERVICE_ROLE_KEY ||
+    process.env.SUPABASE_SECRET_KEY
+  );
 
   if (!supabaseUrl || !key) {
-    throw new Error("Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in Vercel Environment Variables.");
+    throw Object.assign(
+      new Error("Missing SUPABASE_URL or service role key in Vercel Environment Variables."),
+      {
+        debug: {
+          hasSupabaseUrl: Boolean(supabaseUrl),
+          hasNewLegacyKey: Boolean(process.env.SUPABASE_LEGACY_SERVICE_ROLE_KEY),
+          hasOldServiceRoleKey: Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY),
+          detectedKeyType: keyType(key),
+          keyLength: key.length
+        }
+      }
+    );
   }
 
   const url = `${supabaseUrl}/rest/v1/${path}${params}`;
@@ -37,8 +64,8 @@ async function supabaseGet(path, params = "") {
     headers: {
       "apikey": key,
       "Authorization": `Bearer ${key}`,
-      "Content-Type": "application/json",
       "Accept": "application/json",
+      "Content-Type": "application/json",
       "Prefer": "count=exact"
     }
   });
@@ -52,23 +79,17 @@ async function supabaseGet(path, params = "") {
   }
 
   if (!response.ok) {
-    const keyHint = key.startsWith("eyJ")
-      ? "legacy_jwt_key"
-      : key.startsWith("sb_secret_")
-        ? "new_secret_key"
-        : key.startsWith("sb_publishable_")
-          ? "publishable_key_wrong_for_admin"
-          : "unknown_key_format";
-
-    const detail = typeof body === "string" ? body : JSON.stringify(body);
-    const err = new Error(`Supabase REST error ${response.status}: ${detail}`);
+    const err = new Error(`Supabase REST error ${response.status}: ${typeof body === "string" ? body : JSON.stringify(body)}`);
     err.status = response.status;
     err.detail = body;
     err.debug = {
       supabaseUrl,
-      keyTypeDetected: keyHint,
+      detectedKeyType: keyType(key),
       keyLength: key.length,
-      endpoint: url.replace(supabaseUrl, "[SUPABASE_URL]")
+      keyPreview: key ? `${key.slice(0, 8)}...${key.slice(-6)}` : "missing",
+      usingNewLegacyKey: Boolean(process.env.SUPABASE_LEGACY_SERVICE_ROLE_KEY),
+      usingOldServiceRoleKey: !process.env.SUPABASE_LEGACY_SERVICE_ROLE_KEY && Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY),
+      endpoint: `/rest/v1/${path}`
     };
     throw err;
   }
@@ -105,6 +126,7 @@ module.exports = async function handler(req, res) {
     const chunks = [];
     for await (const chunk of req) chunks.push(chunk);
     const raw = Buffer.concat(chunks).toString("utf8");
+
     let payload = {};
     try {
       payload = raw ? JSON.parse(raw) : {};
@@ -130,7 +152,7 @@ module.exports = async function handler(req, res) {
       (events || []).map((e) => e.visitor_id || e.session_id || e.anonymous_id).filter(Boolean)
     ).size;
 
-    const summary = {
+    return json(res, 200, {
       totalReports: reports.length,
       totalEvents: events.length,
       uniqueVisitors,
@@ -140,15 +162,13 @@ module.exports = async function handler(req, res) {
       languages: countBy(reports, "languages"),
       recentReports: reports.slice(0, 20),
       recentEvents: events.slice(0, 30)
-    };
-
-    return json(res, 200, summary);
+    });
   } catch (error) {
     return json(res, 500, {
       error: error.message || "Unknown admin summary error",
       detail: error.detail || null,
       debug: error.debug || null,
-      note: "If this says Invalid API key, check that Vercel SUPABASE_SERVICE_ROLE_KEY is the Legacy service_role JWT starting with eyJ, with no quotes/spaces/newlines, and then redeploy."
+      fix: "Create a NEW Vercel Environment Variable named SUPABASE_LEGACY_SERVICE_ROLE_KEY and paste the Legacy service_role JWT starting with eyJ. Then redeploy."
     });
   }
 };
