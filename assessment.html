@@ -1,375 +1,103 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Free Assessment - JapanOffer AI</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4efe7;
-      color: #111;
-    }
-
-    .container {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 32px 20px 80px;
-    }
-
-    .top {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 36px;
-    }
-
-    .logo {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      background: #111;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 26px;
-    }
-
-    h1 {
-      font-size: 42px;
-      line-height: 1.1;
-      margin: 0 0 12px;
-      letter-spacing: -1px;
-    }
-
-    .subtitle {
-      font-size: 18px;
-      color: #555;
-      max-width: 720px;
-      line-height: 1.6;
-      margin-bottom: 32px;
-    }
-
-    .card {
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 24px;
-      padding: 28px;
-      margin-bottom: 24px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.04);
-    }
-
-    label {
-      font-weight: 700;
-      display: block;
-      margin: 18px 0 8px;
-    }
-
-    input, textarea {
-      width: 100%;
-      box-sizing: border-box;
-      border: 1px solid #ccc;
-      border-radius: 14px;
-      padding: 14px;
-      font-size: 15px;
-      font-family: Arial, sans-serif;
-      background: #fafafa;
-    }
-
-    textarea {
-      min-height: 120px;
-      resize: vertical;
-    }
-
-    .small {
-      color: #666;
-      font-size: 13px;
-      line-height: 1.5;
-      margin-top: 8px;
-    }
-
-    button {
-      background: #111;
-      color: #fff;
-      border: none;
-      padding: 16px 24px;
-      border-radius: 999px;
-      font-size: 16px;
-      font-weight: 800;
-      cursor: pointer;
-      margin-top: 24px;
-    }
-
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .result {
-      display: none;
-      margin-top: 32px;
-    }
-
-    .result h2 {
-      font-size: 30px;
-      margin-bottom: 16px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 18px;
-      overflow: hidden;
-      border-radius: 16px;
-    }
-
-    th, td {
-      border: 1px solid #ddd;
-      padding: 14px;
-      text-align: left;
-      vertical-align: top;
-      font-size: 14px;
-    }
-
-    th {
-      background: #111;
-      color: #fff;
-    }
-
-    .notice {
-      background: #111;
-      color: #fff;
-      border-radius: 20px;
-      padding: 20px;
-      margin-top: 24px;
-      line-height: 1.6;
-    }
-
-    .error {
-      display: none;
-      background: #ffe8e8;
-      color: #8a0000;
-      border: 1px solid #ffb5b5;
-      border-radius: 16px;
-      padding: 16px;
-      margin-top: 20px;
-      line-height: 1.5;
-    }
-
-    .back {
-      color: #111;
-      text-decoration: none;
-      font-weight: 700;
-    }
-
-    @media (max-width: 640px) {
-      h1 {
-        font-size: 32px;
-      }
-
-      .card {
-        padding: 20px;
-      }
-
-      table {
-        font-size: 13px;
-      }
-
-      th, td {
-        padding: 10px;
-      }
-    }
-  </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>English Auto Report | JapanOffer AI</title>
+  <meta name="description" content="Start a beta assessment for JapanOffer AI." />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="container">
-    <div class="top">
-      <div class="logo">J</div>
-      <div>
-        <strong>JapanOffer AI</strong><br />
-        <a class="back" href=" ">← Back to home</a >
-      </div>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="JapanOffer AI home">
+      <span class="brand-mark">J</span>
+      <span class="brand-copy">
+        <strong>JapanOffer AI</strong>
+        <small>Cross-border Talent Network</small>
+      </span>
+    </a>
+
+    <div class="top-search" aria-label="Global platform search">
+      <span>⌕</span>
+      <input value="Search roles, talent or companies" aria-label="Search roles, talent or companies" />
     </div>
 
-    <h1>Free Application Priority Assessment</h1>
-    <p class="subtitle">
-      Paste your background and up to three job descriptions. JapanOffer AI will generate an early-stage priority report showing which applications look more realistic, which risks matter most, and what you should do next.
-    </p >
+    <nav class="nav" aria-label="Main navigation">
+      <a href="index.html#network">Network</a>
+      <a href="jobs.html">Jobs</a>
+      <a href="talent.html">Talent</a>
+      <a href="companies.html">Companies</a>
+      <a href="employers.html">Employers</a>
+    </nav>
 
-    <div class="card">
-      <form id="assessmentForm">
-        <label>Email</label>
-        <input id="email" type="email" placeholder="your@email.com" required />
-        <p class="small">
-          Each email can generate one free report during the beta test. Additional reports may require paid credits later.
-        </p >
+    <a class="nav-cta" href="assessment.html">Join Beta</a>
+  </header>
+  <main>
+    <section class="page-hero">
+      <p class="eyebrow">Assessment</p>
+      <h1>Start with a beta match assessment.</h1>
+      <p>
+        This restores the English Auto Report entry and keeps the Chinese questionnaire. The full automated report can be connected later, but the user journey is now separated clearly.
+      </p>
+    </section>
 
-        <label>Your background</label>
-        <textarea id="background" placeholder="Example: I am a Chinese undergraduate law student in the UK. I previously studied in Japan and I am interested in legal assistant, compliance, fintech or Japan-related international roles." required></textarea>
+    <section class="page-grid">
+      <article class="page-card featured">
+        <span class="kicker">Chinese beta</span>
+        <h2>中文问卷：人工内测分析</h2>
+        <p>适合中文用户。提交问卷后，可作为早期内测用户进行跨境岗位优先级判断。</p>
+        <a class="btn primary" href="https://www.wjx.cn/vm/PRY0MgS.aspx" target="_blank" rel="noopener">开始中文问卷</a>
+      </article>
 
-        <label>Languages</label>
-        <input id="languages" type="text" placeholder="Example: Chinese native, English fluent, Japanese N1" />
+      <article class="page-card">
+        <span class="kicker">English route</span>
+        <h2>English Auto Report</h2>
+        <p>For users who want an English flow. This page can later connect to your automated report API or form workflow.</p>
+        <a class="btn secondary" href="#english-form">Start English form</a>
+      </article>
 
-        <label>Target country / region</label>
-        <input id="targetCountry" type="text" placeholder="Example: Japan, Singapore, Hong Kong, UK" />
+      <article class="page-card">
+        <span class="kicker">Employer</span>
+        <h2>Employer waitlist</h2>
+        <p>For companies or recruiters who want to join the future talent matching side of the platform.</p>
+        <a class="btn secondary" href="employers.html">Join employer waitlist</a>
+      </article>
+    </section>
 
-        <label>Target industry / role direction</label>
-        <input id="targetIndustry" type="text" placeholder="Example: legal assistant, compliance, fintech, business development" />
-
-        <label>Main concern</label>
-        <input id="concerns" type="text" placeholder="Example: visa sponsorship, language requirement, lack of experience" />
-
-        <label>Job 1 title</label>
-        <input id="job1Title" type="text" placeholder="Example: International Legal Assistant" />
-        <label>Job 1 description</label>
-        <textarea id="job1Description" placeholder="Paste the key job description here."></textarea>
-
-        <label>Job 2 title</label>
-        <input id="job2Title" type="text" placeholder="Example: Compliance Analyst" />
-        <label>Job 2 description</label>
-        <textarea id="job2Description" placeholder="Paste the key job description here."></textarea>
-
-        <label>Job 3 title</label>
-        <input id="job3Title" type="text" placeholder="Example: Marketing Intern" />
-        <label>Job 3 description</label>
-        <textarea id="job3Description" placeholder="Paste the key job description here."></textarea>
-
-        <button id="submitButton" type="submit">Generate My Priority Report</button>
+    <section class="wide-panel" id="english-form">
+      <p class="eyebrow">English Auto Report</p>
+      <h2>Basic matching form</h2>
+      <form class="mock-form">
+        <label>Education background
+          <input placeholder="Example: LLB student, business graduate, computer science student" />
+        </label>
+        <label>Languages
+          <input placeholder="Example: English, Japanese N1, Mandarin" />
+        </label>
+        <label>Target market
+          <select>
+            <option>Japan</option>
+            <option>Singapore</option>
+            <option>Hong Kong</option>
+            <option>United Kingdom</option>
+          </select>
+        </label>
+        <label>Career direction
+          <input placeholder="Example: legal compliance, business development, technology" />
+        </label>
+        <div class="route-row">
+          <div>
+            <h3>Preview output</h3>
+            <p>Legal / compliance route · Japan and Singapore first · Visa risk needs checking</p>
+          </div>
+          <strong>Demo</strong>
+        </div>
       </form>
-
-      <div id="errorBox" class="error"></div>
-    </div>
-
-    <div id="result" class="result card">
-      <h2>Your Application Priority Report</h2>
-
-      <h3>Candidate Snapshot</h3>
-      <p id="candidateSnapshot"></p >
-
-      <h3>Most Realistic Route</h3>
-      <p id="overallRoute"></p >
-
-      <h3>Priority Ranking</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Role</th>
-            <th>Fit Score</th>
-            <th>Priority</th>
-            <th>Main Risk</th>
-            <th>Suggested Action</th>
-          </tr>
-        </thead>
-        <tbody id="jobsTable"></tbody>
-      </table>
-
-      <h3>Final Advice</h3>
-      <p id="finalAdvice"></p >
-
-      <div class="notice" id="disclaimer"></div>
-    </div>
-  </div>
-
-  <script>
-    const form = document.getElementById("assessmentForm");
-    const button = document.getElementById("submitButton");
-    const errorBox = document.getElementById("errorBox");
-    const result = document.getElementById("result");
-
-    form.addEventListener("submit", async function (event) {
-      event.preventDefault();
-
-      errorBox.style.display = "none";
-      result.style.display = "none";
-      button.disabled = true;
-      button.textContent = "Generating report...";
-
-      const payload = {
-        email: document.getElementById("email").value,
-        background: document.getElementById("background").value,
-        languages: document.getElementById("languages").value,
-        targetCountry: document.getElementById("targetCountry").value,
-        targetIndustry: document.getElementById("targetIndustry").value,
-        concerns: document.getElementById("concerns").value,
-        jobs: [
-          {
-            title: document.getElementById("job1Title").value,
-            description: document.getElementById("job1Description").value
-          },
-          {
-            title: document.getElementById("job2Title").value,
-            description: document.getElementById("job2Description").value
-          },
-          {
-            title: document.getElementById("job3Title").value,
-            description: document.getElementById("job3Description").value
-          }
-        ]
-      };
-
-      try {
-        const response = await fetch("/api/analyze", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(payload)
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          if (data.error === "FREE_REPORT_USED") {
-            throw new Error("You have already used your free report. Additional reports will require paid credits later.");
-          }
-          throw new Error(data.message || data.error || "Something went wrong.");
-        }
-
-        const report = data.report;
-
-        document.getElementById("candidateSnapshot").textContent = report.candidate_snapshot || "";
-        document.getElementById("overallRoute").textContent = report.overall_route || "";
-        document.getElementById("finalAdvice").textContent = report.final_advice || "";
-        document.getElementById("disclaimer").textContent = report.disclaimer || "This is an early-stage AI assessment and not legal, immigration, or professional career advice.";
-
-        const table = document.getElementById("jobsTable");
-        table.innerHTML = "";
-
-        (report.jobs || []).forEach(job => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td><strong>${escapeHtml(job.role || "")}</strong><br>${escapeHtml(job.reason || "")}</td>
-            <td>${escapeHtml(String(job.fit_score || ""))}%</td>
-            <td>${escapeHtml(job.priority || "")}</td>
-            <td>${escapeHtml(job.main_risk || "")}</td>
-            <td>${escapeHtml(job.suggested_action || "")}</td>
-          `;
-          table.appendChild(row);
-        });
-
-        result.style.display = "block";
-        result.scrollIntoView({ behavior: "smooth" });
-
-      } catch (error) {
-        errorBox.textContent = error.message;
-        errorBox.style.display = "block";
-      } finally {
-        button.disabled = false;
-        button.textContent = "Generate My Priority Report";
-      }
-    });
-
-    function escapeHtml(text) {
-      return text
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-  </script>
+    </section>
+  </main>
+  <footer class="footer">
+    <strong>JapanOffer AI</strong>
+    <span>Cross-border talent matching network.</span>
+  </footer>
 </body>
 </html>
