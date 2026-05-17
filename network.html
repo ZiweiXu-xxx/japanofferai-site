@@ -1,0 +1,669 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>人脉网络 | JapanOffer AI</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    :root {
+      --blue: #0a66c2;
+      --blue-dark: #003f88;
+      --ink: #071b36;
+      --muted: #607086;
+      --line: rgba(7,27,54,.10);
+      --card: rgba(255,255,255,.82);
+      --shadow: 0 24px 80px rgba(10,35,68,.10);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 8%, rgba(10,102,194,.15), transparent 34%),
+        radial-gradient(circle at 90% 4%, rgba(80,167,255,.16), transparent 32%),
+        linear-gradient(135deg, #f7fbff 0%, #ffffff 48%, #edf5ff 100%);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: grid;
+      grid-template-columns: auto minmax(220px, 360px) 1fr auto;
+      align-items: center;
+      gap: 18px;
+      min-height: 76px;
+      padding: 15px 30px;
+      background: rgba(255,255,255,.86);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: inherit;
+      text-decoration: none;
+      min-width: 0;
+    }
+
+    .logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 950;
+      font-size: 23px;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      box-shadow: 0 14px 34px rgba(10,102,194,.24);
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 18px;
+      letter-spacing: -.035em;
+    }
+
+    .brand small {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 760;
+    }
+
+    .search {
+      height: 44px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.76);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 760;
+      min-width: 0;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: flex-end;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .nav a {
+      color: #243650;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .nav a.active {
+      color: var(--blue);
+    }
+
+    .primary-link {
+      color: #fff !important;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      padding: 11px 16px;
+      border-radius: 999px;
+      box-shadow: 0 12px 26px rgba(10,102,194,.22);
+    }
+
+    main {
+      width: min(1180px, calc(100% - 44px));
+      margin: 0 auto;
+      padding: 54px 0 90px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 430px);
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .hero-copy,
+    .profile-panel,
+    .panel,
+    .member-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .hero-copy {
+      border-radius: 34px;
+      padding: 36px;
+      min-height: 370px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .eyebrow {
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      font-size: 12px;
+      font-weight: 950;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(44px, 5.8vw, 74px);
+      line-height: .96;
+      letter-spacing: -.074em;
+      font-weight: 950;
+    }
+
+    h1 span {
+      display: block;
+      color: var(--blue);
+    }
+
+    .hero-copy p {
+      margin: 22px 0 0;
+      max-width: 760px;
+      color: #52647a;
+      font-size: 17px;
+      line-height: 1.75;
+      font-weight: 680;
+    }
+
+    .profile-panel {
+      border-radius: 34px;
+      padding: 26px;
+      min-height: 370px;
+    }
+
+    .profile-panel h2 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: -.05em;
+    }
+
+    .profile-panel p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+      font-weight: 650;
+    }
+
+    .profile-preview {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .profile-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(247,250,255,.92);
+      border: 1px solid rgba(7,27,54,.08);
+      color: #26374d;
+      font-size: 13px;
+      font-weight: 780;
+    }
+
+    .profile-row span {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      min-height: 44px;
+      border-radius: 999px;
+      padding: 0 16px;
+      border: 1px solid rgba(10,102,194,.18);
+      background: rgba(255,255,255,.80);
+      color: var(--blue);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 920;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .btn.primary {
+      color: #fff;
+      border-color: transparent;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      box-shadow: 0 16px 36px rgba(10,102,194,.24);
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 18px;
+      margin: 34px 0 16px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(30px, 3.4vw, 46px);
+      line-height: 1;
+      letter-spacing: -.06em;
+    }
+
+    .section-head p {
+      margin: 0;
+      max-width: 560px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+      font-weight: 680;
+      text-align: right;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .tab {
+      min-height: 40px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.74);
+      color: #26374d;
+      padding: 0 14px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 870;
+      cursor: pointer;
+    }
+
+    .tab.active {
+      color: #fff;
+      border-color: transparent;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      box-shadow: 0 12px 26px rgba(10,102,194,.18);
+    }
+
+    .members-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .member-card {
+      border-radius: 28px;
+      padding: 22px;
+      min-height: 330px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .member-top {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .avatar {
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 950;
+      background: linear-gradient(135deg, #071b36, #0a66c2);
+      box-shadow: 0 12px 28px rgba(7,27,54,.16);
+    }
+
+    .member-card h3 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.15;
+      letter-spacing: -.04em;
+    }
+
+    .member-card .subtitle {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+      font-weight: 760;
+    }
+
+    .match-score {
+      margin-left: auto;
+      text-align: right;
+      color: var(--blue);
+      font-size: 26px;
+      font-weight: 950;
+      letter-spacing: -.05em;
+    }
+
+    .member-desc {
+      margin: 16px 0 0;
+      color: #52647a;
+      font-size: 13px;
+      line-height: 1.68;
+      font-weight: 650;
+    }
+
+    .pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 15px;
+    }
+
+    .pill {
+      display: inline-flex;
+      min-height: 30px;
+      align-items: center;
+      border-radius: 999px;
+      padding: 0 10px;
+      background: rgba(10,102,194,.09);
+      color: #064b93;
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .member-actions {
+      display: flex;
+      gap: 9px;
+      margin-top: auto;
+      padding-top: 18px;
+    }
+
+    .connect-btn,
+    .view-btn {
+      flex: 1;
+      min-height: 42px;
+      border-radius: 999px;
+      border: 1px solid rgba(10,102,194,.18);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 920;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .connect-btn {
+      color: #fff;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      border-color: transparent;
+    }
+
+    .connect-btn.connected {
+      background: #e9f6ef;
+      color: #087443;
+    }
+
+    .view-btn {
+      background: rgba(255,255,255,.75);
+      color: var(--blue);
+    }
+
+    .panel-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .panel {
+      border-radius: 30px;
+      padding: 24px;
+    }
+
+    .panel h2 {
+      margin: 0 0 16px;
+      font-size: 26px;
+      letter-spacing: -.05em;
+    }
+
+    .flow {
+      display: grid;
+      gap: 12px;
+    }
+
+    .flow-item {
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(247,250,255,.92);
+      border: 1px solid rgba(7,27,54,.08);
+    }
+
+    .flow-item strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--ink);
+      font-size: 14px;
+    }
+
+    .flow-item span {
+      display: block;
+      color: #52647a;
+      font-size: 13px;
+      line-height: 1.65;
+      font-weight: 650;
+    }
+
+    .status {
+      display: none;
+      margin-top: 16px;
+      padding: 13px 15px;
+      border-radius: 16px;
+      color: #047857;
+      background: rgba(16,185,129,.10);
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    .status.show {
+      display: block;
+    }
+
+    @media (max-width: 980px) {
+      .topbar {
+        grid-template-columns: auto 1fr auto;
+      }
+
+      .search {
+        display: none;
+      }
+
+      .hero,
+      .members-grid,
+      .panel-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .member-card {
+        min-height: auto;
+      }
+
+      .section-head {
+        display: block;
+      }
+
+      .section-head p {
+        text-align: left;
+        margin-top: 8px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .topbar {
+        padding: 13px 16px;
+      }
+
+      .brand small,
+      .nav a:not(.primary-link):nth-child(n+3) {
+        display: none;
+      }
+
+      main {
+        width: min(100% - 28px, 1180px);
+        padding: 40px 0 68px;
+      }
+
+      .hero-copy,
+      .profile-panel,
+      .panel,
+      .member-card {
+        border-radius: 26px;
+        padding: 22px;
+      }
+
+      h1 {
+        font-size: 46px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <span class="logo">J</span>
+      <span>
+        <strong>JapanOffer AI</strong>
+        <small>Cross-border Career Network</small>
+      </span>
+    </a>
+
+    <div class="search">搜索人脉、公司、岗位或目标市场</div>
+
+    <nav class="nav">
+      <a href="index.html">首页</a>
+      <a class="active" href="network.html">人脉</a>
+      <a href="jobs.html">职位</a>
+      <a href="match.html">AI 匹配</a>
+      <a href="companies.html">公司</a>
+      <a class="primary-link" href="signup.html">注册</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow">Talent Network</div>
+        <h1>不只是匹配岗位。<span>还要连接人。</span></h1>
+        <p>
+          JapanOffer AI 需要从 AI 中转站升级成跨境求职网络。用户不仅可以生成岗位匹配报告，还可以发现相似背景的人、目标公司、招聘联系人和潜在合作机会。
+        </p>
+        <div class="cta-row">
+          <a class="btn primary" href="match.html">先生成 AI 匹配</a>
+          <a class="btn" href="#members">浏览推荐人脉</a>
+        </div>
+      </div>
+
+      <aside class="profile-panel">
+        <h2>你的网络身份</h2>
+        <p>这里以后会连接用户登录后的真实 Profile。现在先用 MVP 方式展示网络结构。</p>
+
+        <div class="profile-preview">
+          <div class="profile-row"><span>身份</span><strong>跨境求职者</strong></div>
+          <div class="profile-row"><span>方向</span><strong>Legal / Compliance</strong></div>
+          <div class="profile-row"><span>市场</span><strong>Japan / HK / Singapore</strong></div>
+          <div class="profile-row"><span>语言</span><strong>中文 / English / 日本語</strong></div>
+        </div>
+
+        <div class="status" id="networkStatus">已记录你的连接意向。</div>
+      </aside>
+    </section>
+
+    <section id="members">
+      <div class="section-head">
+        <h2>推荐人脉与候选人</h2>
+        <p>这一步先做成 MVP 网络页。后面接入真实账号后，Connect 会变成真正的好友申请和站内消息。</p>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" data-filter="all">全部</button>
+        <button class="tab" data-filter="candidate">求职者</button>
+        <button class="tab" data-filter="employer">企业 / 招聘</button>
+        <button class="tab" data-filter="legal">法律合规</button>
+        <button class="tab" data-filter="finance">金融 / Web3</button>
+        <button class="tab" data-filter="japan">日本</button>
+        <button class="tab" data-filter="singapore">新加坡</button>
+        <button class="tab" data-filter="hongkong">香港</button>
+      </div>
+
+      <div class="members-grid" id="membersGrid"></div>
+    </section>
+
+    <section class="panel-grid">
+      <div class="panel">
+        <h2>产品逻辑</h2>
+        <div class="flow">
+          <div class="flow-item">
+            <strong>1. AI 匹配</strong>
+            <span>用户先输入背景，系统判断适合的岗位、国家、公司和申请路线。</span>
+          </div>
+          <div class="flow-item">
+            <strong>2. 人脉网络</strong>
+            <span>用户看到相似背景的人、目标公司和招聘联系人，开始建立求职网络。</span>
+          </div>
+          <div class="flow-item">
+            <strong>3. 职位与公司</strong>
+            <span>岗位页和公司页不再孤立，而是围绕用户匹配结果推荐。</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>下一阶段</h2>
+        <div class="flow">
+          <div class="flow-item">
+            <strong>真实 Profile</strong>
+            <span>登录后保存用户背景、目标国家、语言和岗位方向。</span>
+          </div>
+          <div class="flow-item">
+            <strong>好友申请</strong>
+            <span>Connect 从按钮变成真实好友申请，并记录双方关系。</span>
+          </div>
+          <div class="flow-item">
+            <strong>站内消息</strong>
+            <span>加入简单消息系统，让求职者、企业和导师可以联系。</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="auth-config.js"></script>
+  <script src="analytics.js"></script>
+  <script src="network.js"></script>
+</body>
+</html>

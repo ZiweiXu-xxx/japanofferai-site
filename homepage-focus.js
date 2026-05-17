@@ -1,16 +1,10 @@
-// JapanOffer AI - Step 23 Homepage Focus
-// Goal: make Chinese AI Match Entry the main product entrance,
-// and turn repeated buttons into clear auxiliary routes.
+// JapanOffer AI - Step 24 Homepage + Navigation Focus
+// Main product: Chinese AI matching.
+// Platform structure: Home / Network / Jobs / AI Match / Companies / Feedback.
 
 (function () {
   function cleanText(value) {
     return String(value || "").replace(/\s+/g, " ").trim();
-  }
-
-  function isElementVisible(el) {
-    if (!el) return false;
-    const rect = el.getBoundingClientRect();
-    return rect.width > 0 && rect.height > 0;
   }
 
   function setLink(el, href) {
@@ -32,16 +26,6 @@
     el.textContent = text;
   }
 
-  function markPrimary(el) {
-    if (!el) return;
-    el.classList.add("jo23-primary-cta");
-  }
-
-  function markSecondary(el) {
-    if (!el) return;
-    el.classList.add("jo23-secondary-cta");
-  }
-
   function textIncludes(text, words) {
     return words.some((word) => text.toLowerCase().includes(word.toLowerCase()));
   }
@@ -51,10 +35,8 @@
 
     clickable.forEach((el) => {
       const text = cleanText(el.textContent);
-
       if (!text) return;
 
-      // Main Chinese AI matching entrance
       if (
         textIncludes(text, [
           "中文版",
@@ -71,122 +53,94 @@
       ) {
         setText(el, "开始中文 AI 岗位匹配");
         setLink(el, "match.html");
-        markPrimary(el);
+        el.classList.add("jo24-primary-cta");
         return;
       }
 
-      // English report is secondary
-      if (
-        textIncludes(text, [
-          "english auto report",
-          "english report",
-          "英文报告"
-        ])
-      ) {
+      if (textIncludes(text, ["find talent", "talent", "人脉", "会员", "network"])) {
+        setText(el, "进入人脉网络");
+        setLink(el, "network.html");
+        el.classList.add("jo24-secondary-cta");
+        return;
+      }
+
+      if (textIncludes(text, ["english auto report", "english report", "英文报告"])) {
         setText(el, "英文报告辅助入口");
         setLink(el, "report.html");
-        markSecondary(el);
+        el.classList.add("jo24-secondary-cta");
         return;
       }
 
-      // Feedback / survey
-      if (
-        textIncludes(text, [
-          "反馈",
-          "问卷",
-          "survey",
-          "feedback"
-        ])
-      ) {
+      if (textIncludes(text, ["反馈", "问卷", "survey", "feedback"])) {
         setText(el, "反馈与用户调研");
         setLink(el, "feedback.html");
-        markSecondary(el);
+        el.classList.add("jo24-secondary-cta");
         return;
       }
 
-      // Jobs
-      if (
-        text === "Jobs" ||
-        text === "岗位" ||
-        textIncludes(text, ["find jobs", "找岗位", "职位"])
-      ) {
+      if (text === "Jobs" || text === "岗位" || textIncludes(text, ["find jobs", "找岗位", "职位"])) {
         setLink(el, "jobs.html");
         return;
       }
 
-      // Companies
-      if (
-        text === "Companies" ||
-        text === "公司" ||
-        textIncludes(text, ["explore companies", "公司库"])
-      ) {
+      if (text === "Companies" || text === "公司" || textIncludes(text, ["explore companies", "公司库"])) {
         setLink(el, "companies.html");
         return;
       }
 
-      // Employers
-      if (
-        text === "Employers" ||
-        text === "企业" ||
-        textIncludes(text, ["employer"])
-      ) {
+      if (text === "Employers" || text === "企业" || textIncludes(text, ["employer"])) {
         setLink(el, "employers.html");
-        return;
       }
     });
   }
 
   function upgradeNavigation() {
-    const navLinks = Array.from(document.querySelectorAll("nav a, header a"));
+    const existingHeader = document.querySelector("header");
+    if (!existingHeader || existingHeader.querySelector(".jo24-platform-nav")) return;
 
-    navLinks.forEach((a) => {
+    const nav = document.createElement("nav");
+    nav.className = "jo24-platform-nav";
+    nav.innerHTML = `
+      <a href="index.html">首页</a>
+      <a href="network.html">人脉</a>
+      <a href="jobs.html">职位</a>
+      <a href="match.html">AI 匹配</a>
+      <a href="companies.html">公司</a>
+      <a href="feedback.html">反馈</a>
+    `;
+
+    existingHeader.appendChild(nav);
+
+    const oldLinks = Array.from(existingHeader.querySelectorAll("a"))
+      .filter((a) => !a.closest(".jo24-platform-nav"));
+
+    oldLinks.forEach((a) => {
       const text = cleanText(a.textContent);
-
-      if (!text) return;
-
-      if (text === "Network" || text === "网络") {
-        a.textContent = "AI 匹配";
-        a.setAttribute("href", "match.html");
-      }
-
-      if (text === "Report" || text === "AI Report" || text === "AI 报告") {
-        a.textContent = "AI 匹配";
-        a.setAttribute("href", "match.html");
-      }
-
-      if (text === "Jobs" || text === "岗位") {
-        a.setAttribute("href", "jobs.html");
-      }
-
-      if (text === "Companies" || text === "公司") {
-        a.setAttribute("href", "companies.html");
-      }
-
-      if (text === "Feedback" || text === "反馈") {
-        a.setAttribute("href", "feedback.html");
-      }
+      if (text === "Network") a.style.display = "none";
+      if (text === "AI Report" || text === "Report") a.style.display = "none";
+      if (text === "Talent") a.style.display = "none";
     });
   }
 
   function injectFocusBar() {
-    if (document.querySelector(".jo23-focus-bar")) return;
+    if (document.querySelector(".jo24-focus-bar")) return;
 
     const main = document.querySelector("main") || document.body;
     const firstSection = main.querySelector("section") || main.firstElementChild;
 
     const bar = document.createElement("section");
-    bar.className = "jo23-focus-bar";
+    bar.className = "jo24-focus-bar";
     bar.innerHTML = `
-      <div class="jo23-focus-inner">
+      <div class="jo24-focus-inner">
         <div>
-          <span class="jo23-kicker">Main product entrance</span>
-          <h2>先做中文 AI 岗位匹配，再看岗位和公司。</h2>
-          <p>JapanOffer AI 的主打功能不是普通问卷，而是根据用户背景直接输出岗位排序、匹配分数、目标公司和跨境申请路线。</p>
+          <span class="jo24-kicker">Platform structure</span>
+          <h2>先 AI 匹配，再看职位、人脉和公司。</h2>
+          <p>JapanOffer AI 不只是报告工具。它正在成为一个跨境求职网络：用户输入背景，获得岗位排序，然后进入人脉、职位和公司路径。</p>
         </div>
-        <div class="jo23-focus-actions">
-          <a class="jo23-focus-primary" href="match.html">开始中文 AI 岗位匹配</a>
-          <a class="jo23-focus-secondary" href="jobs.html">查看岗位页</a>
-          <a class="jo23-focus-secondary" href="feedback.html">反馈与用户调研</a>
+        <div class="jo24-focus-actions">
+          <a class="jo24-focus-primary" href="match.html">开始中文 AI 岗位匹配</a>
+          <a class="jo24-focus-secondary" href="network.html">进入人脉网络</a>
+          <a class="jo24-focus-secondary" href="jobs.html">查看职位</a>
         </div>
       </div>
     `;
@@ -199,32 +153,52 @@
   }
 
   function addStyles() {
-    if (document.getElementById("jo23-homepage-focus-style")) return;
+    if (document.getElementById("jo24-platform-style")) return;
 
     const style = document.createElement("style");
-    style.id = "jo23-homepage-focus-style";
+    style.id = "jo24-platform-style";
     style.textContent = `
-      .jo23-primary-cta,
-      .jo23-focus-primary {
+      .jo24-platform-nav {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 18px;
+        margin-left: auto;
+      }
+
+      .jo24-platform-nav a {
+        color: #243650 !important;
+        text-decoration: none !important;
+        font-size: 14px !important;
+        font-weight: 850 !important;
+        white-space: nowrap;
+      }
+
+      .jo24-platform-nav a:nth-child(4) {
+        color: #0a66c2 !important;
+      }
+
+      .jo24-primary-cta,
+      .jo24-focus-primary {
         background: linear-gradient(135deg, #0a66c2, #003f88) !important;
         color: #fff !important;
         border-color: transparent !important;
         box-shadow: 0 18px 44px rgba(10,102,194,.26) !important;
       }
 
-      .jo23-secondary-cta {
+      .jo24-secondary-cta {
         background: rgba(255,255,255,.72) !important;
         color: #0a66c2 !important;
         border: 1px solid rgba(10,102,194,.18) !important;
       }
 
-      .jo23-focus-bar {
+      .jo24-focus-bar {
         width: min(1180px, calc(100% - 44px));
         margin: 28px auto 0;
         padding: 0;
       }
 
-      .jo23-focus-inner {
+      .jo24-focus-inner {
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
         gap: 24px;
@@ -239,7 +213,7 @@
         backdrop-filter: blur(16px);
       }
 
-      .jo23-kicker {
+      .jo24-kicker {
         display: inline-flex;
         color: #0a66c2;
         text-transform: uppercase;
@@ -249,7 +223,7 @@
         margin-bottom: 9px;
       }
 
-      .jo23-focus-inner h2 {
+      .jo24-focus-inner h2 {
         margin: 0;
         color: #061a33;
         font-size: clamp(26px, 3vw, 42px);
@@ -258,7 +232,7 @@
         font-weight: 950;
       }
 
-      .jo23-focus-inner p {
+      .jo24-focus-inner p {
         max-width: 720px;
         margin: 12px 0 0;
         color: #53667d;
@@ -267,14 +241,14 @@
         font-weight: 680;
       }
 
-      .jo23-focus-actions {
+      .jo24-focus-actions {
         display: grid;
         gap: 10px;
         min-width: 230px;
       }
 
-      .jo23-focus-primary,
-      .jo23-focus-secondary {
+      .jo24-focus-primary,
+      .jo24-focus-secondary {
         min-height: 44px;
         display: inline-flex;
         align-items: center;
@@ -287,19 +261,37 @@
         white-space: nowrap;
       }
 
-      .jo23-focus-secondary {
+      .jo24-focus-secondary {
         color: #0a66c2;
         background: rgba(255,255,255,.76);
         border: 1px solid rgba(10,102,194,.18);
       }
 
-      @media (max-width: 820px) {
-        .jo23-focus-inner {
+      @media (max-width: 920px) {
+        .jo24-platform-nav a:nth-child(n+5) {
+          display: none;
+        }
+
+        .jo24-focus-inner {
           grid-template-columns: 1fr;
         }
 
-        .jo23-focus-actions {
+        .jo24-focus-actions {
           min-width: 0;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .jo24-platform-nav {
+          gap: 12px;
+        }
+
+        .jo24-platform-nav a {
+          font-size: 13px !important;
+        }
+
+        .jo24-platform-nav a:nth-child(n+4) {
+          display: none;
         }
       }
     `;
