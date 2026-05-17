@@ -312,6 +312,10 @@
       languages: Array.isArray(row.languages) ? row.languages : [],
       skills: Array.isArray(row.skills) ? row.skills : [],
       description: row.description || "",
+      sourceName: row.source_name || "",
+      sourceUrl: row.source_url || row.apply_url || "",
+      externalId: row.external_id || "",
+      isVerified: !!row.is_verified,
       baseScore: row.match_base ?? row.score ?? 60
     };
   }
@@ -413,12 +417,15 @@
           </div>
 
           <p class="job-desc">${escapeHtml(job.description)}</p>
+          ${job.sourceUrl ? `<p class="job-desc"><a href="${escapeHtml(job.sourceUrl)}" target="_blank" rel="noopener">查看公开来源 / 申请链接</a></p>` : ""}
 
           <div class="pills">
             <span class="pill">${escapeHtml(job.market)}</span>
             <span class="pill">${escapeHtml(job.category)}</span>
             <span class="pill">${escapeHtml(job.visa)}</span>
             ${job.languages.map((lang) => `<span class="pill">${escapeHtml(lang)}</span>`).join("")}
+            ${job.sourceName ? `<span class="pill">来源：${escapeHtml(job.sourceName)}</span>` : ""}
+            ${job.isVerified ? `<span class="pill">公开岗位</span>` : ""}
           </div>
 
           <div class="job-reasons">
