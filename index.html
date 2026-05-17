@@ -3,78 +3,82 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>JapanOffer AI | Cross-border Talent Matching Platform</title>
-  <meta name="description" content="JapanOffer AI is a cross-border talent matching platform for job seekers and employers." />
+  <title>JapanOffer AI | Cross-border Talent Matching Network</title>
+  <meta
+    name="description"
+    content="JapanOffer AI is a cross-border talent matching network that helps international job seekers and employers find better matches through AI match scores."
+  />
   <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
   <header class="topbar">
-    <a class="brand" href="#top">
+    <a class="brand" href="#top" aria-label="JapanOffer AI home">
       <span class="brand-mark">J</span>
-      <span>
+      <span class="brand-copy">
         <strong>JapanOffer AI</strong>
-        <small>Cross-border Talent Matching</small>
+        <small>Cross-border Talent Network</small>
       </span>
     </a>
 
-    <nav class="nav">
+    <div class="top-search" aria-label="Global platform search">
+      <span>⌕</span>
+      <input value="Search roles, talent or companies" aria-label="Search roles, talent or companies" />
+    </div>
+
+    <nav class="nav" aria-label="Main navigation">
+      <a href="#network">Network</a>
+      <a href="#matching">Matching</a>
       <a href="#talent">Talent</a>
-      <a href="#jobs">Jobs</a>
-      <a href="#companies">Companies</a>
-      <a href="#match">Match Score</a>
-      <a href="#employers">For Employers</a>
+      <a href="#employers">Employers</a>
+      <a href="#business">Business</a>
     </nav>
 
-    <div class="top-actions">
-      <a class="signin" href="#beta">Sign in</a>
-      <a class="join" href="#beta">Join Beta</a>
-    </div>
+    <a class="nav-cta" href="#beta">Join Beta</a>
   </header>
 
   <main id="top">
     <section class="hero">
-      <div class="hero-copy">
-        <p class="eyebrow">AI Talent Matching Platform</p>
+      <div class="hero-left">
+        <p class="eyebrow">AI-powered cross-border hiring network</p>
 
         <h1>
-          The cross-border talent platform built for smarter job matching.
-          <span>面向跨境就业的智能人才匹配平台。</span>
+          Cross-border careers should be matched, not searched blindly.
+          <span>跨境求职不应该靠海投，而应该靠精准匹配。</span>
         </h1>
 
-        <p class="subtitle">
-          LinkedIn helps people find jobs. JapanOffer AI helps cross-border talent and employers find the right match.
+        <p class="hero-text">
+          LinkedIn shows where jobs are. JapanOffer AI ranks which roles truly fit each candidate,
+          and helps employers find international talent already matched by language, visa, background and career direction.
         </p>
 
-        <p class="subtitle cn">
-          LinkedIn 主要告诉用户哪里有岗位。JapanOffer AI 要告诉用户哪个岗位真正适合自己，
-          也帮助企业更快找到更匹配的跨境候选人。
+        <p class="hero-text cn">
+          LinkedIn 告诉用户哪里有岗位。JapanOffer AI 告诉用户哪个岗位真正适合自己，
+          也帮助企业更快找到语言、签证、背景和岗位要求都更匹配的跨境候选人。
         </p>
 
-        <div class="search-panel" aria-label="JapanOffer AI matching search">
+        <div class="search-card" aria-label="Platform matching entry">
           <div class="search-tabs">
             <button class="active">Find jobs</button>
             <button>Find talent</button>
             <button>Explore companies</button>
           </div>
 
-          <div class="platform-search">
-            <div class="search-input keyword">
-              <span>Search</span>
-              <input type="text" value="Legal, compliance, business, tech..." aria-label="Search roles or skills" />
-            </div>
+          <div class="search-row">
+            <label>
+              <span>Role, skill or background</span>
+              <input value="Legal, compliance, business, technology" />
+            </label>
 
-            <div class="search-input">
-              <span>Location</span>
-              <input type="text" value="Japan, Singapore, Hong Kong" aria-label="Search target market" />
-            </div>
+            <label>
+              <span>Target market</span>
+              <input value="Japan, Singapore, Hong Kong" />
+            </label>
 
-            <a class="match-button" href="https://www.wjx.cn/vm/PRY0MgS.aspx" target="_blank" rel="noopener">
-              Match now
-            </a>
+            <a href="https://www.wjx.cn/vm/PRY0MgS.aspx" target="_blank" rel="noopener">Match now</a>
           </div>
 
-          <div class="quick-filters" aria-label="Quick matching filters">
+          <div class="quick-tags">
             <span>Entry-level</span>
             <span>Visa-aware</span>
             <span>English + Japanese</span>
@@ -82,298 +86,268 @@
           </div>
         </div>
 
-        <div class="hero-buttons">
+        <div class="hero-actions">
           <a class="btn primary" href="https://www.wjx.cn/vm/PRY0MgS.aspx" target="_blank" rel="noopener">
-            个人用户：开始岗位匹配
+            个人用户：开始匹配
           </a>
-          <a class="btn secondary" href="#employers">
-            企业端：加入人才匹配等待名单
+          <a class="btn secondary" href="mailto:hello@japanofferai.com?subject=Employer%20waitlist">
+            企业端：加入等待名单
           </a>
-        </div>
-
-        <div class="proof-row">
-          <span>Role matching</span>
-          <span>Visa and language fit</span>
-          <span>Employer shortlist</span>
         </div>
       </div>
 
-      <aside class="platform-preview">
-        <div class="preview-header">
+      <aside class="hero-product" aria-label="JapanOffer AI product preview">
+        <div class="product-top">
           <div>
-            <p>Talent Match Dashboard</p>
-            <h2>Recommended matches</h2>
+            <p>JapanOffer AI</p>
+            <h2>Talent Match OS</h2>
           </div>
-          <span>Beta</span>
+          <span>Live beta</span>
         </div>
 
-        <div class="tabs">
-          <button class="active">For Talent</button>
-          <button>For Employers</button>
-        </div>
+        <div class="product-layout">
+          <div class="mini-sidebar">
+            <span class="active">Matches</span>
+            <span>Talent</span>
+            <span>Roles</span>
+            <span>Companies</span>
+          </div>
 
-        <article class="job-card featured">
-          <div class="job-top">
-            <div>
-              <h3>Legal Compliance Analyst</h3>
-              <p>Tokyo · Entry Level · English and Japanese preferred</p>
+          <div class="match-feed">
+            <article class="match-card best">
+              <div class="match-main">
+                <span class="company-icon">J</span>
+                <div>
+                  <h3>Legal Compliance Analyst</h3>
+                  <p>Tokyo · Entry level · English and Japanese preferred</p>
+                </div>
+              </div>
+              <div class="match-score">
+                <strong>86%</strong>
+                <small>Apply first</small>
+              </div>
+              <div class="match-tags">
+                <span>Strong education fit</span>
+                <span>Medium visa risk</span>
+                <span>Legal route</span>
+              </div>
+            </article>
+
+            <article class="match-card">
+              <div class="match-main">
+                <span class="company-icon dark">S</span>
+                <div>
+                  <h3>Cross-border Business Associate</h3>
+                  <p>Singapore · International team · Mandarin useful</p>
+                </div>
+              </div>
+              <div class="match-score">
+                <strong>79%</strong>
+                <small>Shortlist</small>
+              </div>
+              <div class="match-tags">
+                <span>Good language fit</span>
+                <span>Lower visa risk</span>
+              </div>
+            </article>
+
+            <div class="candidate-strip">
+              <span class="candidate-avatar">ZX</span>
+              <div>
+                <strong>Candidate profile</strong>
+                <p>LLB · English / Japanese / Mandarin · Compliance target</p>
+              </div>
+              <a href="#employers">Employer view</a>
             </div>
-            <strong>86%</strong>
           </div>
-          <div class="tags">
-            <span>High Fit</span>
-            <span>Visa Risk: Medium</span>
-            <span>Apply first</span>
-          </div>
-        </article>
-
-        <article class="job-card">
-          <div class="job-top">
-            <div>
-              <h3>Japan Business Associate</h3>
-              <p>Singapore · Cross-border role · Mandarin useful</p>
-            </div>
-            <strong>79%</strong>
-          </div>
-          <div class="tags">
-            <span>Good Fit</span>
-            <span>Visa Risk: Low</span>
-            <span>Shortlist</span>
-          </div>
-        </article>
-
-        <div class="candidate-card">
-          <div class="avatar">ZX</div>
-          <div>
-            <h3>Candidate preview</h3>
-            <p>LLB student · English / Japanese / Mandarin · Legal and compliance target</p>
-          </div>
-          <a href="#employers">View match</a>
         </div>
       </aside>
     </section>
 
-
-    <section class="section network-preview" id="jobs">
-      <div class="section-head center-head">
-        <p class="eyebrow">Platform preview</p>
-        <h2>A smarter cross-border hiring network.</h2>
+    <section class="section network" id="network">
+      <div class="section-head center">
+        <p class="eyebrow">Platform network</p>
+        <h2>One platform, two directions: people find roles, employers find people.</h2>
         <p>
-          The first version starts with matching reports. The long-term product becomes a platform where talent,
-          roles and employers can find each other through match scores.
+          JapanOffer AI starts with individual match reports, then grows into a cross-border talent network
+          where both sides can be ranked, filtered and connected through match scores.
         </p>
       </div>
 
-      <div class="network-shell">
-        <aside class="profile-panel">
+      <div class="network-grid">
+        <article class="profile-panel">
           <div class="cover"></div>
-          <div class="profile-avatar">ZX</div>
-          <h3>Cross-border talent profile</h3>
-          <p>LLB student · English / Japanese / Mandarin · Legal and compliance target</p>
-
+          <span class="profile-avatar">ZX</span>
+          <h3>Talent profile</h3>
+          <p>Education, language, visa situation and target countries become a structured profile for matching.</p>
           <div class="profile-stats">
-            <div>
-              <strong>86%</strong>
-              <span>Best role fit</span>
-            </div>
-            <div>
-              <strong>3</strong>
-              <span>Recommended markets</span>
-            </div>
+            <div><strong>86%</strong><span>Best role fit</span></div>
+            <div><strong>3</strong><span>Markets ranked</span></div>
+          </div>
+        </article>
+
+        <article class="feed-panel">
+          <div class="panel-title">
+            <h3>Recommended roles</h3>
+            <span>Ranked by match score</span>
           </div>
 
-          <a href="https://www.wjx.cn/vm/PRY0MgS.aspx" target="_blank" rel="noopener">Complete profile →</a>
-        </aside>
-
-        <section class="feed-panel">
-          <div class="feed-top">
-            <h3>Recommended roles for you</h3>
-            <span>Updated by match score</span>
-          </div>
-
-          <article class="feed-card best">
-            <div class="feed-card-main">
-              <div class="company-logo">J</div>
-              <div>
-                <h3>Legal Compliance Analyst</h3>
-                <p>Tokyo · Entry level · English and Japanese preferred</p>
-              </div>
-            </div>
-            <div class="feed-score">
-              <strong>86%</strong>
-              <span>Apply first</span>
-            </div>
-            <div class="feed-tags">
-              <span>Strong education fit</span>
-              <span>Medium visa risk</span>
-              <span>Legal route</span>
-            </div>
-          </article>
-
-          <article class="feed-card">
-            <div class="feed-card-main">
-              <div class="company-logo">S</div>
-              <div>
-                <h3>Cross-border Business Associate</h3>
-                <p>Singapore · International team · Mandarin useful</p>
-              </div>
-            </div>
-            <div class="feed-score">
-              <strong>79%</strong>
-              <span>Shortlist</span>
-            </div>
-            <div class="feed-tags">
-              <span>Good language fit</span>
-              <span>Lower visa risk</span>
-              <span>Asia route</span>
-            </div>
-          </article>
-
-          <article class="feed-card weak">
-            <div class="feed-card-main">
-              <div class="company-logo">H</div>
-              <div>
-                <h3>General Marketing Intern</h3>
-                <p>Hong Kong · High competition · Weak background fit</p>
-              </div>
-            </div>
-            <div class="feed-score">
-              <strong>42%</strong>
-              <span>Low priority</span>
-            </div>
-            <div class="feed-tags">
-              <span>Weak role fit</span>
-              <span>High competition</span>
-              <span>Do not apply first</span>
-            </div>
-          </article>
-        </section>
-
-        <aside class="employer-panel">
-          <div class="feed-top">
-            <h3>Employer view</h3>
-            <span>Candidate shortlist</span>
-          </div>
-
-          <div class="shortlist-card">
-            <div class="mini-avatar">A</div>
+          <div class="role-row">
             <div>
-              <h3>LLB candidate</h3>
-              <p>Legal / compliance · JP / EN / CN</p>
+              <h4>Legal Compliance Analyst</h4>
+              <p>Japan · Strong education fit · Medium visa risk</p>
             </div>
+            <strong>86%</strong>
+          </div>
+
+          <div class="role-row">
+            <div>
+              <h4>Business Associate</h4>
+              <p>Singapore · Good language fit · Lower visa risk</p>
+            </div>
+            <strong>79%</strong>
+          </div>
+
+          <div class="role-row low">
+            <div>
+              <h4>General Marketing Intern</h4>
+              <p>Hong Kong · Weak fit · High competition</p>
+            </div>
+            <strong>42%</strong>
+          </div>
+        </article>
+
+        <article class="employer-panel">
+          <div class="panel-title">
+            <h3>Employer shortlist</h3>
+            <span>Candidate view</span>
+          </div>
+
+          <div class="shortlist-row">
+            <span>A</span>
+            <div><h4>LLB candidate</h4><p>Legal / compliance · JP / EN / CN</p></div>
             <strong>Strong</strong>
           </div>
 
-          <div class="shortlist-card">
-            <div class="mini-avatar">B</div>
-            <div>
-              <h3>Business graduate</h3>
-              <p>Japan market · Mandarin / English</p>
-            </div>
+          <div class="shortlist-row">
+            <span>B</span>
+            <div><h4>Business graduate</h4><p>Japan market · Mandarin / English</p></div>
             <strong>Good</strong>
           </div>
 
-          <div class="employer-note">
-            <h3>Why employers care</h3>
-            <p>
-              Companies can reduce weak applications and see candidates already filtered by role fit,
-              language fit and visa risk.
-            </p>
+          <div class="note-box">
+            <h4>Why employers care</h4>
+            <p>Less manual screening, fewer weak applications and a faster shortlist of realistic cross-border candidates.</p>
           </div>
-
-          <a class="employer-link" href="#employers">Join employer waitlist →</a>
-        </aside>
+        </article>
       </div>
     </section>
 
-    <section class="section" id="match">
+    <section class="section difference" id="matching">
       <div class="section-head">
-        <p class="eyebrow">Why we are different</p>
-        <h2>LinkedIn is built for search. JapanOffer AI is built for match.</h2>
+        <p class="eyebrow">Why not another job board?</p>
+        <h2>LinkedIn is built for search. JapanOffer AI is built for matching.</h2>
         <p>
-          Job boards show information. JapanOffer AI turns background, role requirements,
-          language, visa and country fit into a practical match score.
+          Normal platforms show jobs. JapanOffer AI judges whether the route is realistic before users waste time applying.
         </p>
       </div>
 
-      <div class="compare-grid">
-        <article class="compare-card">
+      <div class="compare">
+        <article>
           <h3>Traditional job platforms</h3>
           <ul>
-            <li>Users search roles by themselves</li>
+            <li>Users search jobs manually</li>
             <li>Users guess whether they are qualified</li>
             <li>Employers receive many weak applications</li>
-            <li>Cross-border language and visa risk is unclear</li>
+            <li>Language, visa and country risk are unclear</li>
           </ul>
         </article>
 
-        <article class="compare-card blue">
+        <article class="highlight">
           <h3>JapanOffer AI</h3>
           <ul>
-            <li>System understands the user background first</li>
+            <li>System understands candidate background first</li>
             <li>Roles are ranked by realistic match score</li>
-            <li>Employers can find better matched candidates</li>
-            <li>Language, visa, education and role requirements are judged together</li>
+            <li>Employers can shortlist better matched candidates</li>
+            <li>Education, language, visa and role requirements are judged together</li>
           </ul>
         </article>
       </div>
     </section>
 
-    <section class="section two-side" id="talent">
+    <section class="section two-sides" id="talent">
       <article class="side-card">
-        <p class="eyebrow">For Job Seekers</p>
+        <p class="eyebrow">For job seekers</p>
         <h2>Stop applying blindly.</h2>
         <p>
-          Get a clear view of which overseas roles fit your background, which roles are too risky,
-          and what you should improve next.
+          Users get a clear answer to: which overseas roles should I apply for first, which ones should I avoid,
+          and what should I improve next?
         </p>
-        <ul>
-          <li>Overseas role match score</li>
-          <li>Language and visa risk check</li>
-          <li>Application priority ranking</li>
-          <li>CV and route improvement suggestions</li>
-        </ul>
-        <a class="btn primary" href="https://www.wjx.cn/vm/PRY0MgS.aspx" target="_blank" rel="noopener">
-          Start as job seeker
-        </a>
+        <div class="feature-list">
+          <span>Role match score</span>
+          <span>Visa and language risk</span>
+          <span>Application priority</span>
+          <span>CV and route suggestions</span>
+        </div>
+        <a class="btn primary" href="https://www.wjx.cn/vm/PRY0MgS.aspx" target="_blank" rel="noopener">Start as job seeker</a>
       </article>
 
       <article class="side-card employer" id="employers">
-        <p class="eyebrow">For Employers</p>
+        <p class="eyebrow">For employers</p>
         <h2>Find candidates who already fit.</h2>
         <p>
-          Discover cross-border candidates whose language ability, education, visa situation and career direction
-          are closer to your hiring needs.
+          Employers can discover candidates who are closer to their hiring needs before spending time on manual screening.
         </p>
-        <ul>
-          <li>Candidate background matching</li>
-          <li>Language ability filtering</li>
-          <li>Visa risk pre-screening</li>
-          <li>Shortlist for international hiring</li>
-        </ul>
-        <a class="btn secondary" href="mailto:hello@japanofferai.com?subject=Employer%20waitlist">
-          Join employer waitlist
-        </a>
+        <div class="feature-list">
+          <span>Candidate matching</span>
+          <span>Language filtering</span>
+          <span>Visa risk pre-check</span>
+          <span>International shortlist</span>
+        </div>
+        <a class="btn secondary" href="mailto:hello@japanofferai.com?subject=Employer%20waitlist">Join employer waitlist</a>
       </article>
     </section>
 
-    <section class="section model" id="companies">
-      <div class="section-head">
-        <p class="eyebrow">Business model</p>
-        <h2>From individual reports to a cross-border talent network.</h2>
+    <section class="section engine">
+      <div class="section-head center">
+        <p class="eyebrow">Matching engine</p>
+        <h2>The value is not AI chat. The value is structured matching.</h2>
+        <p>
+          Users can ask a general AI for advice, but JapanOffer AI turns scattered information into a repeatable matching system.
+        </p>
       </div>
 
-      <div class="model-grid">
+      <div class="engine-grid">
+        <span>Education</span>
+        <span>Language</span>
+        <span>Visa risk</span>
+        <span>Target country</span>
+        <span>Role requirements</span>
+        <span>Application outcome</span>
+      </div>
+
+      <div class="formula">
+        Candidate profile + Job requirements + Market rules = Cross-border Match Score
+      </div>
+    </section>
+
+    <section class="section business" id="business">
+      <div class="section-head">
+        <p class="eyebrow">Business model</p>
+        <h2>From individual reports to an international talent network.</h2>
+      </div>
+
+      <div class="business-grid">
         <article>
           <span>01</span>
-          <h3>Personal matching report</h3>
-          <p>Paid AI reports, CV improvement and application route advice for individual users.</p>
+          <h3>Paid match reports</h3>
+          <p>Affordable AI matching reports, CV improvement and route advice for individual users.</p>
         </article>
 
         <article>
           <span>02</span>
           <h3>Subscription</h3>
-          <p>Ongoing job matching, application tracking and route planning for serious overseas job seekers.</p>
+          <p>Ongoing role matching, application tracking and career route planning for serious users.</p>
         </article>
 
         <article>
@@ -385,14 +359,14 @@
     </section>
 
     <section class="section cta" id="beta">
-      <div class="cta-box">
+      <div class="cta-card">
         <p class="eyebrow">Beta access</p>
-        <h2>Join the first version of JapanOffer AI.</h2>
+        <h2>Join the first cross-border talent matching beta.</h2>
         <p>
-          We are starting with cross-border job seekers and building toward a two-sided talent matching platform.
+          We are starting with job seeker matching and building toward a two-sided talent network for candidates and employers.
         </p>
 
-        <div class="hero-buttons center">
+        <div class="hero-actions center-actions">
           <a class="btn primary" href="https://www.wjx.cn/vm/PRY0MgS.aspx" target="_blank" rel="noopener">
             个人用户：开始内测
           </a>
@@ -406,7 +380,7 @@
 
   <footer class="footer">
     <strong>JapanOffer AI</strong>
-    <span>Cross-border talent matching platform.</span>
+    <span>Cross-border talent matching network.</span>
   </footer>
 </body>
 </html>
