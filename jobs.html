@@ -30,7 +30,7 @@
       <a href="employers.html">Employers</a>
     </nav>
 
-    <a class="nav-cta" href="assessment.html">Join Beta</a>
+    <div class="auth-links"><a class="signin-link" href="login.html">Sign in</a><a class="nav-cta" href="signup.html">Sign up</a></div>
   </header>
 
   <main>
@@ -93,6 +93,10 @@
     const resultCount = document.getElementById("resultCount");
     const sourceNote = document.getElementById("sourceNote");
 
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("query")) queryInput.value = params.get("query");
+    if (params.get("market")) marketInput.value = params.get("market");
+
     function escapeHtml(str) {
       return String(str || "")
         .replaceAll("&", "&amp;")
@@ -128,7 +132,7 @@
 
           <div class="live-actions">
             <a class="btn secondary" href="${escapeHtml(job.url)}" target="_blank" rel="noopener">View original job</a>
-            <a class="btn primary" href="assessment.html">Check my fit</a>
+            <button class="btn secondary save-job-btn" type="button" data-job-title="${escapeHtml(job.title)}" data-job-url="${escapeHtml(job.url)}">Save role</button><a class="btn primary" href="assessment.html">Check my fit</a>
           </div>
         </article>
       `;
@@ -161,11 +165,41 @@
 
     form.addEventListener("submit", function (event) {
       event.preventDefault();
-      loadJobs();
+      document.addEventListener("click", function (event) {
+      const button = event.target.closest(".save-job-btn");
+      if (!button) return;
+      const saved = JSON.parse(localStorage.getItem("japanoffer_saved_roles") || "[]");
+      saved.push({
+        title: button.dataset.jobTitle,
+        url: button.dataset.jobUrl,
+        savedAt: new Date().toISOString()
+      });
+      localStorage.setItem("japanoffer_saved_roles", JSON.stringify(saved));
+      button.textContent = "Saved";
+    });
+
+    loadJobs();
+    });
+
+    document.addEventListener("click", function (event) {
+      const button = event.target.closest(".save-job-btn");
+      if (!button) return;
+      const saved = JSON.parse(localStorage.getItem("japanoffer_saved_roles") || "[]");
+      saved.push({
+        title: button.dataset.jobTitle,
+        url: button.dataset.jobUrl,
+        savedAt: new Date().toISOString()
+      });
+      localStorage.setItem("japanoffer_saved_roles", JSON.stringify(saved));
+      button.textContent = "Saved";
     });
 
     loadJobs();
   </script>
   <script src="effects.js"></script>
+  <script src="auth-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth.js"></script>
+  <script src="platform-actions.js"></script>
 </body>
 </html>
