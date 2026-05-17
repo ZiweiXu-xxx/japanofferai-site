@@ -1,114 +1,154 @@
 // JapanOffer AI admin summary API
-// Keep SUPABASE_SERVICE_ROLE_KEY and ADMIN_PASSWORD in Vercel Environment Variables, not in GitHub.
+// Step 16: robust Supabase REST reader with better key handling and diagnostics.
+// Environment variables needed in Vercel:
+// SUPABASE_URL
+// SUPABASE_SERVICE_ROLE_KEY
+// ADMIN_PASSWORD
 
-function countBy(rows, getter) {
-  const map = new Map();
-  for (const row of rows) {
-    const value = getter(row) || "Unknown";
-    const key = String(value).trim() || "Unknown";
-    map.set(key, (map.get(key) || 0) + 1);
+function clean(value) {
+  return String(value || "")
+    .trim()
+    .replace(/^['"]|['"]$/g, "")
+    .replace(/\s+/g, "");
+}
+
+function cleanUrl(value) {
+  return clean(value).replace(/\/rest\/v1\/?$/i, "").replace(/\/+$/g, "");
+}
+
+function json(res, status, data) {
+  res.statusCode = status;
+  res.setHeader("Content-Type", "application/json; charset=utf-8");
+  res.setHeader("Cache-Control", "no-store");
+  res.end(JSON.stringify(data));
+}
+
+async function supabaseGet(path, params = "") {
+  const supabaseUrl = cleanUrl(process.env.SUPABASE_URL);
+  const key = clean(process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY);
+
+  if (!supabaseUrl || !key) {
+    throw new Error("Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in Vercel Environment Variables.");
   }
-  return [...map.entries()]
-    .map(([label, count]) => ({ label, count }))
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 8);
-}
 
-function languageBreakdown(rows) {
-  const langs = [
-    ["English", /english|英语/i],
-    ["Japanese", /japanese|日本|日语|n1|n2/i],
-    ["Mandarin", /mandarin|chinese|中文|普通话/i],
-    ["Cantonese", /cantonese|粤语/i],
-    ["Korean", /korean|韩语/i]
-  ];
-  const counts = langs.map(([label, regex]) => ({
-    label,
-    count: rows.filter((r) => regex.test(r.languages || "")).length
-  })).filter((x) => x.count > 0);
-  return counts.sort((a, b) => b.count - a.count);
-}
-
-async function readJsonBody(req) {
-  if (req.body && typeof req.body === "object") return req.body;
-  if (req.body && typeof req.body === "string") {
-    try { return JSON.parse(req.body); } catch { return {}; }
-  }
-  return new Promise((resolve) => {
-    let data = "";
-    req.on("data", (chunk) => { data += chunk; });
-    req.on("end", () => {
-      try { resolve(JSON.parse(data || "{}")); } catch { resolve({}); }
-    });
-  });
-}
-
-async function supabaseGet(path) {
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  const response = await fetch(`${url}/rest/v1/${path}`, {
+  const url = `${supabaseUrl}/rest/v1/${path}${params}`;
+  const response = await fetch(url, {
+    method: "GET",
     headers: {
-      apikey: key,
-      Authorization: `Bearer ${key}`,
-      "Content-Type": "application/json"
+      "apikey": key,
+      "Authorization": `Bearer ${key}`,
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+      "Prefer": "count=exact"
     }
   });
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`Supabase error: ${response.status} ${text}`);
+
+  const text = await response.text();
+  let body = null;
+  try {
+    body = text ? JSON.parse(text) : null;
+  } catch {
+    body = text;
   }
-  return response.json();
+
+  if (!response.ok) {
+    const keyHint = key.startsWith("eyJ")
+      ? "legacy_jwt_key"
+      : key.startsWith("sb_secret_")
+        ? "new_secret_key"
+        : key.startsWith("sb_publishable_")
+          ? "publishable_key_wrong_for_admin"
+          : "unknown_key_format";
+
+    const detail = typeof body === "string" ? body : JSON.stringify(body);
+    const err = new Error(`Supabase REST error ${response.status}: ${detail}`);
+    err.status = response.status;
+    err.detail = body;
+    err.debug = {
+      supabaseUrl,
+      keyTypeDetected: keyHint,
+      keyLength: key.length,
+      endpoint: url.replace(supabaseUrl, "[SUPABASE_URL]")
+    };
+    throw err;
+  }
+
+  return body || [];
+}
+
+function countBy(rows, field) {
+  const counts = {};
+  for (const row of rows || []) {
+    const value = row && row[field] ? String(row[field]) : "Unknown";
+    counts[value] = (counts[value] || 0) + 1;
+  }
+  return Object.entries(counts)
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count);
+}
+
+function average(rows, field) {
+  const nums = (rows || [])
+    .map((row) => Number(row && row[field]))
+    .filter((n) => Number.isFinite(n));
+  if (!nums.length) return 0;
+  return Math.round(nums.reduce((a, b) => a + b, 0) / nums.length);
 }
 
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
-    res.status(405).json({ error: "Method not allowed" });
-    return;
-  }
-
-  const body = await readJsonBody(req);
-  if (!process.env.ADMIN_PASSWORD || body.password !== process.env.ADMIN_PASSWORD) {
-    res.status(401).json({ error: "Wrong admin password" });
-    return;
-  }
-
-  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    res.status(500).json({ error: "Missing Vercel environment variables: SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY" });
-    return;
+    return json(res, 405, { error: "Method not allowed" });
   }
 
   try {
-    const [reports, events] = await Promise.all([
-      supabaseGet("report_submissions?select=*&order=created_at.desc&limit=500"),
-      supabaseGet("page_events?select=*&order=created_at.desc&limit=1000")
-    ]);
-
-    const visitorIds = new Set();
-    for (const row of [...reports, ...events]) {
-      visitorIds.add(row.user_id || row.user_email || row.anonymous_id || row.session_id || row.id);
+    const adminPassword = clean(process.env.ADMIN_PASSWORD);
+    const chunks = [];
+    for await (const chunk of req) chunks.push(chunk);
+    const raw = Buffer.concat(chunks).toString("utf8");
+    let payload = {};
+    try {
+      payload = raw ? JSON.parse(raw) : {};
+    } catch {
+      payload = {};
     }
 
-    const scores = reports.map((r) => Number(r.score)).filter(Number.isFinite);
-    const averageScore = scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+    if (!adminPassword || clean(payload.password) !== adminPassword) {
+      return json(res, 401, { error: "Invalid admin password" });
+    }
 
-    res.status(200).json({
+    const reports = await supabaseGet(
+      "report_submissions",
+      "?select=*&order=created_at.desc&limit=200"
+    );
+
+    const events = await supabaseGet(
+      "page_events",
+      "?select=*&order=created_at.desc&limit=500"
+    );
+
+    const uniqueVisitors = new Set(
+      (events || []).map((e) => e.visitor_id || e.session_id || e.anonymous_id).filter(Boolean)
+    ).size;
+
+    const summary = {
       totalReports: reports.length,
-      uniqueVisitors: visitorIds.size,
-      pageViews: events.filter((e) => e.event_name === "page_view").length,
-      averageScore,
-      marketBreakdown: countBy(reports, (r) => r.market),
-      careerBreakdown: countBy(reports, (r) => r.career),
-      languageBreakdown: languageBreakdown(reports),
-      recentReports: reports.slice(0, 10).map((r) => ({
-        created_at: r.created_at,
-        user_email: r.user_email,
-        anonymous_id: r.anonymous_id,
-        market: r.market,
-        career: r.career,
-        score: r.score
-      }))
-    });
+      totalEvents: events.length,
+      uniqueVisitors,
+      averageScore: average(reports, "match_score"),
+      markets: countBy(reports, "market"),
+      careers: countBy(reports, "career"),
+      languages: countBy(reports, "languages"),
+      recentReports: reports.slice(0, 20),
+      recentEvents: events.slice(0, 30)
+    };
+
+    return json(res, 200, summary);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return json(res, 500, {
+      error: error.message || "Unknown admin summary error",
+      detail: error.detail || null,
+      debug: error.debug || null,
+      note: "If this says Invalid API key, check that Vercel SUPABASE_SERVICE_ROLE_KEY is the Legacy service_role JWT starting with eyJ, with no quotes/spaces/newlines, and then redeploy."
+    });
   }
 };
