@@ -126,12 +126,12 @@ a {
 .hero {
   display: grid;
   width: min(var(--max), calc(100% - 40px));
-  min-height: calc(100vh - 72px);
+  min-height: 760px;
   margin: 0 auto;
   grid-template-columns: 1.02fr 0.98fr;
   gap: 54px;
   align-items: center;
-  padding: 62px 0;
+  padding: 56px 0 66px;
 }
 
 .eyebrow {
@@ -848,5 +848,279 @@ h1 span {
 
   .market-card {
     min-height: auto;
+  }
+}
+
+
+/* Step 3: LinkedIn-style network feed */
+
+.network-preview {
+  padding-top: 74px;
+}
+
+.network-shell {
+  display: grid;
+  grid-template-columns: 0.82fr 1.35fr 0.95fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.profile-panel,
+.feed-panel,
+.employer-panel {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  background: white;
+  box-shadow: 0 14px 38px rgba(10, 37, 64, 0.06);
+}
+
+.profile-panel {
+  overflow: hidden;
+  text-align: center;
+}
+
+.cover {
+  height: 74px;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.45), transparent 30%),
+    linear-gradient(135deg, var(--blue), var(--navy));
+}
+
+.profile-avatar {
+  display: grid;
+  width: 72px;
+  height: 72px;
+  place-items: center;
+  margin: -36px auto 14px;
+  border: 4px solid white;
+  border-radius: 999px;
+  color: white;
+  background: var(--navy);
+  font-size: 18px;
+  font-weight: 950;
+}
+
+.profile-panel h3 {
+  margin: 0 22px 8px;
+  color: var(--navy);
+  font-size: 18px;
+}
+
+.profile-panel p {
+  margin: 0 24px 18px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.profile-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.profile-stats div {
+  padding: 16px 10px;
+}
+
+.profile-stats div:first-child {
+  border-right: 1px solid var(--line);
+}
+
+.profile-stats strong {
+  display: block;
+  color: var(--blue);
+  font-size: 22px;
+  letter-spacing: -0.04em;
+}
+
+.profile-stats span {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.profile-panel a {
+  display: block;
+  padding: 16px;
+  color: var(--blue);
+  font-size: 13px;
+  font-weight: 950;
+}
+
+.feed-panel,
+.employer-panel {
+  padding: 18px;
+}
+
+.feed-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.feed-top h3 {
+  margin: 0;
+  color: var(--navy);
+  font-size: 18px;
+}
+
+.feed-top span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.feed-card {
+  position: relative;
+  padding: 18px;
+  margin-bottom: 14px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: white;
+}
+
+.feed-card.best {
+  border-color: rgba(10, 102, 194, 0.35);
+  background: linear-gradient(180deg, #ffffff, #f1f7ff);
+}
+
+.feed-card.weak {
+  opacity: 0.82;
+}
+
+.feed-card-main {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 13px;
+  padding-right: 92px;
+}
+
+.company-logo {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border-radius: 12px;
+  color: white;
+  background: var(--blue);
+  font-weight: 950;
+}
+
+.feed-card h3 {
+  margin-bottom: 5px;
+  color: var(--navy);
+  font-size: 17px;
+}
+
+.feed-card p {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.feed-score {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  text-align: right;
+}
+
+.feed-score strong {
+  display: block;
+  color: var(--blue);
+  font-size: 27px;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.feed-score span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.feed-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.feed-tags span {
+  padding: 8px 10px;
+  border-radius: 999px;
+  color: var(--blue-dark);
+  background: var(--soft-blue);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.shortlist-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.shortlist-card h3 {
+  margin-bottom: 4px;
+  color: var(--navy);
+  font-size: 15px;
+}
+
+.shortlist-card p {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.shortlist-card strong {
+  padding: 7px 9px;
+  border-radius: 999px;
+  color: var(--blue-dark);
+  background: var(--soft-blue);
+  font-size: 11px;
+}
+
+.employer-note {
+  margin: 18px 0;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #f8fbff;
+}
+
+.employer-note h3 {
+  margin-bottom: 8px;
+  color: var(--navy);
+  font-size: 16px;
+}
+
+.employer-note p {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.employer-link {
+  color: var(--blue);
+  font-size: 13px;
+  font-weight: 950;
+}
+
+@media (max-width: 1050px) {
+  .network-shell {
+    grid-template-columns: 1fr;
   }
 }
