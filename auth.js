@@ -185,9 +185,9 @@
       <div class="page-grid account-actions-grid">
         <article class="page-card featured">
           <span class="kicker">Next step</span>
-          <h2>Complete match profile</h2>
+          <h2>Generate AI match report</h2>
           <p>Fill in your education, languages, target countries and career direction.</p>
-          <a class="btn primary" href="assessment.html">Start assessment</a>
+          <a class="btn primary" href="report.html">Generate report</a>
         </article>
 
         <article class="page-card">

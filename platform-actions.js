@@ -77,7 +77,7 @@
       item.classList.add("sidebar-link");
 
       const action = () => {
-        if (text.includes("match")) go("assessment.html");
+        if (text.includes("match")) go("report.html");
         else if (text.includes("talent")) go("talent.html");
         else if (text.includes("role")) go("jobs.html");
         else if (text.includes("compan")) go("companies.html");
@@ -144,7 +144,7 @@
       card.classList.add("clickable-card");
       card.addEventListener("click", () => {
         if (index === 0) go("jobs.html");
-        else go("assessment.html");
+        else go("report.html");
       });
     });
 
@@ -165,7 +165,7 @@
     document.querySelectorAll(".business-grid article").forEach((card, index) => {
       card.classList.add("clickable-card");
       card.addEventListener("click", () => {
-        if (index === 0) go("assessment.html");
+        if (index === 0) go("report.html");
         else if (index === 1) go("signup.html");
         else go("employers.html");
       });

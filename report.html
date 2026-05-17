@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Match Report | JapanOffer AI</title>
+  <meta name="description" content="Generate a JapanOffer AI cross-border career match report in Chinese or English." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="auth-body">
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="JapanOffer AI home">
+      <span class="brand-mark">J</span>
+      <span class="brand-copy">
+        <strong>JapanOffer AI</strong>
+        <small>AI Match Report</small>
+      </span>
+    </a>
+
+    <div class="top-search" aria-label="Global platform search">
+      <span>⌕</span>
+      <input value="Search roles, talent or companies" aria-label="Search roles, talent or companies" />
+    </div>
+
+    <nav class="nav" aria-label="Main navigation">
+      <a href="jobs.html">Jobs</a>
+      <a href="talent.html">Talent</a>
+      <a href="companies.html">Companies</a>
+      <a href="feedback.html">Feedback</a>
+    </nav>
+
+    <div class="auth-links">
+      <a class="signin-link" href="login.html">Sign in</a>
+      <a class="nav-cta" href="signup.html">Sign up</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="report-hero">
+      <div>
+        <p class="eyebrow">Auto match report</p>
+        <h1>Generate your cross-border opportunity report.</h1>
+        <p>
+          Answer a few questions and get a structured JapanOffer AI report: target market, role direction,
+          match score, visa/language risk and application priority.
+        </p>
+        <p class="cn-report-intro">
+          填写几个基础信息后，系统会自动生成一份跨境岗位匹配报告，包括目标市场、岗位方向、匹配分数、签证/语言风险和申请优先级。
+        </p>
+      </div>
+
+      <div class="report-status-card">
+        <span>Live demo</span>
+        <strong>AI Match Report</strong>
+        <p>No questionnaire redirect. The report is generated directly on this website.</p>
+      </div>
+    </section>
+
+    <section class="report-shell">
+      <aside class="report-tabs" aria-label="Report language">
+        <button class="active" data-report-lang="zh">中文报告</button>
+        <button data-report-lang="en">English report</button>
+        <a href="feedback.html">反馈问卷 / Feedback</a>
+      </aside>
+
+      <section class="report-panel">
+        <div class="report-panel-head">
+          <div>
+            <p class="eyebrow">Step 1</p>
+            <h2>Build your match profile</h2>
+          </div>
+          <span id="reportModeLabel">中文模式</span>
+        </div>
+
+        <form class="report-form" id="autoReportForm">
+          <label>
+            Education / 学历背景
+            <input name="education" required placeholder="Example: LLB student, business graduate, computer science student" />
+          </label>
+
+          <label>
+            Languages / 语言能力
+            <input name="languages" required placeholder="Example: English, Japanese N1, Mandarin" />
+          </label>
+
+          <label>
+            Target market / 目标市场
+            <select name="market">
+              <option>Japan</option>
+              <option>Singapore</option>
+              <option>Hong Kong</option>
+              <option>United Kingdom</option>
+              <option>Japan + Singapore + Hong Kong</option>
+            </select>
+          </label>
+
+          <label>
+            Career direction / 职业方向
+            <select name="career">
+              <option>Legal / Compliance</option>
+              <option>Business Development</option>
+              <option>Technology</option>
+              <option>Marketing</option>
+              <option>Not sure yet</option>
+            </select>
+          </label>
+
+          <label>
+            Work authorization / 签证或工作许可情况
+            <select name="visa">
+              <option>Need sponsorship</option>
+              <option>Already have work rights</option>
+              <option>Student visa / Graduate route</option>
+              <option>Not sure</option>
+            </select>
+          </label>
+
+          <label class="full">
+            Short background / 简短背景
+            <textarea name="background" placeholder="Briefly describe your degree, experience, target country and concerns."></textarea>
+          </label>
+
+          <button class="btn primary" type="submit">Generate report / 生成报告</button>
+        </form>
+      </section>
+
+      <section class="report-output" id="reportOutput">
+        <div class="empty-report">
+          <p class="eyebrow">Preview</p>
+          <h2>Your report will appear here.</h2>
+          <p>填写表格后，这里会显示你的 AI 匹配报告。This demo generates a structured report instantly.</p>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <strong>JapanOffer AI</strong>
+    <span>Cross-border talent matching network.</span>
+  </footer>
+
+  <script src="auth-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth.js"></script>
+  <script src="platform-actions.js"></script>
+  <script src="report.js"></script>
+  <script src="effects.js"></script>
+</body>
+</html>
