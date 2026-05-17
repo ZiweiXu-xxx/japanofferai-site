@@ -42,6 +42,90 @@
     return ["Legal / Compliance", "Business Associate", "Operations Assistant"];
   }
 
+
+
+  function getAnonId() {
+    let id = localStorage.getItem("japanoffer_anon_id");
+    if (!id) {
+      id = "anon_" + Math.random().toString(36).slice(2) + Date.now().toString(36);
+      localStorage.setItem("japanoffer_anon_id", id);
+    }
+    return id;
+  }
+
+  function getSessionId() {
+    let id = sessionStorage.getItem("japanoffer_session_id");
+    if (!id) {
+      id = "session_" + Math.random().toString(36).slice(2) + Date.now().toString(36);
+      sessionStorage.setItem("japanoffer_session_id", id);
+    }
+    return id;
+  }
+
+  function getSupabaseClient() {
+    if (window.japanOfferAuth) return window.japanOfferAuth;
+    const ready =
+      window.supabase &&
+      window.JAPANOFFER_SUPABASE_URL &&
+      window.JAPANOFFER_SUPABASE_ANON_KEY &&
+      !window.JAPANOFFER_SUPABASE_URL.includes("PASTE_") &&
+      !window.JAPANOFFER_SUPABASE_ANON_KEY.includes("PASTE_");
+    if (!ready) return null;
+    return window.supabase.createClient(
+      window.JAPANOFFER_SUPABASE_URL,
+      window.JAPANOFFER_SUPABASE_ANON_KEY
+    );
+  }
+
+  async function saveReportSubmission(form, score, risks, roles) {
+    const client = getSupabaseClient();
+    if (!client) return;
+
+    let user = null;
+    try {
+      const { data } = await client.auth.getUser();
+      user = data && data.user ? data.user : null;
+    } catch (error) {
+      user = null;
+    }
+
+    const payload = {
+      user_id: user ? user.id : null,
+      user_email: user ? user.email : null,
+      anonymous_id: getAnonId(),
+      session_id: getSessionId(),
+      lang: currentLang,
+      education: form.education || null,
+      languages: form.languages || null,
+      market: form.market || null,
+      career: form.career || null,
+      visa: form.visa || null,
+      background: form.background || null,
+      score,
+      visa_risk: risks.visaRisk,
+      language_risk: risks.languageRisk,
+      roles,
+      page_url: window.location.href,
+      user_agent: navigator.userAgent
+    };
+
+    try {
+      const { error } = await client.from("report_submissions").insert(payload);
+      if (error) console.warn("Report submission was not saved:", error.message);
+    } catch (error) {
+      console.warn("Report submission was not saved:", error);
+    }
+
+    if (window.japanOfferTrack) {
+      window.japanOfferTrack("report_generated", {
+        market: form.market,
+        career: form.career,
+        score,
+        lang: currentLang
+      });
+    }
+  }
+
   function renderZh(form, score, risks, roles) {
     return `
       <article class="generated-report">
@@ -147,7 +231,7 @@
     const output = document.getElementById("reportOutput");
     if (!form || !output) return;
 
-    form.addEventListener("submit", function (event) {
+    form.addEventListener("submit", async function (event) {
       event.preventDefault();
       const data = Object.fromEntries(new FormData(form).entries());
       const score = scoreFrom(data);
@@ -166,6 +250,8 @@
         lang: currentLang,
         createdAt: new Date().toISOString()
       }));
+
+      await saveReportSubmission(data, score, risks, roles);
 
       output.scrollIntoView({ behavior: "smooth", block: "start" });
     });

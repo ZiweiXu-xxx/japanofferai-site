@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Dashboard | JapanOffer AI</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .admin-shell { width: min(1200px, calc(100% - 40px)); margin: 0 auto; padding: 54px 0 90px; }
+    .admin-head { display: flex; justify-content: space-between; gap: 18px; align-items: end; margin-bottom: 24px; }
+    .admin-head h1 { margin: 0; color: var(--navy); font-size: clamp(38px, 5vw, 68px); line-height: 1; letter-spacing: -0.06em; }
+    .admin-login { display: flex; gap: 10px; padding: 14px; border: 1px solid var(--line); border-radius: 20px; background: white; box-shadow: var(--soft-shadow); }
+    .admin-login input { min-height: 46px; border: 1px solid var(--line); border-radius: 14px; padding: 0 14px; }
+    .admin-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin: 24px 0; }
+    .admin-card, .admin-panel { border: 1px solid var(--line); border-radius: 24px; background: white; box-shadow: var(--soft-shadow); }
+    .admin-card { padding: 22px; }
+    .admin-card span { display: block; color: var(--muted); font-size: 12px; font-weight: 950; text-transform: uppercase; letter-spacing: .12em; }
+    .admin-card strong { display: block; margin-top: 14px; color: var(--blue); font-size: 38px; letter-spacing: -0.06em; }
+    .admin-panels { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .admin-panel { padding: 24px; }
+    .admin-panel h2 { margin: 0 0 18px; color: var(--navy); font-size: 26px; letter-spacing: -0.04em; }
+    .bar-row { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; margin: 12px 0; color: var(--muted); }
+    .bar { grid-column: 1 / -1; height: 8px; border-radius: 999px; background: #eef6ff; overflow: hidden; }
+    .bar i { display: block; height: 100%; border-radius: inherit; background: var(--blue); }
+    .recent-list { display: grid; gap: 10px; }
+    .recent-item { padding: 14px; border: 1px solid var(--line); border-radius: 16px; background: #f8fbff; }
+    .recent-item strong { display: block; color: var(--navy); }
+    .recent-item span { color: var(--muted); font-size: 13px; }
+    .admin-error { padding: 14px; border-radius: 16px; background: #fff0f0; color: #9b1c1c; font-weight: 850; }
+    @media (max-width: 900px) { .admin-grid, .admin-panels { grid-template-columns: 1fr; } .admin-head { display: block; } .admin-login { margin-top: 18px; flex-direction: column; } }
+  </style>
+</head>
+<body class="premium-home">
+  <header class="topbar premium-topbar">
+    <a class="brand" href="index.html"><span class="brand-mark">J</span><span class="brand-copy"><strong>JapanOffer AI</strong><small>Admin Dashboard</small></span></a>
+    <div class="top-search"><span>⌕</span><input value="User data dashboard" /></div>
+    <nav class="nav"><a href="index.html">Home</a><a href="jobs.html">Jobs</a><a href="report.html">Report</a></nav>
+    <div class="auth-links"><a class="signin-link" href="login.html">Sign in</a></div>
+  </header>
+
+  <main class="admin-shell">
+    <section class="admin-head">
+      <div>
+        <p class="eyebrow">Private dashboard</p>
+        <h1>User data summary.</h1>
+      </div>
+      <form class="admin-login" id="adminLogin">
+        <input id="adminPassword" type="password" placeholder="Admin password" />
+        <button class="btn primary" type="submit">Load dashboard</button>
+      </form>
+    </section>
+
+    <section id="adminOutput">
+      <div class="admin-panel">
+        <h2>What this dashboard shows</h2>
+        <p style="color: var(--muted); line-height: 1.7;">It summarizes report submissions, page views, user interests, target markets, career directions and recent beta activity. Data will appear after users generate reports or browse the site.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="admin.js"></script>
+</body>
+</html>
