@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>中文 AI 岗位匹配 | JapanOffer AI</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    :root {
+      --jo-blue: #0a66c2;
+      --jo-blue-dark: #004182;
+      --jo-ink: #071b36;
+      --jo-muted: #64748b;
+      --jo-line: rgba(7, 27, 54, .1);
+      --jo-card: rgba(255,255,255,.78);
+      --jo-bg: #f4f8ff;
+    }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(10,102,194,.16), transparent 34%),
+        radial-gradient(circle at 82% 0%, rgba(80,167,255,.16), transparent 32%),
+        linear-gradient(135deg, #f7fbff 0%, #ffffff 48%, #edf5ff 100%);
+      color: var(--jo-ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    .match-shell {
+      min-height: 100vh;
+    }
+
+    .match-topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 18px;
+      padding: 16px 28px;
+      background: rgba(255,255,255,.82);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--jo-line);
+    }
+
+    .match-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: inherit;
+      text-decoration: none;
+      min-width: 0;
+    }
+
+    .match-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 22px;
+      font-weight: 950;
+      background: linear-gradient(135deg, var(--jo-blue), var(--jo-blue-dark));
+      box-shadow: 0 14px 32px rgba(10,102,194,.22);
+    }
+
+    .match-brand strong {
+      display: block;
+      font-size: 18px;
+      letter-spacing: -.03em;
+    }
+
+    .match-brand small {
+      display: block;
+      color: var(--jo-muted);
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .match-nav {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .match-nav a {
+      color: #26374d;
+      text-decoration: none;
+      font-weight: 850;
+      font-size: 14px;
+    }
+
+    .match-nav .nav-primary {
+      color: #fff;
+      background: linear-gradient(135deg, var(--jo-blue), var(--jo-blue-dark));
+      padding: 11px 16px;
+      border-radius: 999px;
+      box-shadow: 0 14px 28px rgba(10,102,194,.2);
+    }
+
+    .match-main {
+      width: min(1180px, calc(100% - 42px));
+      margin: 0 auto;
+      padding: 64px 0 92px;
+    }
+
+    .match-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.02fr) minmax(360px, .98fr);
+      gap: 34px;
+      align-items: start;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--jo-blue);
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .match-title {
+      margin: 0;
+      max-width: 700px;
+      font-size: clamp(44px, 6vw, 78px);
+      line-height: .95;
+      letter-spacing: -.074em;
+      font-weight: 950;
+    }
+
+    .match-title span {
+      display: block;
+      color: var(--jo-blue);
+    }
+
+    .match-subtitle {
+      margin: 24px 0 0;
+      max-width: 680px;
+      color: #52647a;
+      font-size: 18px;
+      line-height: 1.75;
+      font-weight: 680;
+    }
+
+    .sample-card {
+      margin-top: 28px;
+      padding: 18px;
+      border: 1px solid var(--jo-line);
+      border-radius: 24px;
+      background: rgba(255,255,255,.62);
+      box-shadow: 0 18px 60px rgba(9,33,61,.07);
+    }
+
+    .sample-card strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .sample-card p {
+      margin: 0;
+      color: #53667d;
+      font-size: 14px;
+      line-height: 1.75;
+      font-weight: 650;
+    }
+
+    .match-card {
+      padding: 24px;
+      border-radius: 30px;
+      background: var(--jo-card);
+      border: 1px solid var(--jo-line);
+      box-shadow: 0 30px 90px rgba(9,33,61,.11);
+      backdrop-filter: blur(16px);
+    }
+
+    .field-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+
+    .field-label strong {
+      font-size: 15px;
+      letter-spacing: -.02em;
+    }
+
+    .field-label span {
+      color: var(--jo-muted);
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 210px;
+      resize: vertical;
+      box-sizing: border-box;
+      border: 1px solid rgba(9,33,61,.13);
+      border-radius: 22px;
+      padding: 18px;
+      background: rgba(255,255,255,.9);
+      color: var(--jo-ink);
+      outline: none;
+      font: inherit;
+      font-size: 15px;
+      line-height: 1.75;
+      font-weight: 650;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.9);
+    }
+
+    textarea:focus {
+      border-color: rgba(10,102,194,.5);
+      box-shadow: 0 0 0 4px rgba(10,102,194,.1);
+    }
+
+    .quick-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    select {
+      width: 100%;
+      min-height: 54px;
+      border: 1px solid rgba(9,33,61,.13);
+      border-radius: 18px;
+      background: rgba(255,255,255,.9);
+      padding: 0 14px;
+      color: var(--jo-ink);
+      font: inherit;
+      font-weight: 800;
+      outline: none;
+    }
+
+    .match-button {
+      width: 100%;
+      min-height: 60px;
+      margin-top: 16px;
+      border: 0;
+      border-radius: 20px;
+      background: linear-gradient(135deg, var(--jo-blue), var(--jo-blue-dark));
+      color: #fff;
+      font: inherit;
+      font-weight: 950;
+      font-size: 17px;
+      cursor: pointer;
+      box-shadow: 0 20px 44px rgba(10,102,194,.25);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+
+    .match-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 24px 50px rgba(10,102,194,.3);
+    }
+
+    .match-button:disabled {
+      opacity: .62;
+      cursor: wait;
+      transform: none;
+    }
+
+    .small-note {
+      margin: 12px 2px 0;
+      color: var(--jo-muted);
+      font-size: 12px;
+      line-height: 1.55;
+      font-weight: 650;
+    }
+
+    .result-section {
+      margin-top: 38px;
+      display: none;
+    }
+
+    .result-section.show {
+      display: block;
+      animation: resultIn .35s ease both;
+    }
+
+    @keyframes resultIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 18px;
+    }
+
+    .result-header h2 {
+      margin: 0;
+      font-size: clamp(34px, 4vw, 54px);
+      line-height: 1;
+      letter-spacing: -.06em;
+    }
+
+    .score-pill {
+      min-width: 132px;
+      min-height: 92px;
+      border-radius: 28px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,.75);
+      border: 1px solid var(--jo-line);
+      box-shadow: 0 18px 54px rgba(9,33,61,.08);
+    }
+
+    .score-pill span {
+      color: var(--jo-muted);
+      font-size: 12px;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+    }
+
+    .score-pill strong {
+      display: block;
+      color: var(--jo-blue);
+      font-size: 38px;
+      line-height: 1;
+      font-weight: 950;
+      letter-spacing: -.05em;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1.12fr .88fr;
+      gap: 18px;
+    }
+
+    .panel {
+      padding: 24px;
+      border-radius: 28px;
+      background: rgba(255,255,255,.72);
+      border: 1px solid var(--jo-line);
+      box-shadow: 0 20px 70px rgba(9,33,61,.08);
+    }
+
+    .panel h3 {
+      margin: 0 0 16px;
+      font-size: 22px;
+      letter-spacing: -.04em;
+    }
+
+    .role-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .role-card {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(247,250,255,.9);
+      border: 1px solid rgba(9,33,61,.08);
+    }
+
+    .role-card h4 {
+      margin: 0 0 6px;
+      font-size: 18px;
+      letter-spacing: -.03em;
+    }
+
+    .role-card p {
+      margin: 0;
+      color: #52647a;
+      font-size: 13px;
+      line-height: 1.6;
+      font-weight: 650;
+    }
+
+    .role-score {
+      color: var(--jo-blue);
+      font-size: 26px;
+      font-weight: 950;
+      line-height: 1;
+    }
+
+    .tag-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 14px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 0 11px;
+      border-radius: 999px;
+      background: rgba(10,102,194,.09);
+      color: #064b93;
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .analysis-list {
+      margin: 0;
+      padding-left: 18px;
+      color: #405168;
+      line-height: 1.75;
+      font-weight: 670;
+      font-size: 14px;
+    }
+
+    .analysis-list li {
+      margin: 8px 0;
+    }
+
+    .roadmap {
+      display: grid;
+      gap: 12px;
+    }
+
+    .roadmap-step {
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(247,250,255,.9);
+      border: 1px solid rgba(9,33,61,.08);
+    }
+
+    .roadmap-step strong {
+      display: block;
+      color: var(--jo-ink);
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .roadmap-step span {
+      display: block;
+      color: #52647a;
+      font-size: 13px;
+      line-height: 1.65;
+      font-weight: 650;
+    }
+
+    .copy-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .secondary-btn {
+      border: 1px solid rgba(10,102,194,.18);
+      background: rgba(255,255,255,.75);
+      color: #0a66c2;
+      border-radius: 999px;
+      padding: 11px 14px;
+      font: inherit;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .status-message {
+      display: none;
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(16,185,129,.1);
+      color: #047857;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .status-message.show {
+      display: block;
+    }
+
+    @media (max-width: 880px) {
+      .match-topbar {
+        padding: 13px 16px;
+      }
+
+      .match-brand small,
+      .match-nav a:not(.nav-primary) {
+        display: none;
+      }
+
+      .match-nav .nav-primary {
+        padding: 10px 13px;
+        font-size: 13px;
+      }
+
+      .match-main {
+        width: min(100% - 28px, 1180px);
+        padding: 42px 0 68px;
+      }
+
+      .match-hero,
+      .result-grid,
+      .result-header {
+        grid-template-columns: 1fr;
+      }
+
+      .quick-row {
+        grid-template-columns: 1fr;
+      }
+
+      .match-title {
+        font-size: 48px;
+      }
+
+      .match-subtitle {
+        font-size: 16px;
+      }
+
+      .score-pill {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="match-shell">
+    <header class="match-topbar">
+      <a class="match-brand" href="index.html">
+        <span class="match-logo">J</span>
+        <span>
+          <strong>JapanOffer AI</strong>
+          <small>中文 AI 岗位匹配</small>
+        </span>
+      </a>
+
+      <nav class="match-nav">
+        <a href="index.html">首页</a>
+        <a href="jobs.html">岗位</a>
+        <a href="report.html">AI 报告</a>
+        <a class="nav-primary" href="signup.html">注册</a>
+      </nav>
+    </header>
+
+    <main class="match-main">
+      <section class="match-hero">
+        <div>
+          <div class="eyebrow">AI Match Entry</div>
+          <h1 class="match-title">输入你的背景。<span>自动匹配岗位。</span></h1>
+          <p class="match-subtitle">
+            用中文描述你的学历、专业、语言、技能、项目经历和目标国家。JapanOffer AI 会自动判断你更适合哪些跨境岗位、为什么适合，以及下一步应该怎么准备。
+          </p>
+
+          <div class="sample-card">
+            <strong>示例输入</strong>
+            <p>
+              我是英国法律本科学生，会中文、英文和日语，想去日本或新加坡找法律合规、国际业务或 Web3 合规相关工作。我没有正式工作经验，但有项目经历和法律背景。
+            </p>
+          </div>
+        </div>
+
+        <section class="match-card">
+          <form id="matchForm">
+            <label class="field-label" for="backgroundInput">
+              <strong>你的个人背景</strong>
+              <span>中文输入即可</span>
+            </label>
+
+            <textarea id="backgroundInput" placeholder="例如：我是英国法律本科学生，会中文、英文和日语，想去日本或新加坡找法律合规、国际业务或 Web3 合规相关工作。我没有正式工作经验，但有项目经历和法律背景。"></textarea>
+
+            <div class="quick-row">
+              <label>
+                <span class="field-label"><strong>目标市场</strong></span>
+                <select id="targetMarket">
+                  <option value="auto">让系统判断</option>
+                  <option value="日本">日本</option>
+                  <option value="新加坡">新加坡</option>
+                  <option value="香港">香港</option>
+                  <option value="英国">英国</option>
+                </select>
+              </label>
+
+              <label>
+                <span class="field-label"><strong>职业方向</strong></span>
+                <select id="careerDirection">
+                  <option value="auto">让系统判断</option>
+                  <option value="法律 / 合规">法律 / 合规</option>
+                  <option value="国际业务">国际业务</option>
+                  <option value="Web3 / 金融合规">Web3 / 金融合规</option>
+                  <option value="技术 / 数据">技术 / 数据</option>
+                  <option value="市场 / 运营">市场 / 运营</option>
+                </select>
+              </label>
+            </div>
+
+            <button class="match-button" type="submit" id="generateButton">生成我的岗位匹配</button>
+            <p class="small-note">
+              这是中文 MVP 版本。结果会根据你的背景、语言、目标国家、签证风险和岗位要求生成结构化匹配建议。
+            </p>
+          </form>
+        </section>
+      </section>
+
+      <section class="result-section" id="resultSection">
+        <div class="result-header">
+          <div>
+            <div class="eyebrow">Match result</div>
+            <h2>你的跨境岗位匹配结果</h2>
+          </div>
+          <div class="score-pill">
+            <div>
+              <span>Best fit</span>
+              <strong id="bestScore">0%</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="result-grid">
+          <div class="panel">
+            <h3>最适合你的岗位</h3>
+            <div class="role-list" id="roleList"></div>
+            <div class="tag-grid" id="tagGrid"></div>
+
+            <div class="copy-actions">
+              <button class="secondary-btn" id="copyResult" type="button">复制结果</button>
+              <a class="secondary-btn" href="report.html">生成更完整报告</a>
+              <a class="secondary-btn" href="jobs.html">查看岗位页</a>
+            </div>
+            <div class="status-message" id="statusMessage">结果已复制。</div>
+          </div>
+
+          <div class="panel">
+            <h3>系统判断</h3>
+            <ul class="analysis-list" id="analysisList"></ul>
+
+            <h3 style="margin-top:24px;">下一步建议</h3>
+            <div class="roadmap" id="roadmapList"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="auth-config.js"></script>
+  <script src="analytics.js"></script>
+  <script src="ai-match.js"></script>
+</body>
+</html>
