@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jobs | JapanOffer AI</title>
-  <meta name="description" content="Explore role matching previews for cross-border job seekers." />
+  <title>Live Jobs | JapanOffer AI</title>
+  <meta name="description" content="Search public ATS job postings and rank them with JapanOffer AI match scores." />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -32,56 +32,139 @@
 
     <a class="nav-cta" href="assessment.html">Join Beta</a>
   </header>
+
   <main>
     <section class="page-hero">
-      <p class="eyebrow">Jobs</p>
-      <h1>Recommended overseas roles, ranked by realistic match.</h1>
+      <p class="eyebrow">Live job search beta</p>
+      <h1>Search public company job feeds and rank them by cross-border fit.</h1>
       <p>
-        This page is the future job discovery layer. Instead of showing every job, JapanOffer AI ranks roles by background fit, language fit, visa risk and career direction.
+        This beta does not scrape LinkedIn. It uses public ATS job-board APIs where available, then adds JapanOffer AI-style match scoring for role fit, market fit and visa/language risk.
       </p>
     </section>
 
-    <section class="page-grid">
-      <article class="page-card featured">
-        <span class="kicker">Best match</span>
-        <h2>Legal Compliance Analyst</h2>
-        <p>Tokyo · Entry level · English and Japanese preferred</p>
-        <ul>
-          <li>Strong education fit</li>
-          <li>Medium visa risk</li>
-          <li>Good long-term route value</li>
-        </ul>
-        <a class="btn primary" href="assessment.html">Check my fit</a>
-      </article>
+    <section class="wide-panel">
+      <p class="eyebrow">Search roles</p>
+      <h2>Find roles from public company feeds</h2>
 
-      <article class="page-card">
-        <span class="kicker">Shortlist</span>
-        <h2>Cross-border Business Associate</h2>
-        <p>Singapore · International team · Mandarin useful</p>
-        <ul>
-          <li>Good language fit</li>
-          <li>Lower visa risk</li>
-          <li>Useful Asia market route</li>
-        </ul>
-        <a class="btn secondary" href="assessment.html">Compare route</a>
-      </article>
+      <form class="job-search-form" id="jobSearchForm">
+        <label>
+          Role or keyword
+          <input id="queryInput" value="legal compliance business" />
+        </label>
 
-      <article class="page-card">
-        <span class="kicker">Low priority</span>
-        <h2>General Marketing Intern</h2>
-        <p>Hong Kong · High competition · weaker background fit</p>
-        <ul>
-          <li>Weak role fit</li>
-          <li>High competition</li>
-          <li>Do not apply first</li>
-        </ul>
-        <a class="btn secondary" href="assessment.html">See why</a>
-      </article>
+        <label>
+          Market
+          <input id="marketInput" value="Japan Singapore Hong Kong Remote" />
+        </label>
+
+        <button class="btn primary" type="submit">Search live jobs</button>
+      </form>
+
+      <p class="source-note" id="sourceNote">
+        Sources: public Greenhouse / Lever job-board APIs where available. More sources can be added later.
+      </p>
+    </section>
+
+    <section class="wide-panel results-panel">
+      <div class="results-top">
+        <div>
+          <p class="eyebrow">Results</p>
+          <h2 id="resultsTitle">Live job matches</h2>
+        </div>
+        <span id="resultCount">Loading...</span>
+      </div>
+
+      <div class="jobs-results" id="jobsResults">
+        <div class="loading-card">Loading public job feeds...</div>
+      </div>
     </section>
   </main>
+
   <footer class="footer">
     <strong>JapanOffer AI</strong>
     <span>Cross-border talent matching network.</span>
   </footer>
+
+  <script>
+    const form = document.getElementById("jobSearchForm");
+    const queryInput = document.getElementById("queryInput");
+    const marketInput = document.getElementById("marketInput");
+    const jobsResults = document.getElementById("jobsResults");
+    const resultCount = document.getElementById("resultCount");
+    const sourceNote = document.getElementById("sourceNote");
+
+    function escapeHtml(str) {
+      return String(str || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function renderJob(job) {
+      const score = Number(job.matchScore || 0);
+      const scoreClass = score >= 82 ? "score-high" : score >= 65 ? "score-mid" : "score-low";
+      return `
+        <article class="live-job-card">
+          <div class="live-job-main">
+            <div>
+              <h3>${escapeHtml(job.title)}</h3>
+              <p>${escapeHtml(job.company)} · ${escapeHtml(job.location)}</p>
+            </div>
+            <div class="live-score ${scoreClass}">
+              <strong>${score}%</strong>
+              <span>${escapeHtml(job.priority || "Review")}</span>
+            </div>
+          </div>
+
+          <p class="live-desc">${escapeHtml(job.shortDescription || job.description || "No description preview available.")}</p>
+
+          <div class="live-tags">
+            <span>${escapeHtml(job.source || "Public source")}</span>
+            <span>Visa risk: ${escapeHtml(job.visaRisk || "Unknown")}</span>
+            <span>JapanOffer match score</span>
+          </div>
+
+          <div class="live-actions">
+            <a class="btn secondary" href="${escapeHtml(job.url)}" target="_blank" rel="noopener">View original job</a>
+            <a class="btn primary" href="assessment.html">Check my fit</a>
+          </div>
+        </article>
+      `;
+    }
+
+    async function loadJobs() {
+      const query = queryInput.value.trim();
+      const market = marketInput.value.trim();
+      jobsResults.innerHTML = '<div class="loading-card">Loading public job feeds...</div>';
+      resultCount.textContent = "Loading...";
+
+      try {
+        const response = await fetch(`/api/jobs?query=${encodeURIComponent(query)}&market=${encodeURIComponent(market)}`);
+        const data = await response.json();
+
+        resultCount.textContent = `${data.count || 0} results`;
+        sourceNote.textContent = data.note || "Live job sources loaded.";
+
+        if (!data.jobs || data.jobs.length === 0) {
+          jobsResults.innerHTML = '<div class="loading-card">No jobs found. Try a broader keyword like business, legal, compliance or remote.</div>';
+          return;
+        }
+
+        jobsResults.innerHTML = data.jobs.map(renderJob).join("");
+      } catch (error) {
+        resultCount.textContent = "Demo mode";
+        jobsResults.innerHTML = '<div class="loading-card">The live API is not available yet. Make sure api/jobs.js is uploaded inside your GitHub api folder.</div>';
+      }
+    }
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      loadJobs();
+    });
+
+    loadJobs();
+  </script>
 </body>
 </html>
