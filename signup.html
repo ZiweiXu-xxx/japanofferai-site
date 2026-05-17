@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign up | JapanOffer AI</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">J</span>
+      <span class="brand-copy">
+        <strong>JapanOffer AI</strong>
+        <small>Cross-border Talent Network</small>
+      </span>
+    </a>
+    <div class="top-search"><span>⌕</span><input value="Search roles, talent or companies" /></div>
+    <nav class="nav">
+      <a href="jobs.html">Jobs</a>
+      <a href="talent.html">Talent</a>
+      <a href="companies.html">Companies</a>
+      <a href="employers.html">Employers</a>
+    </nav>
+    <div class="auth-links"><a class="signin-link" href="login.html">Sign in</a><a class="nav-cta" href="signup.html">Sign up</a></div>
+  </header>
+
+  <main>
+    <section class="auth-page">
+      <div class="auth-copy">
+        <p class="eyebrow">Create account</p>
+        <h1>Build your cross-border talent profile.</h1>
+        <p>
+          Create an account so JapanOffer AI can become more than a landing page: profiles, saved roles, reports and employer matching can sit behind the login.
+        </p>
+      </div>
+
+      <div class="auth-panel">
+        <h2>Sign up</h2>
+        <p class="auth-muted">Start as a job seeker or employer beta user.</p>
+
+        <form class="auth-form" data-signup-form>
+          <label>Full name
+            <input name="fullName" type="text" required placeholder="Your name" />
+          </label>
+
+          <label>Email
+            <input name="email" type="email" required placeholder="you@example.com" />
+          </label>
+
+          <label>Password
+            <input name="password" type="password" required minlength="6" placeholder="At least 6 characters" />
+          </label>
+
+          <label>Account type
+            <select name="role">
+              <option value="Job seeker">Job seeker</option>
+              <option value="Employer">Employer</option>
+              <option value="University / Agency">University / Agency</option>
+            </select>
+          </label>
+
+          <button class="btn primary" type="submit">Create account</button>
+        </form>
+
+        <div data-auth-message class="auth-message info">You may need to confirm your email after signing up.</div>
+
+        <p class="auth-switch">
+          Already have an account? <a href="login.html">Sign in</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script src="auth-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth.js"></script>
+  <script src="effects.js"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Account | JapanOffer AI</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">J</span>
+      <span class="brand-copy">
+        <strong>JapanOffer AI</strong>
+        <small>Cross-border Talent Network</small>
+      </span>
+    </a>
+    <div class="top-search"><span>⌕</span><input value="Search roles, talent or companies" /></div>
+    <nav class="nav">
+      <a href="jobs.html">Jobs</a>
+      <a href="talent.html">Talent</a>
+      <a href="companies.html">Companies</a>
+      <a href="employers.html">Employers</a>
+    </nav>
+    <div class="auth-links"><a class="signin-link" href="login.html">Sign in</a><a class="nav-cta" href="signup.html">Sign up</a></div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <p class="eyebrow">Account</p>
+      <h1>Your JapanOffer AI profile.</h1>
+      <p>
+        This is the logged-in area. Later this can store saved roles, match reports, CV uploads and employer-side candidate shortlists.
+      </p>
+    </section>
+
+    <section class="wide-panel" data-account-box>
+      <div class="auth-message info">Loading account...</div>
+    </section>
+  </main>
+
+  <script src="auth-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth.js"></script>
+  <script src="effects.js"></script>
+</body>
+</html>
