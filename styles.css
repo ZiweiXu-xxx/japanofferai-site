@@ -3533,3 +3533,252 @@ main::before {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Step 14: mobile header and product dashboard fix */
+
+/* Desktop remains almost unchanged. This block only cleans the mobile experience. */
+@media (max-width: 900px) {
+  .topbar,
+  .premium-topbar {
+    grid-template-columns: auto 1fr auto !important;
+    gap: 10px !important;
+    padding: 12px 18px !important;
+  }
+
+  .brand {
+    min-width: 0;
+  }
+
+  .brand-mark {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    font-size: 21px;
+    flex: 0 0 auto;
+  }
+
+  .brand-copy {
+    min-width: 0;
+  }
+
+  .brand-copy strong {
+    font-size: 18px;
+    white-space: nowrap;
+  }
+
+  .brand-copy small,
+  .top-search,
+  .nav {
+    display: none !important;
+  }
+
+  .auth-links {
+    grid-column: 3 !important;
+    justify-self: end !important;
+    margin-left: auto !important;
+    gap: 0 !important;
+  }
+
+  /* On mobile, keep only Sign in in the top-right. Sign up still appears in the page body. */
+  .auth-links .nav-cta {
+    display: none !important;
+  }
+
+  .signin-link {
+    display: inline-flex !important;
+    min-height: 42px !important;
+    padding: 10px 16px !important;
+    border: 1px solid rgba(10, 102, 194, 0.18) !important;
+    border-radius: 999px !important;
+    color: #0a66c2 !important;
+    background: rgba(255, 255, 255, 0.78) !important;
+    box-shadow: 0 10px 28px rgba(9, 33, 61, 0.08) !important;
+    font-size: 14px !important;
+    font-weight: 950 !important;
+    white-space: nowrap !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .premium-hero {
+    min-height: auto !important;
+    padding-top: 12px !important;
+  }
+
+  .hero-stage {
+    width: min(100% - 24px, 1200px) !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+    padding: 44px 0 34px !important;
+  }
+
+  .hero-copy h1 {
+    max-width: 100% !important;
+    font-size: 46px !important;
+    line-height: 0.98 !important;
+    letter-spacing: -0.058em !important;
+  }
+
+  .hero-copy h1 span {
+    font-size: 42px !important;
+    line-height: 1 !important;
+    letter-spacing: -0.056em !important;
+  }
+
+  .hero-lede {
+    font-size: 16px !important;
+    line-height: 1.7 !important;
+  }
+
+  .premium-search-card {
+    margin-top: 24px !important;
+    border-radius: 26px !important;
+  }
+
+  .premium-search-tabs {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .premium-search-tabs a {
+    white-space: nowrap !important;
+  }
+
+  .premium-search-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  .premium-search-button {
+    width: 100% !important;
+  }
+
+  /* Critical fix: the product preview must not keep a desktop side column on mobile. */
+  .product-cinema {
+    width: 100% !important;
+    max-width: 100% !important;
+    transform: none !important;
+  }
+
+  .cinema-window {
+    border-radius: 28px !important;
+  }
+
+  .window-toolbar {
+    grid-template-columns: auto auto auto 1fr auto !important;
+    padding: 16px !important;
+  }
+
+  .window-toolbar strong {
+    font-size: 14px !important;
+  }
+
+  .cinema-layout {
+    display: block !important;
+    grid-template-columns: none !important;
+    padding: 16px !important;
+  }
+
+  .cinema-sidebar {
+    display: flex !important;
+    flex-direction: row !important;
+    min-height: 0 !important;
+    height: auto !important;
+    width: 100% !important;
+    gap: 8px !important;
+    padding: 8px !important;
+    margin-bottom: 14px !important;
+    overflow-x: auto !important;
+    border-radius: 18px !important;
+  }
+
+  .cinema-sidebar span {
+    flex: 0 0 auto !important;
+    padding: 10px 13px !important;
+    font-size: 12px !important;
+    white-space: nowrap !important;
+  }
+
+  .cinema-feed {
+    display: grid !important;
+    width: 100% !important;
+    gap: 12px !important;
+  }
+
+  .cinema-card {
+    width: 100% !important;
+    padding: 15px !important;
+    border-radius: 20px !important;
+  }
+
+  .cinema-card-top {
+    grid-template-columns: auto 1fr auto !important;
+    gap: 12px !important;
+    align-items: start !important;
+  }
+
+  .cinema-card h3 {
+    font-size: 18px !important;
+    line-height: 1.14 !important;
+  }
+
+  .cinema-card p {
+    font-size: 13px !important;
+    line-height: 1.45 !important;
+  }
+
+  .cinema-card strong {
+    font-size: 28px !important;
+    min-width: 54px !important;
+  }
+
+  .cinema-tags {
+    gap: 7px !important;
+  }
+
+  .cinema-tags span {
+    font-size: 11px !important;
+    padding: 7px 9px !important;
+  }
+
+  .candidate-glass {
+    grid-template-columns: auto 1fr !important;
+    gap: 12px !important;
+  }
+
+  .candidate-glass a {
+    grid-column: 1 / -1 !important;
+    justify-self: start !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .topbar,
+  .premium-topbar {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  .brand-mark {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .brand-copy strong {
+    font-size: 17px !important;
+  }
+
+  .signin-link {
+    padding: 9px 13px !important;
+    font-size: 13px !important;
+  }
+
+  .hero-copy h1 {
+    font-size: 42px !important;
+  }
+
+  .hero-copy h1 span {
+    font-size: 38px !important;
+  }
+}
