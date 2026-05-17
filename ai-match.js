@@ -19,6 +19,195 @@
   const copyButton = document.getElementById("copyResult");
   const statusMessage = document.getElementById("statusMessage");
 
+  const urlParams = new URLSearchParams(window.location.search);
+  const shouldLoadProfile = urlParams.get("source") === "profile" || urlParams.get("from") === "profile" || urlParams.get("auto") === "1";
+
+  function ensureProfileNotice() {
+    let notice = document.getElementById("profileMatchNotice");
+    if (notice) return notice;
+
+    const formCard = form?.closest("section") || form?.parentElement || document.body;
+    notice = document.createElement("div");
+    notice.id = "profileMatchNotice";
+    notice.style.cssText = [
+      "display:none",
+      "margin:0 0 14px",
+      "padding:13px 15px",
+      "border-radius:16px",
+      "background:rgba(10,102,194,.09)",
+      "border:1px solid rgba(10,102,194,.16)",
+      "color:#064b93",
+      "font-size:13px",
+      "line-height:1.55",
+      "font-weight:800"
+    ].join(";");
+    formCard.insertBefore(notice, formCard.firstChild);
+    return notice;
+  }
+
+  function showProfileNotice(message, type = "info") {
+    const notice = ensureProfileNotice();
+    notice.textContent = message;
+    notice.style.display = "block";
+    if (type === "error") {
+      notice.style.background = "rgba(180,35,24,.10)";
+      notice.style.borderColor = "rgba(180,35,24,.18)";
+      notice.style.color = "#b42318";
+    } else if (type === "success") {
+      notice.style.background = "rgba(16,185,129,.10)";
+      notice.style.borderColor = "rgba(16,185,129,.18)";
+      notice.style.color = "#047857";
+    }
+  }
+
+  function getClientSupabaseConfig() {
+    const url = String(window.JAPANOFFER_SUPABASE_URL || window.SUPABASE_URL || "").replace(/\/+$/, "");
+    const key = String(
+      window.JAPANOFFER_SUPABASE_ANON_KEY ||
+      window.JAPANOFFER_SUPABASE_PUBLISHABLE_KEY ||
+      window.SUPABASE_ANON_KEY ||
+      window.SUPABASE_PUBLISHABLE_KEY ||
+      ""
+    ).trim();
+
+    if (!url || !key || !window.supabase?.createClient) return null;
+    return { url, key };
+  }
+
+  async function readBlobAsArrayBuffer(blob) {
+    return await blob.arrayBuffer();
+  }
+
+  async function extractDocxText(blob) {
+    if (!window.mammoth?.extractRawText) return "";
+    const arrayBuffer = await readBlobAsArrayBuffer(blob);
+    const result = await window.mammoth.extractRawText({ arrayBuffer });
+    return String(result?.value || "").trim();
+  }
+
+  async function tryExtractCvText(client, profile) {
+    if (!profile?.cv_storage_path) return "";
+
+    const fileName = String(profile.cv_file_name || "").toLowerCase();
+    const { data, error } = await client.storage.from("cvs").download(profile.cv_storage_path);
+    if (error || !data) return "";
+
+    if (fileName.endsWith(".docx")) {
+      return await extractDocxText(data);
+    }
+
+    // Browser-side PDF/DOC extraction is intentionally not forced here.
+    // For PDF/DOC, we still use saved profile fields and CV filename.
+    return "";
+  }
+
+  function buildBackgroundFromProfile(profile, cvText) {
+    const parts = [];
+
+    if (profile?.full_name) parts.push(`我的姓名是 ${profile.full_name}。`);
+    if (profile?.headline) parts.push(`我的当前身份是：${profile.headline}。`);
+    if (profile?.target_market) parts.push(`我的目标市场是：${profile.target_market}。`);
+    if (profile?.career_direction) parts.push(`我的职业方向是：${profile.career_direction}。`);
+    if (profile?.languages) parts.push(`我的语言能力是：${profile.languages}。`);
+    if (profile?.bio) parts.push(`我的个人简介是：${profile.bio}`);
+
+    if (profile?.cv_file_name) {
+      parts.push(`我已经上传了 CV 文件：${profile.cv_file_name}。请把这份 CV 作为申请资料的一部分。`);
+    }
+
+    if (cvText && cvText.length > 40) {
+      parts.push(`以下是系统从我上传的 CV 中读取到的内容：${cvText.slice(0, 4200)}`);
+    }
+
+    return parts.join("\n\n").trim();
+  }
+
+  function applyProfileSelects(profile) {
+    if (profile?.target_market && marketSelect) {
+      const marketMap = {
+        "日本": "日本",
+        "香港": "香港",
+        "新加坡": "新加坡",
+        "英国": "英国"
+      };
+      marketSelect.value = marketMap[profile.target_market] || "auto";
+    }
+
+    if (profile?.career_direction && careerSelect) {
+      const wanted = String(profile.career_direction);
+      const option = Array.from(careerSelect.options || []).find((item) => item.value === wanted || item.textContent === wanted);
+      if (option) careerSelect.value = option.value;
+    }
+  }
+
+  async function loadProfileAndAutoMatch() {
+    if (!shouldLoadProfile || !form || !textarea) return;
+
+    const config = getClientSupabaseConfig();
+    if (!config) {
+      showProfileNotice("没有读取到 Supabase 配置，所以暂时不能自动调用你的个人主页资料。", "error");
+      return;
+    }
+
+    const client = window.supabase.createClient(config.url, config.key);
+
+    showProfileNotice("正在读取你的个人主页和已上传 CV...");
+
+    const { data: userData, error: userError } = await client.auth.getUser();
+    const user = userData?.user;
+
+    if (userError || !user) {
+      showProfileNotice("你还没有登录。请先登录后再用个人资料做 AI 匹配。", "error");
+      return;
+    }
+
+    const { data: profile, error: profileError } = await client
+      .from("user_profiles")
+      .select("*")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (profileError) {
+      showProfileNotice(`读取个人主页失败：${profileError.message}`, "error");
+      return;
+    }
+
+    if (!profile) {
+      showProfileNotice("还没有找到你的个人主页资料。请先在「我的主页」保存资料或上传 CV。", "error");
+      return;
+    }
+
+    let cvText = "";
+    try {
+      cvText = await tryExtractCvText(client, profile);
+    } catch (error) {
+      console.warn("CV text extraction failed", error);
+    }
+
+    const background = buildBackgroundFromProfile(profile, cvText);
+
+    if (!background || background.length < 20) {
+      showProfileNotice("已找到你的账号，但个人资料内容太少。请先在「我的主页」补充目标市场、方向和简介。", "error");
+      return;
+    }
+
+    textarea.value = background;
+    applyProfileSelects(profile);
+
+    if (cvText) {
+      showProfileNotice("已读取你的个人主页和 DOCX 简历内容，正在自动生成匹配结果。", "success");
+    } else if (profile.cv_file_name) {
+      showProfileNotice("已读取你的个人主页和 CV 文件记录。当前浏览器版本会优先使用个人资料字段生成匹配，DOCX 可读取更多内容。", "success");
+    } else {
+      showProfileNotice("已读取你的个人主页资料，正在自动生成匹配结果。", "success");
+    }
+
+    setTimeout(() => {
+      form.requestSubmit ? form.requestSubmit() : form.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
+    }, 350);
+  }
+
+
   const ROLE_LIBRARY = [
     {
       title: "金融合规分析师",
@@ -626,4 +815,6 @@
     statusMessage.classList.add("jo22-show");
     setTimeout(() => statusMessage.classList.remove("jo22-show"), 2200);
   });
+
+  loadProfileAndAutoMatch();
 })();

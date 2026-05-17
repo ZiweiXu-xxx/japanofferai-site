@@ -387,3 +387,30 @@
 
   init();
 })();
+
+
+// Step 27: make profile-to-match always pass source=profile&auto=1
+(function () {
+  function bindProfileMatchLinks() {
+    const links = Array.from(document.querySelectorAll("a, button"));
+    links.forEach((el) => {
+      const text = String(el.textContent || "").replace(/\s+/g, " ").trim();
+      if (text.includes("用我的资料做 AI 匹配") || text.includes("生成匹配报告")) {
+        if (el.tagName === "A") {
+          el.setAttribute("href", "match.html?source=profile&auto=1");
+        } else {
+          el.addEventListener("click", function (event) {
+            event.preventDefault();
+            window.location.href = "match.html?source=profile&auto=1";
+          });
+        }
+      }
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", bindProfileMatchLinks);
+  } else {
+    bindProfileMatchLinks();
+  }
+})();
