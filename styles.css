@@ -1401,3 +1401,276 @@ h1 span {
     text-align: left;
   }
 }
+
+
+/* Step 7: cinematic motion and premium visual depth */
+
+body {
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: auto;
+  z-index: -2;
+  pointer-events: none;
+  width: 520px;
+  height: 520px;
+  border-radius: 999px;
+  filter: blur(44px);
+  opacity: 0.34;
+  transform: translate3d(0, 0, 0);
+}
+
+body::before {
+  top: -180px;
+  left: -170px;
+  background: rgba(10, 102, 194, 0.34);
+  animation: cinematic-orb-one 16s ease-in-out infinite alternate;
+}
+
+body::after {
+  right: -220px;
+  top: 240px;
+  background: rgba(0, 65, 130, 0.22);
+  animation: cinematic-orb-two 18s ease-in-out infinite alternate;
+}
+
+main {
+  position: relative;
+}
+
+main::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.34;
+  background-image:
+    linear-gradient(rgba(10, 102, 194, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(10, 102, 194, 0.045) 1px, transparent 1px);
+  background-size: 54px 54px;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.65), transparent 76%);
+  animation: grid-drift 24s linear infinite;
+}
+
+.topbar {
+  animation: topbar-drop 700ms cubic-bezier(.2, .8, .2, 1) both;
+}
+
+.brand-mark {
+  animation: logo-pop 900ms cubic-bezier(.2, .8, .2, 1) 130ms both;
+}
+
+.hero-left {
+  animation: hero-rise 900ms cubic-bezier(.2, .8, .2, 1) 120ms both;
+}
+
+.hero-product {
+  animation: hero-product-in 1050ms cubic-bezier(.2, .8, .2, 1) 260ms both;
+}
+
+.search-card {
+  animation: search-rise 900ms cubic-bezier(.2, .8, .2, 1) 380ms both;
+}
+
+.hero-product,
+.profile-panel,
+.feed-panel,
+.employer-panel,
+.page-card,
+.live-job-card,
+.side-card,
+.business-grid article,
+.compare article,
+.cta-card,
+.wide-panel {
+  position: relative;
+  transform-style: preserve-3d;
+  transition:
+    transform 240ms ease,
+    box-shadow 240ms ease,
+    border-color 240ms ease;
+}
+
+.hero-product::after,
+.profile-panel::after,
+.feed-panel::after,
+.employer-panel::after,
+.page-card::after,
+.live-job-card::after,
+.side-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    radial-gradient(
+      420px circle at var(--glow-x, 50%) var(--glow-y, 50%),
+      rgba(10, 102, 194, 0.16),
+      transparent 42%
+    );
+  transition: opacity 220ms ease;
+}
+
+.is-tilting {
+  transform:
+    perspective(900px)
+    rotateX(var(--tilt-x, 0deg))
+    rotateY(var(--tilt-y, 0deg))
+    translateY(-3px);
+  border-color: rgba(10, 102, 194, 0.24);
+  box-shadow: 0 26px 80px rgba(9, 33, 61, 0.15);
+}
+
+.is-tilting::after {
+  opacity: 1;
+}
+
+.match-card.best,
+.role-row:first-of-type,
+.live-job-card:first-child {
+  animation: soft-pulse 3.6s ease-in-out infinite;
+}
+
+.company-icon,
+.candidate-avatar,
+.profile-avatar,
+.shortlist-row span,
+.mini-avatar {
+  box-shadow: 0 0 0 0 rgba(10, 102, 194, 0.28);
+  animation: avatar-glow 3.8s ease-in-out infinite;
+}
+
+.btn.primary,
+.nav-cta,
+.search-row a,
+.match-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn.primary::before,
+.nav-cta::before,
+.search-row a::before,
+.match-button::before {
+  content: "";
+  position: absolute;
+  inset: -40% auto -40% -70%;
+  width: 55%;
+  transform: rotate(18deg);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.38), transparent);
+  animation: button-shine 3.4s ease-in-out infinite;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(34px) scale(0.985);
+  filter: blur(6px);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+  transition:
+    opacity 800ms cubic-bezier(.2, .8, .2, 1) var(--reveal-delay, 0ms),
+    transform 800ms cubic-bezier(.2, .8, .2, 1) var(--reveal-delay, 0ms),
+    filter 800ms cubic-bezier(.2, .8, .2, 1) var(--reveal-delay, 0ms);
+}
+
+.live-job-card {
+  animation: card-float 8s ease-in-out infinite;
+}
+
+.live-job-card:nth-child(2n) {
+  animation-delay: 500ms;
+}
+
+.live-job-card:nth-child(3n) {
+  animation-delay: 900ms;
+}
+
+@keyframes cinematic-orb-one {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  100% { transform: translate3d(140px, 180px, 0) scale(1.16); }
+}
+
+@keyframes cinematic-orb-two {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  100% { transform: translate3d(-160px, 120px, 0) scale(1.12); }
+}
+
+@keyframes grid-drift {
+  0% { background-position: 0 0, 0 0; }
+  100% { background-position: 54px 54px, 54px 54px; }
+}
+
+@keyframes topbar-drop {
+  0% { opacity: 0; transform: translateY(-18px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes logo-pop {
+  0% { opacity: 0; transform: scale(0.82) rotate(-8deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+@keyframes hero-rise {
+  0% { opacity: 0; transform: translateY(32px); filter: blur(8px); }
+  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+@keyframes hero-product-in {
+  0% { opacity: 0; transform: translateY(40px) scale(0.96); filter: blur(10px); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+@keyframes search-rise {
+  0% { opacity: 0; transform: translateY(20px) scale(0.98); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes soft-pulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(10, 102, 194, 0); }
+  50% { box-shadow: 0 18px 48px rgba(10, 102, 194, 0.12); }
+}
+
+@keyframes avatar-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(10, 102, 194, 0.24); }
+  50% { box-shadow: 0 0 0 8px rgba(10, 102, 194, 0); }
+}
+
+@keyframes button-shine {
+  0% { left: -70%; }
+  42%, 100% { left: 125%; }
+}
+
+@keyframes card-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+@media (max-width: 720px) {
+  body::before,
+  body::after {
+    opacity: 0.2;
+  }
+
+  .reveal {
+    filter: none;
+  }
+}
