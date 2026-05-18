@@ -330,30 +330,32 @@
 
       function render() {
         const q = input.value.trim();
-        let list = window.JAPANOFFER_SEARCH?.search(q, 50) || [];
 
         if (!q) {
-          list = (window.JAPANOFFER_SEARCH_INDEX || []).slice(0, 12).map((item) => ({ ...item, _score: item.score || 0 }));
+          summary.textContent = "请输入关键词搜索真实公开岗位或站内功能。";
+          resultsEl.innerHTML = `<div class="empty">现在不会再默认展示 demo 岗位。搜索 legal、web3、compliance、AML 等关键词。如果没有真实岗位，请先去 admin-jobs.html 运行公开岗位导入。</div>`;
+          return;
         }
+
+        let list = window.JAPANOFFER_SEARCH?.search(q, 50) || [];
 
         if (activeType !== "all") {
           list = list.filter((item) => item.type === activeType);
         }
 
-        summary.textContent = q
-          ? `搜索「${q}」：找到 ${list.length} 个结果。`
-          : "你可以搜索 legal、web3、Japan、Hong Kong AML、CV、申请中心等关键词。";
+        const realJobCount = window.JAPANOFFER_SEARCH?.getRealJobCount?.() || 0;
+        summary.textContent = `搜索「${q}」：找到 ${list.length} 个结果。当前真实公开岗位：${realJobCount} 个。`;
 
         if (!list.length) {
-          resultsEl.innerHTML = `<div class="empty">没有找到结果。可以换成岗位方向、国家、公司类型或技能关键词。</div>`;
+          resultsEl.innerHTML = `<div class="empty">没有找到真实公开岗位结果。请先去 admin-jobs.html 用 Remotive 导入公开岗位，或者换一个关键词。</div>`;
           return;
         }
 
         resultsEl.innerHTML = list.map((item) => `
-          <a class="result" href="${escapeHtml(item.href)}">
+          <a class="result" href="${escapeHtml(item.href)}" ${item.type === "job" ? 'target="_blank" rel="noopener"' : ""}>
             <div class="result-top">
-              <span class="badge">${escapeHtml(typeLabel(item.type))}</span>
-              <span class="badge">${escapeHtml(item.market || "Global")}</span>
+              <span class="badge">${escapeHtml(item.type === "job" ? "真实岗位" : typeLabel(item.type))}</span>
+              <span class="badge">${escapeHtml(item.raw?.source_name || item.market || "Global")}</span>
             </div>
             <h2>${escapeHtml(item.title)}</h2>
             <p>${escapeHtml(item.subtitle || item.description || "")}</p>
@@ -377,6 +379,6 @@
       input.value = params.get("q") || "";
       render();
     })();
-  </script>
+  </script>  </script>
 </body>
 </html>

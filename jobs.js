@@ -329,17 +329,28 @@
         .select("*")
         .eq("item_type", "job")
         .eq("is_active", true)
-        .order("sort_order", { ascending: true })
+        .eq("is_verified", true)
+        .order("last_seen_at", { ascending: false })
         .order("score", { ascending: false });
 
       if (error) throw error;
 
-      if (Array.isArray(data) && data.length) {
-        jobs = data.map(mapPlatformJob);
+      const realRows = (Array.isArray(data) ? data : []).filter((row) => {
+        return row.is_verified === true && (row.source_url || row.apply_url || row.source_name || row.external_id);
+      });
+
+      if (realRows.length) {
+        jobs = realRows.map(mapPlatformJob);
         return true;
       }
+
+      // Important: do not fall back to demo jobs here.
+      // If importer has not run yet, show an empty jobs page rather than fake roles.
+      jobs = [];
+      return false;
     } catch (error) {
-      console.warn("Could not load jobs from platform_items. Static jobs are used.", error);
+      console.warn("Could not load real public jobs from platform_items.", error);
+      jobs = [];
     }
 
     return false;

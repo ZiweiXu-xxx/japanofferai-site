@@ -1,10 +1,15 @@
-// JapanOffer AI - Step 34 Database-backed Global Search
-// Loads search data from Supabase platform_items when available.
-// Falls back to search-data.js static index if database is not ready.
+// JapanOffer AI - Step 36 Global Search Fix
+// Fixes:
+// 1. Search panel will NOT open automatically on page load or empty focus.
+// 2. Search will not show demo role-target jobs as if they were real jobs.
+// 3. Jobs / companies / network results must be verified imported public data.
+// 4. Functional pages can still appear as page results.
 
 (function () {
-  let index = Array.isArray(window.JAPANOFFER_SEARCH_INDEX) ? window.JAPANOFFER_SEARCH_INDEX : [];
+  let fallbackIndex = Array.isArray(window.JAPANOFFER_SEARCH_INDEX) ? window.JAPANOFFER_SEARCH_INDEX : [];
+  let index = fallbackIndex;
   let loadedFromDatabase = false;
+  let realJobCount = 0;
 
   function clean(value) {
     return String(value || "").replace(/\s+/g, " ").trim();
@@ -46,24 +51,49 @@
     return { url, key };
   }
 
+  function isRealPublicItem(row) {
+    if (!row) return false;
+
+    // Functional pages are real pages, even if they are not imported jobs.
+    if (row.item_type === "page") return true;
+
+    // Jobs, companies and network routes must come from a verified public source.
+    return Boolean(
+      row.is_verified === true &&
+      (row.source_url || row.apply_url || row.source_name || row.external_id)
+    );
+  }
+
   function mapPlatformItem(row) {
+    const source = row.source_name ? ` · 来源：${row.source_name}` : "";
     return {
       type: row.item_type,
       title: row.title,
       subtitle: row.subtitle || [row.company_name, row.city || row.market, row.seniority].filter(Boolean).join(" · "),
       market: row.market || "Global",
-      tags: Array.from(new Set([...(row.tags || []), ...(row.skills || []), ...(row.languages || []), row.category, row.market].filter(Boolean))),
-      href: row.href || (row.item_type === "job" ? `jobs.html?q=${encodeURIComponent(row.title)}` : "#"),
+      tags: Array.from(new Set([...(row.tags || []), ...(row.skills || []), ...(row.languages || []), row.category, row.market, row.source_name].filter(Boolean))),
+      href: row.apply_url || row.source_url || row.href || (row.item_type === "job" ? `jobs.html?q=${encodeURIComponent(row.title)}` : "#"),
       score: row.score || row.match_base || 60,
-      description: row.description || "",
-      raw: row
+      description: (row.description || "") + source,
+      raw: row,
+      isRealPublic: isRealPublicItem(row)
     };
+  }
+
+  function cleanFallbackIndex() {
+    // Fallback should not pretend demo jobs are real.
+    // Keep only functional pages if DB is not available.
+    return fallbackIndex.filter((item) => item.type === "page");
   }
 
   async function refreshIndexFromSupabase() {
     const config = getConfig();
+
     if (!config) {
-      window.dispatchEvent(new CustomEvent("japanoffer-search-ready", { detail: { source: "static", count: index.length } }));
+      index = cleanFallbackIndex();
+      realJobCount = 0;
+      window.JAPANOFFER_SEARCH_INDEX = index;
+      window.dispatchEvent(new CustomEvent("japanoffer-search-ready", { detail: { source: "pages-only", count: index.length, realJobCount } }));
       return index;
     }
 
@@ -78,17 +108,21 @@
 
       if (error) throw error;
 
-      if (Array.isArray(data) && data.length) {
-        index = data.map(mapPlatformItem);
-        window.JAPANOFFER_SEARCH_INDEX = index;
-        loadedFromDatabase = true;
-        window.dispatchEvent(new CustomEvent("japanoffer-search-ready", { detail: { source: "database", count: index.length } }));
-      } else {
-        window.dispatchEvent(new CustomEvent("japanoffer-search-ready", { detail: { source: "static", count: index.length } }));
-      }
+      const mapped = (Array.isArray(data) ? data : [])
+        .filter(isRealPublicItem)
+        .map(mapPlatformItem);
+
+      index = mapped.length ? mapped : cleanFallbackIndex();
+      realJobCount = mapped.filter((item) => item.type === "job" && item.isRealPublic).length;
+      window.JAPANOFFER_SEARCH_INDEX = index;
+      loadedFromDatabase = true;
+      window.dispatchEvent(new CustomEvent("japanoffer-search-ready", { detail: { source: "database-real-only", count: index.length, realJobCount } }));
     } catch (error) {
-      console.warn("JapanOffer search database load failed. Static fallback is used.", error);
-      window.dispatchEvent(new CustomEvent("japanoffer-search-ready", { detail: { source: "static", count: index.length, error: error.message } }));
+      console.warn("JapanOffer search database load failed. Pages-only fallback is used.", error);
+      index = cleanFallbackIndex();
+      realJobCount = 0;
+      window.JAPANOFFER_SEARCH_INDEX = index;
+      window.dispatchEvent(new CustomEvent("japanoffer-search-ready", { detail: { source: "pages-only", count: index.length, realJobCount, error: error.message } }));
     }
 
     return index;
@@ -125,7 +159,7 @@
 
   function search(query, limit = 8) {
     const q = norm(query);
-    if (!q) return [];
+    if (q.length < 2) return [];
 
     return index
       .map((item) => ({ ...item, _score: scoreItem(item, q) }))
@@ -153,24 +187,24 @@
   }
 
   function addStyle() {
-    if (document.getElementById("jo34-global-search-style")) return;
+    if (document.getElementById("jo36-global-search-style")) return;
 
     const style = document.createElement("style");
-    style.id = "jo34-global-search-style";
+    style.id = "jo36-global-search-style";
     style.textContent = `
-      .jo33-search-wrap, .jo34-search-wrap {
+      .jo34-search-wrap, .jo36-search-wrap {
         position: relative !important;
         z-index: 100;
       }
 
-      .jo33-search-panel, .jo34-search-panel {
+      .jo34-search-panel, .jo36-search-panel {
         position: absolute;
         top: calc(100% + 10px);
         left: 0;
         width: min(540px, calc(100vw - 34px));
         max-height: min(560px, calc(100vh - 120px));
         overflow: auto;
-        background: rgba(255,255,255,.94);
+        background: rgba(255,255,255,.95);
         border: 1px solid rgba(7,27,54,.11);
         border-radius: 26px;
         box-shadow: 0 28px 100px rgba(7,27,54,.18);
@@ -179,12 +213,12 @@
         display: none;
       }
 
-      .jo33-search-panel.show, .jo34-search-panel.show {
+      .jo34-search-panel.show, .jo36-search-panel.show {
         display: block;
-        animation: jo34SearchIn .18s ease-out;
+        animation: jo36SearchIn .18s ease-out;
       }
 
-      .jo34-search-head {
+      .jo36-search-head {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -195,12 +229,12 @@
         font-weight: 850;
       }
 
-      .jo34-search-head strong {
+      .jo36-search-head strong {
         color: #061a33;
         font-size: 13px;
       }
 
-      .jo34-result {
+      .jo36-result {
         display: grid;
         grid-template-columns: 42px minmax(0, 1fr) auto;
         gap: 12px;
@@ -212,13 +246,12 @@
         border: 1px solid transparent;
       }
 
-      .jo34-result:hover,
-      .jo34-result.active {
+      .jo36-result:hover {
         background: rgba(10,102,194,.08);
         border-color: rgba(10,102,194,.14);
       }
 
-      .jo34-icon {
+      .jo36-icon {
         width: 42px;
         height: 42px;
         border-radius: 14px;
@@ -230,14 +263,14 @@
         background: linear-gradient(135deg, #0a66c2, #003f88);
       }
 
-      .jo34-result h4 {
+      .jo36-result h4 {
         margin: 0;
         font-size: 14px;
         line-height: 1.25;
         letter-spacing: -.02em;
       }
 
-      .jo34-result p {
+      .jo36-result p {
         margin: 4px 0 0;
         color: #607086;
         font-size: 12px;
@@ -245,7 +278,7 @@
         font-weight: 650;
       }
 
-      .jo34-badge {
+      .jo36-badge {
         display: inline-flex;
         min-height: 26px;
         align-items: center;
@@ -258,7 +291,7 @@
         white-space: nowrap;
       }
 
-      .jo34-empty {
+      .jo36-empty {
         padding: 18px;
         border-radius: 18px;
         background: rgba(247,250,255,.92);
@@ -268,14 +301,14 @@
         font-weight: 700;
       }
 
-      .jo34-quick {
+      .jo36-quick {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
         padding: 8px 10px 12px;
       }
 
-      .jo34-chip {
+      .jo36-chip {
         border: 1px solid rgba(10,102,194,.16);
         background: rgba(255,255,255,.78);
         color: #0a66c2;
@@ -286,13 +319,13 @@
         cursor: pointer;
       }
 
-      @keyframes jo34SearchIn {
+      @keyframes jo36SearchIn {
         from { opacity: 0; transform: translateY(8px) scale(.98); }
         to { opacity: 1; transform: translateY(0) scale(1); }
       }
 
       @media (max-width: 720px) {
-        .jo33-search-panel, .jo34-search-panel {
+        .jo34-search-panel, .jo36-search-panel {
           position: fixed;
           left: 14px;
           right: 14px;
@@ -305,79 +338,101 @@
   }
 
   function wrapInput(input) {
-    if (input.dataset.jo34SearchBound === "1") return;
-    input.dataset.jo34SearchBound = "1";
+    if (input.dataset.jo36SearchBound === "1") return;
+    input.dataset.jo36SearchBound = "1";
 
-    const originalParent = input.parentElement;
-    if (!originalParent) return;
+    const wrap = input.parentElement;
+    if (!wrap) return;
 
-    const wrap = originalParent;
-    wrap.classList.add("jo34-search-wrap");
+    wrap.classList.add("jo36-search-wrap");
+
+    // Remove old panels from previous step if any.
+    wrap.querySelectorAll(".jo33-search-panel, .jo34-search-panel, .jo36-search-panel").forEach((el) => el.remove());
 
     const panel = document.createElement("div");
-    panel.className = "jo34-search-panel";
+    panel.className = "jo36-search-panel";
     panel.innerHTML = `
-      <div class="jo34-search-head">
+      <div class="jo36-search-head">
         <strong>Search JapanOffer AI</strong>
-        <span class="jo34-source">Loading data...</span>
+        <span class="jo36-source">Real jobs only</span>
       </div>
-      <div class="jo34-results"></div>
-      <div class="jo34-quick">
-        <button class="jo34-chip" type="button" data-query="legal compliance">Legal compliance</button>
-        <button class="jo34-chip" type="button" data-query="web3 compliance">Web3 compliance</button>
-        <button class="jo34-chip" type="button" data-query="japan">Japan</button>
-        <button class="jo34-chip" type="button" data-query="hong kong aml">Hong Kong AML</button>
+      <div class="jo36-results"></div>
+      <div class="jo36-quick">
+        <button class="jo36-chip" type="button" data-query="legal compliance">Legal compliance</button>
+        <button class="jo36-chip" type="button" data-query="web3 compliance">Web3 compliance</button>
+        <button class="jo36-chip" type="button" data-query="japan">Japan</button>
+        <button class="jo36-chip" type="button" data-query="hong kong aml">Hong Kong AML</button>
       </div>
     `;
     wrap.appendChild(panel);
 
-    const resultsBox = panel.querySelector(".jo34-results");
-    const sourceLabel = panel.querySelector(".jo34-source");
+    const resultsBox = panel.querySelector(".jo36-results");
+    const sourceLabel = panel.querySelector(".jo36-source");
 
     function updateSourceLabel() {
-      sourceLabel.textContent = loadedFromDatabase ? "Database search" : "MVP search";
+      if (loadedFromDatabase) {
+        sourceLabel.textContent = realJobCount ? `Database · ${realJobCount} real jobs` : "Database · no imported jobs yet";
+      } else {
+        sourceLabel.textContent = "Pages only";
+      }
+    }
+
+    function hideIfEmpty() {
+      if (!input.value.trim()) {
+        panel.classList.remove("show");
+        return true;
+      }
+      return false;
     }
 
     function render() {
       updateSourceLabel();
-      const query = input.value.trim();
-      const results = search(query);
 
+      const query = input.value.trim();
+
+      // Important fix: do not open dropdown on empty focus/page load.
       if (!query) {
-        resultsBox.innerHTML = `
-          <div class="jo34-empty">
-            试试搜索：legal compliance、web3、Japan、Hong Kong AML、CV、申请中心。
-          </div>
-        `;
-        panel.classList.add("show");
+        panel.classList.remove("show");
         return;
       }
+
+      const results = search(query);
 
       if (!results.length) {
         resultsBox.innerHTML = `
-          <div class="jo34-empty">
-            暂时没有找到「${escapeHtml(query)}」。可以换成岗位方向、国家、公司类型或技能关键词。
+          <div class="jo36-empty">
+            没有找到真实公开岗位结果。可能还没有成功运行「公开岗位导入」。
+            <br><br>
+            去 admin-jobs.html 先用 Remotive 导入一次，然后回来搜索。
           </div>
         `;
         panel.classList.add("show");
         return;
       }
 
-      resultsBox.innerHTML = results.map((item) => `
-        <a class="jo34-result" href="${escapeHtml(item.href)}">
-          <span class="jo34-icon">${escapeHtml(typeLabel(item.type).slice(0, 2))}</span>
-          <span>
-            <h4>${escapeHtml(item.title)}</h4>
-            <p>${escapeHtml(item.subtitle || item.description || "")}</p>
-          </span>
-          <span class="jo34-badge">${escapeHtml(typeLabel(item.type))}</span>
-        </a>
-      `).join("");
+      resultsBox.innerHTML = results.map((item) => {
+        const isJob = item.type === "job";
+        const sourceText = isJob && item.raw?.source_name ? ` · ${item.raw.source_name}` : "";
+        return `
+          <a class="jo36-result" href="${escapeHtml(item.href)}" ${isJob ? 'target="_blank" rel="noopener"' : ""}>
+            <span class="jo36-icon">${escapeHtml(typeLabel(item.type).slice(0, 2))}</span>
+            <span>
+              <h4>${escapeHtml(item.title)}</h4>
+              <p>${escapeHtml(item.subtitle || item.description || "")}${escapeHtml(sourceText)}</p>
+            </span>
+            <span class="jo36-badge">${escapeHtml(isJob ? "真实岗位" : typeLabel(item.type))}</span>
+          </a>
+        `;
+      }).join("");
 
       panel.classList.add("show");
     }
 
-    input.addEventListener("focus", render);
+    input.addEventListener("focus", () => {
+      // Keep silent on focus unless there is already text.
+      if (!hideIfEmpty()) render();
+    });
+
     input.addEventListener("input", render);
 
     input.addEventListener("keydown", (event) => {
@@ -393,7 +448,7 @@
       }
     });
 
-    panel.querySelectorAll(".jo34-chip").forEach((button) => {
+    panel.querySelectorAll(".jo36-chip").forEach((button) => {
       button.addEventListener("click", () => {
         input.value = button.dataset.query || "";
         render();
@@ -407,7 +462,10 @@
       }
     });
 
-    window.addEventListener("japanoffer-search-ready", render);
+    window.addEventListener("japanoffer-search-ready", () => {
+      if (input.value.trim()) render();
+      else panel.classList.remove("show");
+    });
   }
 
   function init() {
@@ -420,7 +478,8 @@
     init,
     refreshIndexFromSupabase,
     getIndex: () => index,
-    isDatabaseLoaded: () => loadedFromDatabase
+    isDatabaseLoaded: () => loadedFromDatabase,
+    getRealJobCount: () => realJobCount
   };
 
   if (document.readyState === "loading") {
