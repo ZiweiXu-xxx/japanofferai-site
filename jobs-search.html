@@ -383,6 +383,22 @@
       if (url.startsWith("https://") || url.startsWith("http://")) return escapeHtml(url);
       return "#";
     }
+
+    window.addEventListener("DOMContentLoaded", function () {
+      const params = new URLSearchParams(window.location.search);
+      const q = params.get("q");
+
+      if (q) {
+        const input = document.getElementById("searchInput");
+        if (input) {
+          input.value = q;
+          setTimeout(function () {
+            searchRealJobs();
+          }, 200);
+        }
+      }
+    });
+
   </script>
 </body>
 </html>
