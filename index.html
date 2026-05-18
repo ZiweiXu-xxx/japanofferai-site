@@ -3,9 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>JapanOffer AI | Cross-border Talent Matching Network</title>
+  <title data-i18n-title="meta.title">JapanOffer AI | Cross-border Talent Matching Network</title>
   <meta
     name="description"
+    data-i18n-content="meta.description"
     content="JapanOffer AI is a cross-border talent matching network that helps international job seekers and employers find better matches through AI match scores."
   />
   <link rel="stylesheet" href="styles.css" />
@@ -17,26 +18,38 @@
       <span class="brand-mark">J</span>
       <span class="brand-copy">
         <strong>JapanOffer AI</strong>
-        <small>Cross-border Talent Network</small>
+        <small data-i18n="brand.subtitle">Cross-border Talent Network</small>
       </span>
     </a>
 
-    <div class="top-search" aria-label="Global platform search">
+    <form class="top-search" aria-label="Global platform search" id="topSearchForm">
       <span>⌕</span>
-      <input value="Search roles, talent or companies" aria-label="Search roles, talent or companies" />
-    </div>
+      <input
+        data-i18n-placeholder="search.topPlaceholder"
+        placeholder="Search UK legal, Singapore compliance, Japan legal, Hong Kong AML..."
+        aria-label="Search roles, talent or companies"
+      />
+    </form>
 
     <nav class="nav" aria-label="Main navigation">
-      <a href="#network">Network</a>
-      <a href="jobs.html">Jobs</a>
-      <a href="report.html">Report</a>
-      <a href="companies.html">Companies</a>
-      <a href="feedback.html">Feedback</a>
+      <a href="#network" data-i18n="nav.network">Network</a>
+      <a href="jobs-search.html" data-i18n="nav.jobs">Jobs</a>
+      <a href="report.html" data-i18n="nav.report">Report</a>
+      <a href="companies.html" data-i18n="nav.companies">Companies</a>
+      <a href="feedback.html" data-i18n="nav.feedback">Feedback</a>
     </nav>
 
+    <div class="locale-picker" aria-label="Language selector">
+      <select id="languageSelect" aria-label="Language">
+        <option value="en">EN</option>
+        <option value="zh">中文</option>
+        <option value="ja">日本語</option>
+      </select>
+    </div>
+
     <div class="auth-links">
-      <a class="signin-link" href="login.html">Sign in</a>
-      <a class="nav-cta" href="signup.html">Sign up</a>
+      <a class="signin-link" href="login.html" data-i18n="auth.signIn">Sign in</a>
+      <a class="nav-cta" href="signup.html" data-i18n="auth.signUp">Sign up</a>
     </div>
   </header>
 
@@ -51,56 +64,61 @@
 
       <div class="hero-stage">
         <div class="hero-copy premium-reveal">
-          <p class="eyebrow">AI-powered cross-border hiring network</p>
+          <p class="eyebrow" data-i18n="hero.eyebrow">AI-powered cross-border hiring network</p>
 
-          <h1>
+          <h1 data-i18n-html="hero.title">
             Search less.
             <span>Match smarter.</span>
           </h1>
 
-          <p class="hero-lede">
+          <p class="hero-lede" data-i18n="hero.lead">
             JapanOffer AI helps cross-border talent and overseas employers find better matches through
             structured role fit, language fit, visa risk and career direction scoring.
           </p>
 
-          <p class="hero-lede cn">
-            少一点海投，多一点精准匹配。JapanOffer AI 用背景、语言、签证风险和岗位要求，
-            判断哪些跨境机会真正值得优先申请。
+          <p class="hero-lede cn" data-i18n="hero.sublead">
+            Search fewer roles. Apply with more precision. JapanOffer AI helps you decide which cross-border opportunities are truly worth applying for first.
           </p>
 
           <div class="premium-search-card" aria-label="Platform matching entry">
             <div class="premium-search-tabs">
-              <a class="active" href="jobs.html">Find jobs</a>
-              <a href="talent.html">Find talent</a>
-              <a href="companies.html">Explore companies</a>
+              <a class="active" href="jobs-search.html" data-i18n="search.findJobs">Find jobs</a>
+              <a href="talent.html" data-i18n="search.findTalent">Find talent</a>
+              <a href="companies.html" data-i18n="search.exploreCompanies">Explore companies</a>
             </div>
 
             <div class="premium-search-row">
               <label>
-                <span>Role, skill or background</span>
-                <input value="Legal, compliance, business, technology" />
+                <span data-i18n="search.roleLabel">Role, skill or background</span>
+                <input
+                  data-i18n-value="search.roleValue"
+                  value="Legal, compliance, business, technology"
+                />
               </label>
 
               <label>
-                <span>Target market</span>
-                <input value="Japan, Singapore, Hong Kong" />
+                <span data-i18n="search.marketLabel">Target market</span>
+                <input
+                  data-i18n-value="search.marketValue"
+                  value="UK, Singapore, Japan"
+                />
               </label>
 
-              <a class="premium-search-button" href="report.html?lang=zh">Generate report</a>
+              <a class="premium-search-button" href="jobs-search.html" data-i18n="search.button">Search jobs</a>
             </div>
 
             <div class="quick-tags premium-tags">
-              <span>Entry-level</span>
-              <span>Visa-aware</span>
-              <span>English + Japanese</span>
-              <span>Legal / Compliance</span>
+              <span data-query="UK entry level legal compliance" data-i18n="tags.entry">Entry-level</span>
+              <span data-query="visa sponsorship analyst" data-i18n="tags.visa">Visa-aware</span>
+              <span data-query="Japanese English legal compliance" data-i18n="tags.language">English + Japanese</span>
+              <span data-query="legal compliance AML" data-i18n="tags.legal">Legal / Compliance</span>
             </div>
           </div>
 
           <div class="hero-actions premium-actions">
-            <a class="btn primary" href="report.html?lang=zh">中文版：生成 AI 匹配报告</a>
-            <a class="btn secondary" href="report.html?lang=en">English Auto Report</a>
-            <a class="btn secondary" href="feedback.html">反馈问卷</a>
+            <a class="btn primary" href="report.html?lang=zh" data-i18n="actions.zhReport">Chinese AI Match Report</a>
+            <a class="btn secondary" href="report.html?lang=en" data-i18n="actions.enReport">English Auto Report</a>
+            <a class="btn secondary" href="feedback.html" data-i18n="actions.feedback">Feedback</a>
           </div>
         </div>
 
@@ -108,16 +126,16 @@
           <div class="cinema-window">
             <div class="window-toolbar">
               <span></span><span></span><span></span>
-              <strong>Talent Match OS</strong>
-              <em>Live beta</em>
+              <strong data-i18n="preview.title">Talent Match OS</strong>
+              <em data-i18n="preview.live">Live beta</em>
             </div>
 
             <div class="cinema-layout">
               <nav class="cinema-sidebar">
-                <span class="active">Matches</span>
-                <span>Talent</span>
-                <span>Roles</span>
-                <span>Companies</span>
+                <span class="active" data-i18n="preview.matches">Matches</span>
+                <span data-i18n="preview.talent">Talent</span>
+                <span data-i18n="preview.roles">Roles</span>
+                <span data-i18n="preview.companies">Companies</span>
               </nav>
 
               <div class="cinema-feed">
@@ -125,15 +143,16 @@
                   <div class="cinema-card-top">
                     <span class="company-icon">J</span>
                     <div>
-                      <h3>Legal Compliance Analyst</h3>
-                      <p>Tokyo · Entry level · English and Japanese preferred</p>
+                      <h3 data-i18n="preview.legalTitle">Legal Compliance Analyst</h3>
+                      <p data-i18n="preview.legalMeta">Tokyo · Entry level · English and Japanese preferred</p>
                     </div>
                     <strong>86%</strong>
                   </div>
+
                   <div class="cinema-tags">
-                    <span>Strong education fit</span>
-                    <span>Medium visa risk</span>
-                    <span>Apply first</span>
+                    <span data-i18n="preview.educationFit">Strong education fit</span>
+                    <span data-i18n="preview.visaRisk">Medium visa risk</span>
+                    <span data-i18n="preview.applyFirst">Apply first</span>
                   </div>
                 </article>
 
@@ -141,167 +160,176 @@
                   <div class="cinema-card-top">
                     <span class="company-icon dark">S</span>
                     <div>
-                      <h3>Cross-border Business Associate</h3>
-                      <p>Singapore · International team · Mandarin useful</p>
+                      <h3 data-i18n="preview.businessTitle">Cross-border Business Associate</h3>
+                      <p data-i18n="preview.businessMeta">Singapore · International team · Mandarin useful</p>
                     </div>
                     <strong>79%</strong>
                   </div>
+
                   <div class="cinema-tags">
-                    <span>Good language fit</span>
-                    <span>Lower visa risk</span>
+                    <span data-i18n="preview.languageFit">Good language fit</span>
+                    <span data-i18n="preview.lowerRisk">Lower visa risk</span>
                   </div>
                 </article>
 
                 <article class="candidate-glass">
                   <span class="candidate-avatar">ZX</span>
                   <div>
-                    <h3>Candidate profile</h3>
-                    <p>LLB · English / Japanese / Mandarin · Compliance target</p>
+                    <h3 data-i18n="preview.candidateTitle">Candidate profile</h3>
+                    <p data-i18n="preview.candidateMeta">LLB · English / Japanese / Mandarin · Compliance target</p>
                   </div>
-                  <a href="account.html">View profile</a>
+                  <a href="account.html" data-i18n="preview.viewProfile">View profile</a>
                 </article>
               </div>
             </div>
           </div>
 
           <div class="floating-proof proof-a">
-            <span>Match score</span>
+            <span data-i18n="proof.matchScore">Match score</span>
             <strong>86%</strong>
           </div>
 
           <div class="floating-proof proof-b">
-            <span>Visa risk</span>
-            <strong>Medium</strong>
+            <span data-i18n="proof.visaRisk">Visa risk</span>
+            <strong data-i18n="proof.medium">Medium</strong>
           </div>
         </aside>
       </div>
 
       <div class="proof-marquee" aria-label="Product proof">
         <div class="marquee-track">
-          <span>Role matching</span>
-          <span>Visa-aware scoring</span>
-          <span>Language fit</span>
-          <span>Employer shortlist</span>
-          <span>AI report</span>
-          <span>Cross-border talent network</span>
-          <span>Role matching</span>
-          <span>Visa-aware scoring</span>
-          <span>Language fit</span>
-          <span>Employer shortlist</span>
-          <span>AI report</span>
-          <span>Cross-border talent network</span>
+          <span data-i18n="marquee.roleMatching">Role matching</span>
+          <span data-i18n="marquee.visaScoring">Visa-aware scoring</span>
+          <span data-i18n="marquee.languageFit">Language fit</span>
+          <span data-i18n="marquee.employerShortlist">Employer shortlist</span>
+          <span data-i18n="marquee.aiReport">AI report</span>
+          <span data-i18n="marquee.network">Cross-border talent network</span>
+          <span data-i18n="marquee.roleMatching">Role matching</span>
+          <span data-i18n="marquee.visaScoring">Visa-aware scoring</span>
+          <span data-i18n="marquee.languageFit">Language fit</span>
+          <span data-i18n="marquee.employerShortlist">Employer shortlist</span>
+          <span data-i18n="marquee.aiReport">AI report</span>
+          <span data-i18n="marquee.network">Cross-border talent network</span>
         </div>
       </div>
     </section>
 
     <section class="premium-section narrative-section" id="network">
-      <div class="section-kicker premium-reveal">From search to match</div>
+      <div class="section-kicker premium-reveal" data-i18n="network.kicker">From search to match</div>
+
       <div class="narrative-grid">
         <div class="premium-reveal">
-          <h2>The job board era shows information. The next era decides fit.</h2>
+          <h2 data-i18n="network.title">The job board era shows information. The next era decides fit.</h2>
         </div>
+
         <div class="premium-reveal">
-          <p>
+          <p data-i18n="network.copy">
             LinkedIn and job boards are built around search. JapanOffer AI adds a cross-border matching layer:
             candidate profile, role requirements, market rules and risk signals become one practical score.
           </p>
-          <a class="text-link" href="report.html">Generate your match report →</a>
+          <a class="text-link" href="report.html" data-i18n="network.link">Generate your match report →</a>
         </div>
       </div>
 
       <div class="metric-strip premium-reveal">
         <article>
           <span>01</span>
-          <strong>Talent profile</strong>
-          <p>Education, language, visa status and direction.</p>
+          <strong data-i18n="steps.profileTitle">Talent profile</strong>
+          <p data-i18n="steps.profileCopy">Education, language, visa status and direction.</p>
         </article>
+
         <article>
           <span>02</span>
-          <strong>Role intelligence</strong>
-          <p>Job requirements, market reality and sponsor risk.</p>
+          <strong data-i18n="steps.roleTitle">Role intelligence</strong>
+          <p data-i18n="steps.roleCopy">Job requirements, market reality and sponsor risk.</p>
         </article>
+
         <article>
           <span>03</span>
-          <strong>Employer shortlist</strong>
-          <p>Better candidate discovery with less manual screening.</p>
+          <strong data-i18n="steps.employerTitle">Employer shortlist</strong>
+          <p data-i18n="steps.employerCopy">Better candidate discovery with less manual screening.</p>
         </article>
       </div>
     </section>
 
     <section class="premium-section split-showcase">
       <div class="showcase-copy premium-reveal">
-        <p class="eyebrow">AI Match Report</p>
-        <h2>A product flow that feels real, not a survey redirect.</h2>
-        <p>
-          The core user action is now report generation. Feedback research is separated into its own page,
+        <p class="eyebrow" data-i18n="report.kicker">AI Match Report</p>
+        <h2 data-i18n="report.title">A product flow that feels real, not a survey redirect.</h2>
+        <p data-i18n="report.copy">
+          The core user action is now real job search and report generation. Feedback research is separated into its own page,
           so users feel they are using a product, not filling an external questionnaire.
         </p>
+
         <div class="hero-actions">
-          <a class="btn primary" href="report.html?lang=zh">Generate report</a>
-          <a class="btn secondary" href="feedback.html">Give feedback</a>
+          <a class="btn primary" href="report.html?lang=zh" data-i18n="report.generate">Generate report</a>
+          <a class="btn secondary" href="feedback.html" data-i18n="report.feedback">Give feedback</a>
         </div>
       </div>
 
       <div class="report-preview premium-reveal">
         <div class="report-score">
-          <span>Overall match</span>
+          <span data-i18n="report.overall">Overall match</span>
           <strong>86%</strong>
         </div>
-        <h3>Recommended route</h3>
-        <p>Legal Compliance Analyst · KYC / AML Analyst · Contract Assistant</p>
+
+        <h3 data-i18n="report.routeTitle">Recommended route</h3>
+        <p data-i18n="report.routeCopy">Legal Compliance Analyst · KYC / AML Analyst · Contract Assistant</p>
+
         <div class="report-metrics mini">
-          <div><span>Market</span><strong>Japan</strong></div>
-          <div><span>Risk</span><strong>Medium</strong></div>
-          <div><span>Priority</span><strong>Apply first</strong></div>
-          <div><span>Language</span><strong>JP / EN</strong></div>
+          <div><span data-i18n="report.market">Market</span><strong data-i18n="report.marketValue">Japan</strong></div>
+          <div><span data-i18n="report.risk">Risk</span><strong data-i18n="proof.medium">Medium</strong></div>
+          <div><span data-i18n="report.priority">Priority</span><strong data-i18n="preview.applyFirst">Apply first</strong></div>
+          <div><span data-i18n="report.language">Language</span><strong>JP / EN</strong></div>
         </div>
       </div>
     </section>
 
     <section class="premium-section role-studio">
       <div class="section-head center premium-reveal">
-        <p class="eyebrow">Platform routes</p>
-        <h2>Every part of the homepage now leads somewhere useful.</h2>
-        <p>Search roles, generate reports, save jobs, build a profile, or enter the employer-side waitlist.</p>
+        <p class="eyebrow" data-i18n="routes.kicker">Platform routes</p>
+        <h2 data-i18n="routes.title">Every part of the homepage now leads somewhere useful.</h2>
+        <p data-i18n="routes.copy">Search roles, generate reports, save jobs, build a profile, or enter the employer-side waitlist.</p>
       </div>
 
       <div class="studio-grid">
-        <a class="studio-card premium-reveal" href="jobs.html">
+        <a class="studio-card premium-reveal" href="jobs-search.html">
           <span>01</span>
-          <h3>Search live jobs</h3>
-          <p>Public ATS job feeds plus JapanOffer AI match scoring.</p>
+          <h3 data-i18n="routes.jobsTitle">Search live jobs</h3>
+          <p data-i18n="routes.jobsCopy">Public ATS job feeds plus JapanOffer AI match scoring.</p>
         </a>
 
         <a class="studio-card premium-reveal" href="report.html">
           <span>02</span>
-          <h3>Generate AI report</h3>
-          <p>Chinese or English report, generated directly on-site.</p>
+          <h3 data-i18n="routes.reportTitle">Generate AI report</h3>
+          <p data-i18n="routes.reportCopy">Chinese, English or Japanese reports generated directly on-site.</p>
         </a>
 
         <a class="studio-card premium-reveal" href="signup.html">
           <span>03</span>
-          <h3>Create account</h3>
-          <p>Build toward saved roles, reports and profile history.</p>
+          <h3 data-i18n="routes.accountTitle">Create account</h3>
+          <p data-i18n="routes.accountCopy">Build toward saved roles, reports and profile history.</p>
         </a>
 
         <a class="studio-card premium-reveal" href="employers.html">
           <span>04</span>
-          <h3>Employer waitlist</h3>
-          <p>Open the company-side matching route.</p>
+          <h3 data-i18n="routes.employerTitle">Employer waitlist</h3>
+          <p data-i18n="routes.employerCopy">Open the company-side matching route.</p>
         </a>
       </div>
     </section>
 
     <section class="premium-section final-cta">
       <div class="final-card premium-reveal">
-        <p class="eyebrow">Beta access</p>
-        <h2>Build your cross-border match profile.</h2>
-        <p>
-          Start with one AI report. Then compare roles, save opportunities and move toward a structured international career route.
+        <p class="eyebrow" data-i18n="final.kicker">Beta access</p>
+        <h2 data-i18n="final.title">Build your cross-border match profile.</h2>
+        <p data-i18n="final.copy">
+          Start with one real job search. Then compare roles, save opportunities and move toward a structured international career route.
         </p>
+
         <div class="hero-actions center-actions">
-          <a class="btn primary" href="report.html?lang=zh">中文版：生成报告</a>
-          <a class="btn secondary" href="signup.html">Create account</a>
+          <a class="btn primary" href="jobs-search.html?q=UK%20legal%20graduate" data-i18n="final.searchJobs">Search jobs</a>
+          <a class="btn secondary" href="signup.html" data-i18n="auth.signUp">Sign up</a>
         </div>
       </div>
     </section>
@@ -309,7 +337,7 @@
 
   <footer class="footer">
     <strong>JapanOffer AI</strong>
-    <span>Cross-border talent matching network.</span>
+    <span data-i18n="footer.copy">Cross-border talent matching network.</span>
   </footer>
 
   <script src="auth-config.js"></script>
@@ -318,7 +346,7 @@
   <script src="analytics.js"></script>
   <script src="platform-actions.js"></script>
   <script src="effects.js"></script>
-<script src="homepage-focus.js"></script>
-<script src="language-switcher.js"></script>
+  <script src="homepage-focus.js"></script>
+  <script src="i18n.js"></script>
 </body>
 </html>
