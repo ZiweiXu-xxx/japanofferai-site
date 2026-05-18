@@ -1,0 +1,808 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Global Job Search | JapanOffer AI</title>
+  <meta name="description" content="Search real jobs across supported markets with JapanOffer AI match scoring." />
+
+  <style>
+    :root {
+      --bg: #07111f;
+      --panel: rgba(255, 255, 255, 0.08);
+      --panel-strong: rgba(255, 255, 255, 0.12);
+      --line: rgba(255, 255, 255, 0.15);
+      --text: #ffffff;
+      --muted: #b8c4d6;
+      --muted-2: #91a3bd;
+      --gold: #d6b36a;
+      --blue: #82b7ff;
+      --danger: #ffd1d1;
+      --shadow: 0 28px 80px rgba(0, 0, 0, 0.28);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(130, 183, 255, 0.18), transparent 34%),
+        radial-gradient(circle at 82% 10%, rgba(214, 179, 106, 0.15), transparent 28%),
+        linear-gradient(180deg, #07111f 0%, #0b1627 58%, #08101d 100%);
+      color: var(--text);
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .wrap {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 34px 0 70px;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 48px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #1f57c8, #6aa2ff);
+      color: white;
+      font-weight: 950;
+      box-shadow: 0 18px 40px rgba(31, 87, 200, 0.26);
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 17px;
+      letter-spacing: -0.04em;
+    }
+
+    .brand small {
+      display: block;
+      color: var(--muted-2);
+      font-size: 12px;
+      font-weight: 750;
+      margin-top: 2px;
+    }
+
+    .lang select {
+      height: 36px;
+      min-width: 86px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.1);
+      color: white;
+      outline: none;
+      padding: 0 10px;
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    .lang option { color: #111827; }
+
+    .home-link {
+      color: #07111f;
+      background: var(--gold);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-weight: 900;
+      box-shadow: 0 16px 40px rgba(214, 179, 106, 0.18);
+      white-space: nowrap;
+    }
+
+    .hero {
+      margin-bottom: 30px;
+    }
+
+    .eyebrow {
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      margin: 0 0 18px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(42px, 6vw, 72px);
+      line-height: .94;
+      letter-spacing: -0.075em;
+    }
+
+    h1 span {
+      display: block;
+      color: var(--gold);
+    }
+
+    .subtitle {
+      max-width: 850px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.7;
+      margin: 20px 0 0;
+    }
+
+    .source-note {
+      margin-top: 12px;
+      color: var(--muted-2);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .search-card {
+      margin: 32px 0 22px;
+      padding: 20px;
+      border-radius: 26px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .search-box {
+      display: grid;
+      grid-template-columns: 1fr 220px auto;
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    input, select, button {
+      font: inherit;
+    }
+
+    input, .country-select {
+      width: 100%;
+      border: 0;
+      border-radius: 15px;
+      padding: 15px 16px;
+      font-size: 15px;
+      outline: none;
+      background: rgba(255,255,255,0.95);
+      color: #111827;
+    }
+
+    .country-select {
+      cursor: pointer;
+      font-weight: 750;
+    }
+
+    .search-button {
+      border: 0;
+      border-radius: 15px;
+      padding: 15px 22px;
+      background: var(--gold);
+      color: #07111f;
+      font-weight: 950;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 18px 40px rgba(214, 179, 106, 0.18);
+    }
+
+    .quick {
+      margin-top: 13px;
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .quick button {
+      border: 1px solid rgba(214, 179, 106, .35);
+      background: rgba(214, 179, 106, .15);
+      color: #f4dfaa;
+      padding: 9px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    .status {
+      color: var(--muted);
+      margin: 20px 0;
+      line-height: 1.6;
+      font-weight: 760;
+    }
+
+    .job {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 22px;
+      margin-bottom: 16px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.18);
+    }
+
+    .job h2 {
+      margin: 0 0 8px;
+      font-size: 24px;
+      letter-spacing: -0.045em;
+      line-height: 1.18;
+    }
+
+    .meta {
+      color: var(--muted);
+      margin-bottom: 13px;
+      line-height: 1.5;
+      font-weight: 720;
+    }
+
+    .desc {
+      color: #dbe4f2;
+      line-height: 1.65;
+      margin: 0 0 14px;
+    }
+
+    .score {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+      margin: 14px 0;
+    }
+
+    .tag {
+      background: rgba(214,179,106,0.16);
+      border: 1px solid rgba(214,179,106,0.35);
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+      color: #f4dfaa;
+      font-weight: 850;
+    }
+
+    .tag.blue {
+      background: rgba(130,183,255,0.12);
+      border-color: rgba(130,183,255,0.28);
+      color: #dbeafe;
+    }
+
+    .advice {
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(130,183,255,0.1);
+      border: 1px solid rgba(130,183,255,0.22);
+      color: #dbeafe;
+      line-height: 1.6;
+    }
+
+    .apply {
+      display: inline-block;
+      margin-top: 14px;
+      color: #07111f;
+      background: var(--gold);
+      padding: 12px 15px;
+      border-radius: 13px;
+      text-decoration: none;
+      font-weight: 950;
+    }
+
+    .empty, .error {
+      padding: 28px;
+      border-radius: 22px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .error {
+      background: rgba(255,80,80,0.12);
+      border-color: rgba(255,120,120,0.25);
+      color: var(--danger);
+    }
+
+    .fine-print {
+      margin-top: 30px;
+      color: var(--muted-2);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 880px) {
+      .topbar { grid-template-columns: 1fr; align-items: stretch; }
+      .home-link, .lang select { width: fit-content; }
+      .search-box { grid-template-columns: 1fr; }
+      .search-button { width: 100%; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">J</span>
+        <span>
+          <strong>JapanOffer AI</strong>
+          <small data-i18n="brand.subtitle">Cross-border Talent Network</small>
+        </span>
+      </a>
+
+      <div class="lang">
+        <select id="languageSelect" aria-label="Language">
+          <option value="en">EN</option>
+          <option value="zh">中文</option>
+          <option value="ja">日本語</option>
+        </select>
+      </div>
+
+      <a class="home-link" href="index.html" data-i18n="nav.home">Back to Home</a>
+    </header>
+
+    <section class="hero">
+      <p class="eyebrow" data-i18n="hero.eyebrow">Real job search engine</p>
+      <h1 data-i18n-html="hero.title">Global Job Search<span>Powered by real sources.</span></h1>
+      <p class="subtitle" data-i18n="hero.subtitle">
+        Search real jobs across supported markets. JapanOffer AI combines country-based job search with remote-job fallback and match scoring.
+      </p>
+      <p class="source-note" data-i18n="hero.source">
+        Connected sources: Adzuna Job Search API and Remotive Remote Jobs API.
+      </p>
+    </section>
+
+    <section class="search-card">
+      <div class="search-box">
+        <input id="searchInput" data-i18n-placeholder="search.placeholder" placeholder="Search anything: UK legal, Singapore finance, Canada compliance, 香港 AML..." />
+
+        <select id="countrySelect" class="country-select" aria-label="Country">
+          <option value="auto" data-i18n-option="country.auto">Auto-detect country</option>
+          <option value="gb" data-i18n-option="country.gb">United Kingdom</option>
+          <option value="sg" data-i18n-option="country.sg">Singapore</option>
+          <option value="ca" data-i18n-option="country.ca">Canada</option>
+          <option value="au" data-i18n-option="country.au">Australia</option>
+          <option value="us" data-i18n-option="country.us">United States</option>
+          <option value="de" data-i18n-option="country.de">Germany</option>
+          <option value="fr" data-i18n-option="country.fr">France</option>
+          <option value="nl" data-i18n-option="country.nl">Netherlands</option>
+          <option value="nz" data-i18n-option="country.nz">New Zealand</option>
+          <option value="in" data-i18n-option="country.in">India</option>
+          <option value="remote" data-i18n-option="country.remote">Remote</option>
+          <option value="japan" data-i18n-option="country.japan">Japan fallback</option>
+          <option value="hongkong" data-i18n-option="country.hongkong">Hong Kong fallback</option>
+        </select>
+
+        <button class="search-button" onclick="searchRealJobs()" data-i18n="search.button">Search jobs</button>
+      </div>
+
+      <div class="quick">
+        <button onclick="quickSearch('UK legal graduate')" data-i18n="quick.ukLegal">UK legal graduate</button>
+        <button onclick="quickSearch('Singapore compliance AML')" data-i18n="quick.sgCompliance">Singapore compliance</button>
+        <button onclick="quickSearch('Canada finance analyst')" data-i18n="quick.caFinance">Canada finance</button>
+        <button onclick="quickSearch('Australia graduate')" data-i18n="quick.auGraduate">Australia graduate</button>
+        <button onclick="quickSearch('visa sponsorship analyst')" data-i18n="quick.visa">Visa sponsorship</button>
+        <button onclick="quickSearch('日本 法务')" data-i18n="quick.jpLegal">Japan legal</button>
+        <button onclick="quickSearch('香港 AML')" data-i18n="quick.hkAml">Hong Kong AML</button>
+      </div>
+    </section>
+
+    <div id="status" class="status" data-i18n="status.ready">Type any keyword and search real jobs.</div>
+    <div id="jobs"></div>
+
+    <p class="fine-print" data-i18n="fineprint">
+      Job data is returned from public sources. Always verify location rules, sponsorship, contract type and application details on the source page before applying.
+    </p>
+  </div>
+
+  <script>
+    const LANG_KEY = "japanoffer_lang";
+
+    const T = {
+      en: {
+        brand: { subtitle: "Cross-border Talent Network" },
+        nav: { home: "Back to Home" },
+        hero: {
+          eyebrow: "Real job search engine",
+          title: "Global Job Search<span>Powered by real sources.</span>",
+          subtitle: "Search real jobs across supported markets. JapanOffer AI combines country-based job search with remote-job fallback and match scoring.",
+          source: "Connected sources: Adzuna Job Search API and Remotive Remote Jobs API."
+        },
+        search: {
+          placeholder: "Search anything: UK legal, Singapore finance, Canada compliance, Hong Kong AML...",
+          button: "Search jobs"
+        },
+        country: {
+          auto: "Auto-detect country",
+          gb: "United Kingdom",
+          sg: "Singapore",
+          ca: "Canada",
+          au: "Australia",
+          us: "United States",
+          de: "Germany",
+          fr: "France",
+          nl: "Netherlands",
+          nz: "New Zealand",
+          in: "India",
+          remote: "Remote",
+          japan: "Japan fallback",
+          hongkong: "Hong Kong fallback"
+        },
+        quick: {
+          ukLegal: "UK legal graduate",
+          sgCompliance: "Singapore compliance",
+          caFinance: "Canada finance",
+          auGraduate: "Australia graduate",
+          visa: "Visa sponsorship",
+          jpLegal: "Japan legal",
+          hkAml: "Hong Kong AML"
+        },
+        status: {
+          ready: "Type any keyword and search real jobs.",
+          emptyKeyword: "Please type a keyword first.",
+          loading: "Searching real job sources...",
+          noJobs: "No jobs found for this exact search yet. Try a broader keyword such as legal, compliance, finance, analyst, graduate, internship, AML or visa sponsorship.",
+          failed: "Real job search failed. Check that Vercel has ADZUNA_APP_ID and ADZUNA_APP_KEY, and that api/search-real-jobs.js exists in the api folder."
+        },
+        result: {
+          showing: "Showing",
+          realJobs: "real jobs",
+          realJob: "real job",
+          from: "from",
+          interpreted: "Search interpreted as",
+          market: "Market",
+          source: "Source",
+          match: "Match score",
+          visa: "Visa risk",
+          priority: "Apply priority",
+          level: "Level",
+          advice: "AI advice",
+          apply: "View source",
+          noDescription: "No description available."
+        },
+        advice: {
+          fallback: "Check the source page before applying. Confirm location restrictions, sponsorship, contract type and whether the role fits your background."
+        },
+        fineprint: "Job data is returned from public sources. Always verify location rules, sponsorship, contract type and application details on the source page before applying."
+      },
+
+      zh: {
+        brand: { subtitle: "跨境人才匹配网络" },
+        nav: { home: "返回首页" },
+        hero: {
+          eyebrow: "真实岗位搜索引擎",
+          title: "全球岗位搜索<span>连接真实岗位来源。</span>",
+          subtitle: "搜索多个市场的真实岗位。JapanOffer AI 将国家岗位搜索、远程岗位补充和匹配评分结合在一起。",
+          source: "已连接来源：Adzuna 岗位搜索 API 和 Remotive 远程岗位 API。"
+        },
+        search: {
+          placeholder: "搜索任意关键词：英国法律、新加坡金融、加拿大合规、香港 AML...",
+          button: "搜索岗位"
+        },
+        country: {
+          auto: "自动识别国家",
+          gb: "英国",
+          sg: "新加坡",
+          ca: "加拿大",
+          au: "澳大利亚",
+          us: "美国",
+          de: "德国",
+          fr: "法国",
+          nl: "荷兰",
+          nz: "新西兰",
+          in: "印度",
+          remote: "远程",
+          japan: "日本补充搜索",
+          hongkong: "香港补充搜索"
+        },
+        quick: {
+          ukLegal: "英国法律毕业生岗位",
+          sgCompliance: "新加坡合规岗位",
+          caFinance: "加拿大金融分析",
+          auGraduate: "澳洲毕业生岗位",
+          visa: "签证担保岗位",
+          jpLegal: "日本法务",
+          hkAml: "香港 AML"
+        },
+        status: {
+          ready: "输入任意关键词，搜索真实岗位。",
+          emptyKeyword: "请先输入关键词。",
+          loading: "正在搜索真实岗位来源...",
+          noJobs: "这个关键词暂时没有找到岗位。可以试试更宽泛的关键词，比如 legal、compliance、finance、analyst、graduate、internship、AML 或 visa sponsorship。",
+          failed: "真实岗位搜索失败。请检查 Vercel 是否已经设置 ADZUNA_APP_ID 和 ADZUNA_APP_KEY，并确认 api/search-real-jobs.js 已上传到 api 文件夹。"
+        },
+        result: {
+          showing: "显示",
+          realJobs: "个真实岗位",
+          realJob: "个真实岗位",
+          from: "来源",
+          interpreted: "搜索被理解为",
+          market: "市场",
+          source: "来源",
+          match: "匹配分数",
+          visa: "签证风险",
+          priority: "申请优先级",
+          level: "级别",
+          advice: "AI 建议",
+          apply: "查看来源",
+          noDescription: "暂无岗位描述。"
+        },
+        advice: {
+          fallback: "申请前请查看来源页面，并确认地点限制、签证担保、合同类型，以及该岗位是否真的适合你的背景。"
+        },
+        fineprint: "岗位数据来自公开来源。申请前请务必在来源页面核实地点要求、签证担保、合同类型和申请细节。"
+      },
+
+      ja: {
+        brand: { subtitle: "クロスボーダー人材ネットワーク" },
+        nav: { home: "ホームへ戻る" },
+        hero: {
+          eyebrow: "実際の求人検索エンジン",
+          title: "グローバル求人検索<span>実際の求人ソースに接続。</span>",
+          subtitle: "対応市場の実際の求人を検索できます。JapanOffer AI は国別求人検索、リモート求人の補完、マッチスコアを組み合わせます。",
+          source: "接続済みソース：Adzuna Job Search API と Remotive Remote Jobs API。"
+        },
+        search: {
+          placeholder: "英国 法務、シンガポール 金融、カナダ コンプライアンス、香港 AML などを検索...",
+          button: "求人を検索"
+        },
+        country: {
+          auto: "国を自動判定",
+          gb: "英国",
+          sg: "シンガポール",
+          ca: "カナダ",
+          au: "オーストラリア",
+          us: "米国",
+          de: "ドイツ",
+          fr: "フランス",
+          nl: "オランダ",
+          nz: "ニュージーランド",
+          in: "インド",
+          remote: "リモート",
+          japan: "日本フォールバック",
+          hongkong: "香港フォールバック"
+        },
+        quick: {
+          ukLegal: "英国 法務 新卒",
+          sgCompliance: "シンガポール コンプライアンス",
+          caFinance: "カナダ 金融",
+          auGraduate: "オーストラリア 新卒",
+          visa: "ビザスポンサー",
+          jpLegal: "日本 法務",
+          hkAml: "香港 AML"
+        },
+        status: {
+          ready: "キーワードを入力して実際の求人を検索できます。",
+          emptyKeyword: "まずキーワードを入力してください。",
+          loading: "実際の求人ソースを検索しています...",
+          noJobs: "この検索条件では求人が見つかりませんでした。legal、compliance、finance、analyst、graduate、internship、AML、visa sponsorship など、より広いキーワードを試してください。",
+          failed: "求人検索に失敗しました。Vercel に ADZUNA_APP_ID と ADZUNA_APP_KEY が設定され、api/search-real-jobs.js が api フォルダにあるか確認してください。"
+        },
+        result: {
+          showing: "表示中：",
+          realJobs: "件の求人",
+          realJob: "件の求人",
+          from: "ソース",
+          interpreted: "検索解釈",
+          market: "市場",
+          source: "ソース",
+          match: "マッチスコア",
+          visa: "ビザリスク",
+          priority: "応募優先度",
+          level: "レベル",
+          advice: "AI アドバイス",
+          apply: "ソースを見る",
+          noDescription: "求人説明はありません。"
+        },
+        advice: {
+          fallback: "応募前にソースページで勤務地制限、ビザスポンサー、契約形態、あなたの経歴との適合性を確認してください。"
+        },
+        fineprint: "求人データは公開ソースから取得しています。応募前に勤務地条件、ビザスポンサー、契約形態、応募詳細を必ずソースページで確認してください。"
+      }
+    };
+
+    let currentJobs = [];
+
+    function get(obj, path) {
+      return path.split(".").reduce((acc, key) => acc && acc[key], obj);
+    }
+
+    function getLang() {
+      return localStorage.getItem(LANG_KEY) || "en";
+    }
+
+    function setLang(lang) {
+      localStorage.setItem(LANG_KEY, lang);
+      applyLang(lang);
+      if (currentJobs.length) renderJobs(currentJobs);
+    }
+
+    function t(path) {
+      return get(T[getLang()] || T.en, path) || get(T.en, path) || path;
+    }
+
+    function applyLang(lang) {
+      const pack = T[lang] || T.en;
+      document.documentElement.lang = lang === "zh" ? "zh-CN" : lang;
+      document.body.dataset.lang = lang;
+      document.getElementById("languageSelect").value = lang;
+
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const value = get(pack, el.dataset.i18n);
+        if (value !== undefined) el.textContent = value;
+      });
+
+      document.querySelectorAll("[data-i18n-html]").forEach((el) => {
+        const value = get(pack, el.dataset.i18nHtml);
+        if (value !== undefined) el.innerHTML = value;
+      });
+
+      document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+        const value = get(pack, el.dataset.i18nPlaceholder);
+        if (value !== undefined) el.placeholder = value;
+      });
+
+      document.querySelectorAll("[data-i18n-option]").forEach((el) => {
+        const value = get(pack, el.dataset.i18nOption);
+        if (value !== undefined) el.textContent = value;
+      });
+
+      document.title = lang === "zh"
+        ? "全球岗位搜索 | JapanOffer AI"
+        : lang === "ja"
+          ? "グローバル求人検索 | JapanOffer AI"
+          : "Global Job Search | JapanOffer AI";
+    }
+
+    document.getElementById("languageSelect").addEventListener("change", (event) => {
+      setLang(event.target.value);
+    });
+
+    document.getElementById("searchInput").addEventListener("keydown", function(event) {
+      if (event.key === "Enter") searchRealJobs();
+    });
+
+    function quickSearch(keyword) {
+      document.getElementById("searchInput").value = keyword;
+      document.getElementById("countrySelect").value = "auto";
+      searchRealJobs();
+    }
+
+    async function searchRealJobs() {
+      const keyword = document.getElementById("searchInput").value.trim();
+      const country = document.getElementById("countrySelect").value;
+      const status = document.getElementById("status");
+      const box = document.getElementById("jobs");
+
+      if (!keyword) {
+        currentJobs = [];
+        box.innerHTML = "";
+        status.textContent = t("status.emptyKeyword");
+        return;
+      }
+
+      status.textContent = t("status.loading");
+      box.innerHTML = "";
+
+      try {
+        const response = await fetch(
+          "/api/search-real-jobs?q=" +
+          encodeURIComponent(keyword) +
+          "&country=" +
+          encodeURIComponent(country) +
+          "&limit=30"
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Search API failed.");
+        }
+
+        const jobs = Array.isArray(data.jobs) ? data.jobs : [];
+        currentJobs = jobs;
+
+        const sources = Array.isArray(data.sources) ? data.sources.join(" + ") : "public sources";
+        const countWord = jobs.length === 1 ? t("result.realJob") : t("result.realJobs");
+
+        if (getLang() === "en") {
+          status.textContent =
+            `${t("result.showing")} ${jobs.length} ${countWord} ${t("result.from")} ${sources}. ` +
+            `${t("result.interpreted")}: ${data.parsed?.what || keyword}` +
+            `${data.parsed?.marketLabel ? " · " + t("result.market") + ": " + data.parsed.marketLabel : ""}.`;
+        } else {
+          status.textContent =
+            `${t("result.showing")} ${jobs.length}${countWord} · ${t("result.from")}: ${sources}。` +
+            `${t("result.interpreted")}: ${data.parsed?.what || keyword}` +
+            `${data.parsed?.marketLabel ? " · " + t("result.market") + ": " + data.parsed.marketLabel : ""}。`;
+        }
+
+        renderJobs(jobs);
+      } catch (error) {
+        currentJobs = [];
+        status.textContent = "";
+        box.innerHTML = `<div class="error">${escapeHtml(t("status.failed"))}</div>`;
+      }
+    }
+
+    function renderJobs(jobs) {
+      const box = document.getElementById("jobs");
+
+      if (!jobs.length) {
+        box.innerHTML = `<div class="empty">${escapeHtml(t("status.noJobs"))}</div>`;
+        return;
+      }
+
+      box.innerHTML = jobs.map(job => {
+        const advice = job.ai_note || t("advice.fallback");
+
+        return `
+          <div class="job">
+            <h2>${escapeHtml(job.title)}</h2>
+
+            <div class="meta">
+              ${escapeHtml(job.company)} ·
+              ${escapeHtml(job.country)} ·
+              ${escapeHtml(job.city || "Location not specified")} ·
+              ${escapeHtml(t("result.source"))}: ${escapeHtml(job.source_name || "Public source")}
+            </div>
+
+            <p class="desc">${escapeHtml(job.description || t("result.noDescription"))}</p>
+
+            <div class="score">
+              <span class="tag">${escapeHtml(t("result.match"))}: ${escapeHtml(job.match_score || "N/A")}</span>
+              <span class="tag">${escapeHtml(t("result.visa"))}: ${escapeHtml(job.visa_risk || "unknown")}</span>
+              <span class="tag">${escapeHtml(t("result.priority"))}: ${escapeHtml(job.apply_priority || "Medium")}</span>
+              <span class="tag blue">${escapeHtml(t("result.level"))}: ${escapeHtml(job.seniority || "Not specified")}</span>
+            </div>
+
+            <div class="advice">
+              ${escapeHtml(t("result.advice"))}: ${escapeHtml(advice)}
+            </div>
+
+            ${job.apply_url ? `<a class="apply" href="${escapeUrl(job.apply_url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(t("result.apply"))}</a>` : ""}
+          </div>
+        `;
+      }).join("");
+    }
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function escapeUrl(value) {
+      const url = String(value || "").trim();
+      if (url.startsWith("https://") || url.startsWith("http://")) return escapeHtml(url);
+      return "#";
+    }
+
+    function boot() {
+      applyLang(getLang());
+
+      const params = new URLSearchParams(window.location.search);
+      const q = params.get("q");
+
+      if (q) {
+        document.getElementById("searchInput").value = q;
+        setTimeout(searchRealJobs, 200);
+      }
+    }
+
+    boot();
+  </script>
+</body>
+</html>
