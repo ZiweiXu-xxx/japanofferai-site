@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Global Job Search | JapanOffer AI</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #07111f;
+      color: #ffffff;
+    }
+
+    .wrap {
+      max-width: 1050px;
+      margin: 0 auto;
+      padding: 42px 20px;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 42px;
+    }
+
+    .brand {
+      font-size: 22px;
+      font-weight: 800;
+      color: #ffffff;
+      text-decoration: none;
+    }
+
+    .home-link {
+      color: #d6b36a;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    h1 {
+      font-size: 46px;
+      line-height: 1.05;
+      margin: 0 0 14px;
+      letter-spacing: -1.4px;
+    }
+
+    .subtitle {
+      color: #b8c4d6;
+      max-width: 760px;
+      line-height: 1.6;
+      font-size: 17px;
+      margin: 0;
+    }
+
+    .search-card {
+      margin: 32px 0 26px;
+      padding: 20px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+    }
+
+    input, select {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    input {
+      flex: 1;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 22px;
+      background: #d6b36a;
+      color: #07111f;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .filters {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .status {
+      color: #b8c4d6;
+      margin: 18px 0;
+    }
+
+    .job {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 22px;
+      margin-bottom: 16px;
+    }
+
+    .job h2 {
+      margin: 0 0 8px;
+      font-size: 24px;
+      letter-spacing: -0.4px;
+    }
+
+    .meta {
+      color: #b8c4d6;
+      margin-bottom: 13px;
+      line-height: 1.5;
+    }
+
+    .desc {
+      color: #dbe4f2;
+      line-height: 1.6;
+      margin: 0 0 14px;
+    }
+
+    .score {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+      margin: 14px 0;
+    }
+
+    .tag {
+      background: rgba(214,179,106,0.16);
+      border: 1px solid rgba(214,179,106,0.35);
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+      color: #f4dfaa;
+    }
+
+    .advice {
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 14px;
+      background: rgba(130,183,255,0.1);
+      border: 1px solid rgba(130,183,255,0.22);
+      color: #dbeafe;
+      line-height: 1.55;
+    }
+
+    .apply {
+      display: inline-block;
+      margin-top: 14px;
+      color: #07111f;
+      background: #d6b36a;
+      padding: 11px 14px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 800;
+    }
+
+    .empty {
+      padding: 28px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #b8c4d6;
+      line-height: 1.6;
+    }
+
+    .error {
+      padding: 28px;
+      border-radius: 20px;
+      background: rgba(255,80,80,0.12);
+      border: 1px solid rgba(255,120,120,0.25);
+      color: #ffd1d1;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 760px) {
+      h1 {
+        font-size: 36px;
+      }
+
+      .top {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .search-box {
+        flex-direction: column;
+      }
+
+      .filters {
+        grid-template-columns: 1fr;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="top">
+      <a class="brand" href="index.html">JapanOffer AI</a>
+      <a class="home-link" href="index.html">Back to Home</a>
+    </div>
+
+    <h1>Global Job Search</h1>
+    <p class="subtitle">
+      Search legal, compliance, AML, KYC, Web3, business and operations roles across Japan,
+      Hong Kong, Singapore, the UK, Canada, Australia and remote markets.
+    </p>
+
+    <div class="search-card">
+      <div class="search-box">
+        <input id="searchInput" placeholder="Search compliance, legal, web3, AML..." />
+        <button onclick="searchJobs()">Search jobs</button>
+      </div>
+
+      <div class="filters">
+        <select id="countryFilter" onchange="searchJobs()">
+          <option value="">All countries</option>
+          <option value="Japan">Japan</option>
+          <option value="Hong Kong">Hong Kong</option>
+          <option value="Singapore">Singapore</option>
+          <option value="United Kingdom">United Kingdom</option>
+          <option value="Canada">Canada</option>
+          <option value="Australia">Australia</option>
+          <option value="Remote">Remote</option>
+        </select>
+
+        <select id="categoryFilter" onchange="searchJobs()">
+          <option value="">All directions</option>
+          <option value="Legal">Legal</option>
+          <option value="Compliance">Compliance</option>
+          <option value="AML">AML</option>
+          <option value="KYC">KYC</option>
+          <option value="Web3">Web3</option>
+          <option value="Business">Business</option>
+          <option value="Operations">Operations</option>
+        </select>
+
+        <select id="visaFilter" onchange="searchJobs()">
+          <option value="">All visa risks</option>
+          <option value="low">Low risk</option>
+          <option value="medium">Medium risk</option>
+          <option value="high">High risk</option>
+          <option value="unknown">Unknown</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="status" class="status">Loading jobs from Supabase...</div>
+    <div id="jobs"></div>
+  </div>
+
+  <script>
+    /*
+      Replace these two values with your Supabase values:
+
+      Supabase -> Project Settings -> API
+      1. Project URL
+      2. anon public key
+
+      Important:
+      Do NOT paste service_role key here.
+    */
+
+    const SUPABASE_URL = "PASTE_YOUR_SUPABASE_PROJECT_URL_HERE";
+    const SUPABASE_ANON_KEY = "PASTE_YOUR_SUPABASE_ANON_PUBLIC_KEY_HERE";
+
+    let allJobs = [];
+
+    document.getElementById("searchInput").addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {
+        searchJobs();
+      }
+    });
+
+    async function loadJobs() {
+      const status = document.getElementById("status");
+
+      if (
+        !SUPABASE_URL.startsWith("https://") ||
+        SUPABASE_URL.includes("PASTE_YOUR") ||
+        SUPABASE_ANON_KEY.includes("PASTE_YOUR")
+      ) {
+        status.innerHTML = "";
+        document.getElementById("jobs").innerHTML = `
+          <div class="error">
+            Supabase is not connected yet.<br><br>
+            Open this file and replace SUPABASE_URL and SUPABASE_ANON_KEY at the bottom of the code.
+          </div>
+        `;
+        return;
+      }
+
+      try {
+        const url = `${SUPABASE_URL.replace(/\/$/, "")}/rest/v1/jobs?is_active=eq.true&select=*&order=created_at.desc`;
+
+        const res = await fetch(url, {
+          headers: {
+            apikey: SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+          }
+        });
+
+        if (!res.ok) {
+          throw new Error("Supabase request failed: " + res.status);
+        }
+
+        allJobs = await res.json();
+
+        status.textContent = `Loaded ${allJobs.length} cached job${allJobs.length === 1 ? "" : "s"}.`;
+        renderJobs(allJobs);
+      } catch (error) {
+        status.innerHTML = "";
+        document.getElementById("jobs").innerHTML = `
+          <div class="error">
+            Could not load jobs from Supabase.<br><br>
+            Check your Project URL, anon public key, jobs table, and RLS policy.
+          </div>
+        `;
+      }
+    }
+
+    function searchJobs() {
+      const keyword = document.getElementById("searchInput").value.trim().toLowerCase();
+      const country = document.getElementById("countryFilter").value.toLowerCase();
+      const category = document.getElementById("categoryFilter").value.toLowerCase();
+      const visa = document.getElementById("visaFilter").value.toLowerCase();
+
+      const filtered = allJobs.filter(job => {
+        const text = [
+          job.title,
+          job.company,
+          job.country,
+          job.city,
+          job.category,
+          job.visa_risk,
+          job.seniority,
+          job.description
+        ].join(" ").toLowerCase();
+
+        if (keyword && !text.includes(keyword)) return false;
+        if (country && String(job.country || "").toLowerCase() !== country) return false;
+        if (category && !text.includes(category)) return false;
+        if (visa && String(job.visa_risk || "").toLowerCase() !== visa) return false;
+
+        return true;
+      });
+
+      document.getElementById("status").textContent =
+        `Showing ${filtered.length} matching job${filtered.length === 1 ? "" : "s"}.`;
+
+      renderJobs(filtered);
+    }
+
+    function renderJobs(jobs) {
+      const box = document.getElementById("jobs");
+
+      if (!jobs.length) {
+        box.innerHTML = `
+          <div class="empty">
+            No matching jobs found yet.<br><br>
+            This is where the next step will trigger real job-source expansion and save new results into Supabase.
+          </div>
+        `;
+        return;
+      }
+
+      box.innerHTML = jobs.map(job => {
+        const matchScore = calculateMatchScore(job);
+        const priority = calculatePriority(matchScore, job.visa_risk);
+        const visaRisk = job.visa_risk || "unknown";
+
+        return `
+          <div class="job">
+            <h2>${escapeHtml(job.title || "Untitled role")}</h2>
+
+            <div class="meta">
+              ${escapeHtml(job.company || "Unknown company")} ·
+              ${escapeHtml(job.country || "Unknown country")} ·
+              ${escapeHtml(job.city || "")}
+            </div>
+
+            <p class="desc">${escapeHtml(job.description || "No description available.")}</p>
+
+            <div class="score">
+              <span class="tag">Match score: ${matchScore}</span>
+              <span class="tag">Visa risk: ${escapeHtml(visaRisk)}</span>
+              <span class="tag">Apply priority: ${priority}</span>
+            </div>
+
+            <div class="advice">
+              AI advice: This role is most relevant if you can connect your background to
+              ${escapeHtml(job.category || "this field")}. Before applying, check whether the company has
+              sponsorship signals, international hiring history, or a clear graduate route.
+            </div>
+
+            ${job.apply_url ? `<a class="apply" href="${escapeUrl(job.apply_url)}" target="_blank" rel="noopener noreferrer">Apply from source</a>` : ""}
+          </div>
+        `;
+      }).join("");
+    }
+
+    function calculateMatchScore(job) {
+      let score = 58;
+
+      const text = [
+        job.title,
+        job.category,
+        job.description
+      ].join(" ").toLowerCase();
+
+      if (text.includes("compliance")) score += 8;
+      if (text.includes("aml")) score += 8;
+      if (text.includes("kyc")) score += 8;
+      if (text.includes("legal")) score += 6;
+      if (text.includes("web3") || text.includes("crypto")) score += 8;
+
+      if (String(job.visa_risk || "").toLowerCase() === "low") score += 6;
+      if (String(job.visa_risk || "").toLowerCase() === "high") score -= 8;
+
+      return Math.max(40, Math.min(score, 88));
+    }
+
+    function calculatePriority(score, visaRisk) {
+      const risk = String(visaRisk || "").toLowerCase();
+
+      if (score >= 72 && risk !== "high") return "High";
+      if (score >= 62) return "Medium";
+      return "Low";
+    }
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function escapeUrl(value) {
+      const url = String(value || "").trim();
+
+      if (url.startsWith("https://") || url.startsWith("http://")) {
+        return escapeHtml(url);
+      }
+
+      return "#";
+    }
+
+    loadJobs();
+  </script>
+</body>
+</html>
