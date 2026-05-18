@@ -75,10 +75,63 @@ function arrayFromInput(value, fallback = []) {
   return fallback;
 }
 
+function keyKind(key) {
+  const value = clean(key);
+  if (!value) return "empty";
+  if (value.startsWith("sb_publishable_")) return "publishable_key_NOT_ALLOWED";
+  if (value.startsWith("sb_secret_")) return "secret_key";
+  if (value.startsWith("eyJ")) return "legacy_jwt";
+  return "unknown";
+}
+
+function decodeJwtPayload(key) {
+  try {
+    if (!String(key || "").startsWith("eyJ")) return null;
+    const part = String(key).split(".")[1];
+    const normalized = part.replace(/-/g, "+").replace(/_/g, "/");
+    const payload = Buffer.from(normalized, "base64").toString("utf8");
+    return JSON.parse(payload);
+  } catch {
+    return null;
+  }
+}
+
+function getProjectRefFromUrl(url) {
+  try {
+    const host = new URL(url).hostname;
+    return host.split(".")[0];
+  } catch {
+    return "";
+  }
+}
+
 function getSupabaseConfig() {
-  const url = process.env.SUPABASE_URL || process.env.JAPANOFFER_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.JAPANOFFER_SUPABASE_SERVICE_ROLE_KEY;
-  return { url, key };
+  const url = clean(process.env.SUPABASE_URL || process.env.JAPANOFFER_SUPABASE_URL);
+
+  // Important:
+  // Some projects already have SUPABASE_LEGACY_SERVICE_ROLE_KEY, while SUPABASE_SERVICE_ROLE_KEY
+  // may accidentally contain a publishable/anon/wrong-project key. Try all possible service keys.
+  const candidates = [
+    ["SUPABASE_LEGACY_SERVICE_ROLE_KEY", process.env.SUPABASE_LEGACY_SERVICE_ROLE_KEY],
+    ["SUPABASE_SERVICE_ROLE_KEY", process.env.SUPABASE_SERVICE_ROLE_KEY],
+    ["JAPANOFFER_SUPABASE_SERVICE_ROLE_KEY", process.env.JAPANOFFER_SUPABASE_SERVICE_ROLE_KEY],
+    ["SUPABASE_SECRET_KEY", process.env.SUPABASE_SECRET_KEY]
+  ]
+    .map(([name, key]) => {
+      const value = clean(key);
+      const payload = decodeJwtPayload(value);
+      return {
+        name,
+        key: value,
+        kind: keyKind(value),
+        length: value.length,
+        role: payload?.role || null,
+        ref: payload?.ref || null
+      };
+    })
+    .filter((item) => item.key);
+
+  return { url, keys: candidates, projectRef: getProjectRefFromUrl(url) };
 }
 
 async function fetchJson(url, options = {}) {
@@ -434,53 +487,120 @@ async function importLever(companies, maxPerCompany) {
 }
 
 async function upsertJobsToSupabase(jobs) {
-  const { url, key } = getSupabaseConfig();
+  const { url, keys, projectRef } = getSupabaseConfig();
 
-  if (!url || !key) {
-    throw new Error("SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY is missing in Vercel Environment Variables.");
+  if (!url || !keys.length) {
+    throw new Error("Missing SUPABASE_URL or service role key. Add SUPABASE_LEGACY_SERVICE_ROLE_KEY or SUPABASE_SERVICE_ROLE_KEY in Vercel Environment Variables.");
   }
 
   if (!jobs.length) {
-    return { upserted: 0, data: [] };
+    return { upserted: 0, data: [], usedKey: null };
   }
 
-  const response = await fetch(`${url.replace(/\/+$/, "")}/rest/v1/platform_items?on_conflict=slug`, {
-    method: "POST",
-    headers: {
-      "apikey": key,
-      "Authorization": `Bearer ${key}`,
-      "Content-Type": "application/json",
-      "Prefer": "resolution=merge-duplicates,return=representation"
-    },
-    body: JSON.stringify(jobs)
-  });
+  const attempts = [];
 
-  const text = await response.text();
-  let data = null;
+  for (const candidate of keys) {
+    if (candidate.kind === "publishable_key_NOT_ALLOWED") {
+      attempts.push({
+        name: candidate.name,
+        kind: candidate.kind,
+        length: candidate.length,
+        skipped: true,
+        reason: "Publishable key cannot write to Supabase tables."
+      });
+      continue;
+    }
 
-  try {
-    data = text ? JSON.parse(text) : null;
-  } catch {
-    data = { raw: text };
+    if (candidate.role && candidate.role !== "service_role") {
+      attempts.push({
+        name: candidate.name,
+        kind: candidate.kind,
+        role: candidate.role,
+        ref: candidate.ref,
+        length: candidate.length,
+        skipped: true,
+        reason: "JWT role is not service_role."
+      });
+      continue;
+    }
+
+    if (candidate.ref && projectRef && candidate.ref !== projectRef) {
+      attempts.push({
+        name: candidate.name,
+        kind: candidate.kind,
+        role: candidate.role,
+        ref: candidate.ref,
+        projectRef,
+        length: candidate.length,
+        skipped: true,
+        reason: "Key belongs to another Supabase project."
+      });
+      continue;
+    }
+
+    const response = await fetch(`${url.replace(/\/+$/, "")}/rest/v1/platform_items?on_conflict=slug`, {
+      method: "POST",
+      headers: {
+        "apikey": candidate.key,
+        "Authorization": `Bearer ${candidate.key}`,
+        "Content-Type": "application/json",
+        "Prefer": "resolution=merge-duplicates,return=representation"
+      },
+      body: JSON.stringify(jobs)
+    });
+
+    const text = await response.text();
+    let data = null;
+
+    try {
+      data = text ? JSON.parse(text) : null;
+    } catch {
+      data = { raw: text };
+    }
+
+    attempts.push({
+      name: candidate.name,
+      kind: candidate.kind,
+      role: candidate.role,
+      ref: candidate.ref,
+      projectRef,
+      length: candidate.length,
+      status: response.status,
+      response: response.ok ? "ok" : String(text || "").slice(0, 320)
+    });
+
+    if (response.ok) {
+      return {
+        upserted: Array.isArray(data) ? data.length : jobs.length,
+        data,
+        usedKey: {
+          name: candidate.name,
+          kind: candidate.kind,
+          role: candidate.role,
+          ref: candidate.ref,
+          length: candidate.length
+        },
+        attempts
+      };
+    }
   }
 
-  if (!response.ok) {
-    throw new Error(`Supabase upsert failed: HTTP ${response.status} ${text}`);
-  }
-
-  return { upserted: Array.isArray(data) ? data.length : jobs.length, data };
+  throw new Error(`Supabase upsert failed with all configured keys. Debug: ${JSON.stringify(attempts)}`);
 }
 
 async function insertImportRun(run) {
-  const { url, key } = getSupabaseConfig();
-  if (!url || !key) return;
+  const { url, keys } = getSupabaseConfig();
+  if (!url || !keys.length) return;
+
+  const usable = keys.find((item) => item.kind !== "publishable_key_NOT_ALLOWED" && (!item.role || item.role === "service_role"));
+  if (!usable) return;
 
   try {
     await fetch(`${url.replace(/\/+$/, "")}/rest/v1/job_import_runs`, {
       method: "POST",
       headers: {
-        "apikey": key,
-        "Authorization": `Bearer ${key}`,
+        "apikey": usable.key,
+        "Authorization": `Bearer ${usable.key}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify(run)
@@ -556,6 +676,8 @@ module.exports = async function handler(req, res) {
     return json(res, 200, {
       ok: true,
       imported: upsertResult.upserted,
+      usedKey: upsertResult.usedKey,
+      keyAttempts: upsertResult.attempts || [],
       rawCount: allJobs.length,
       relevantCount: dedupedJobs.length,
       errors: allErrors,
