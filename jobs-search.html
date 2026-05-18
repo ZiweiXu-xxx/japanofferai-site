@@ -16,7 +16,7 @@
     }
 
     .wrap {
-      max-width: 1080px;
+      max-width: 1120px;
       margin: 0 auto;
       padding: 42px 20px 70px;
     }
@@ -43,7 +43,7 @@
     }
 
     h1 {
-      font-size: 46px;
+      font-size: 48px;
       line-height: 1.05;
       margin: 0 0 14px;
       letter-spacing: -1.4px;
@@ -51,7 +51,7 @@
 
     .subtitle {
       color: #b8c4d6;
-      max-width: 790px;
+      max-width: 880px;
       line-height: 1.6;
       font-size: 17px;
       margin: 0;
@@ -73,17 +73,18 @@
     }
 
     .search-box {
-      display: flex;
+      display: grid;
+      grid-template-columns: 1fr 210px auto;
       gap: 10px;
     }
 
-    input {
-      flex: 1;
+    input, select {
       border: 0;
       border-radius: 12px;
       padding: 14px;
       font-size: 15px;
       outline: none;
+      width: 100%;
     }
 
     button {
@@ -94,6 +95,7 @@
       color: #07111f;
       font-weight: 800;
       cursor: pointer;
+      white-space: nowrap;
     }
 
     .quick {
@@ -160,6 +162,12 @@
       color: #f4dfaa;
     }
 
+    .tag.blue {
+      background: rgba(130,183,255,0.12);
+      border-color: rgba(130,183,255,0.28);
+      color: #dbeafe;
+    }
+
     .advice {
       margin-top: 12px;
       padding: 14px;
@@ -196,10 +204,10 @@
       color: #ffd1d1;
     }
 
-    @media (max-width: 760px) {
-      h1 { font-size: 36px; }
+    @media (max-width: 860px) {
+      h1 { font-size: 38px; }
       .top { align-items: flex-start; flex-direction: column; }
-      .search-box { flex-direction: column; }
+      .search-box { grid-template-columns: 1fr; }
       button { width: 100%; }
     }
   </style>
@@ -214,30 +222,48 @@
 
     <h1>Global Job Search</h1>
     <p class="subtitle">
-      Search real remote jobs from public job sources. This first live version connects to Remotive.
-      Next, we can add Adzuna for Japan, Hong Kong, Singapore, the UK, Canada and Australia.
+      Search real jobs across supported markets. This version uses Adzuna for country-based job search
+      and Remotive as a remote-job fallback. Try broad searches such as UK legal, Singapore compliance,
+      Canada finance, Australia graduate, AML analyst or visa sponsorship.
     </p>
     <div class="source-note">
-      Source currently connected: Remotive public jobs API. Results link back to Remotive as the source.
+      Connected sources: Adzuna Job Search API + Remotive Remote Jobs API.
     </div>
 
     <div class="search-card">
       <div class="search-box">
-        <input id="searchInput" placeholder="Try compliance, AML, legal, risk, web3, crypto..." />
-        <button onclick="searchRealJobs()">Search real jobs</button>
+        <input id="searchInput" placeholder="Search anything: UK legal, Singapore finance, 加拿大 合规, AML analyst..." />
+        <select id="countrySelect">
+          <option value="auto">Auto-detect country</option>
+          <option value="gb">United Kingdom</option>
+          <option value="sg">Singapore</option>
+          <option value="ca">Canada</option>
+          <option value="au">Australia</option>
+          <option value="us">United States</option>
+          <option value="de">Germany</option>
+          <option value="fr">France</option>
+          <option value="nl">Netherlands</option>
+          <option value="nz">New Zealand</option>
+          <option value="in">India</option>
+          <option value="remote">Remote</option>
+          <option value="japan">Japan fallback</option>
+          <option value="hongkong">Hong Kong fallback</option>
+        </select>
+        <button onclick="searchRealJobs()">Search jobs</button>
       </div>
 
       <div class="quick">
-        <button onclick="quickSearch('compliance')">Compliance</button>
-        <button onclick="quickSearch('AML')">AML</button>
-        <button onclick="quickSearch('legal')">Legal</button>
-        <button onclick="quickSearch('risk')">Risk</button>
-        <button onclick="quickSearch('web3')">Web3</button>
-        <button onclick="quickSearch('crypto')">Crypto</button>
+        <button onclick="quickSearch('UK legal graduate')">UK legal graduate</button>
+        <button onclick="quickSearch('Singapore compliance AML')">Singapore compliance</button>
+        <button onclick="quickSearch('Canada finance analyst')">Canada finance</button>
+        <button onclick="quickSearch('Australia graduate')">Australia graduate</button>
+        <button onclick="quickSearch('visa sponsorship analyst')">Visa sponsorship</button>
+        <button onclick="quickSearch('日本 法务')">日本 法务</button>
+        <button onclick="quickSearch('香港 AML')">香港 AML</button>
       </div>
     </div>
 
-    <div id="status" class="status">Type a keyword and search real jobs.</div>
+    <div id="status" class="status">Type any keyword and search real jobs.</div>
     <div id="jobs"></div>
   </div>
 
@@ -248,11 +274,13 @@
 
     function quickSearch(keyword) {
       document.getElementById("searchInput").value = keyword;
+      document.getElementById("countrySelect").value = "auto";
       searchRealJobs();
     }
 
     async function searchRealJobs() {
       const keyword = document.getElementById("searchInput").value.trim();
+      const country = document.getElementById("countrySelect").value;
       const status = document.getElementById("status");
       const box = document.getElementById("jobs");
 
@@ -262,29 +290,39 @@
         return;
       }
 
-      status.textContent = "Searching real job data...";
+      status.textContent = "Searching real job sources...";
       box.innerHTML = "";
 
       try {
-        const response = await fetch("/api/search-real-jobs?q=" + encodeURIComponent(keyword) + "&limit=20");
-
-        if (!response.ok) {
-          throw new Error("Search API failed.");
-        }
+        const response = await fetch(
+          "/api/search-real-jobs?q=" +
+          encodeURIComponent(keyword) +
+          "&country=" +
+          encodeURIComponent(country) +
+          "&limit=30"
+        );
 
         const data = await response.json();
-        const jobs = Array.isArray(data.jobs) ? data.jobs : [];
 
-        status.textContent = `Showing ${jobs.length} real job${jobs.length === 1 ? "" : "s"} from ${data.source || "public sources"}.`;
+        if (!response.ok) {
+          throw new Error(data.error || "Search API failed.");
+        }
+
+        const jobs = Array.isArray(data.jobs) ? data.jobs : [];
+        const sources = Array.isArray(data.sources) ? data.sources.join(" + ") : "public sources";
+
+        status.textContent =
+          `Showing ${jobs.length} real job${jobs.length === 1 ? "" : "s"} from ${sources}. ` +
+          `Search interpreted as: ${data.parsed?.what || keyword}` +
+          `${data.parsed?.marketLabel ? " · Market: " + data.parsed.marketLabel : ""}.`;
 
         renderJobs(jobs);
       } catch (error) {
         status.textContent = "";
         box.innerHTML = `
           <div class="error">
-            Real job search is not connected yet.<br><br>
-            Make sure the file <strong>api/search-real-jobs.js</strong> is uploaded inside your GitHub api folder,
-            then wait for Vercel to redeploy.
+            Real job search failed.<br><br>
+            Check that Vercel has ADZUNA_APP_ID and ADZUNA_APP_KEY, and that api/search-real-jobs.js was uploaded to the api folder.
           </div>
         `;
       }
@@ -296,7 +334,7 @@
       if (!jobs.length) {
         box.innerHTML = `
           <div class="empty">
-            No real jobs found for this keyword yet. Try compliance, AML, legal, risk, web3 or crypto.
+            No jobs found for this exact search yet. Try a broader keyword such as legal, compliance, finance, analyst, graduate, internship, AML or visa sponsorship.
           </div>
         `;
         return;
@@ -309,8 +347,8 @@
           <div class="meta">
             ${escapeHtml(job.company)} ·
             ${escapeHtml(job.country)} ·
-            ${escapeHtml(job.city || "Remote")} ·
-            Source: ${escapeHtml(job.source_name || "Public API")}
+            ${escapeHtml(job.city || "Location not specified")} ·
+            Source: ${escapeHtml(job.source_name || "Public source")}
           </div>
 
           <p class="desc">${escapeHtml(job.description || "No description available.")}</p>
@@ -319,15 +357,14 @@
             <span class="tag">Match score: ${escapeHtml(job.match_score || "N/A")}</span>
             <span class="tag">Visa risk: ${escapeHtml(job.visa_risk || "unknown")}</span>
             <span class="tag">Apply priority: ${escapeHtml(job.apply_priority || "Medium")}</span>
+            <span class="tag blue">${escapeHtml(job.seniority || "Level not specified")}</span>
           </div>
 
           <div class="advice">
-            AI advice: This role may be worth checking if your background fits
-            ${escapeHtml(job.category || "this field")}. Because this is a remote-source role,
-            confirm location restrictions, contractor status, sponsorship and employment conditions before applying.
+            AI advice: ${escapeHtml(job.ai_note || "Check the source page before applying.")}
           </div>
 
-          ${job.apply_url ? `<a class="apply" href="${escapeUrl(job.apply_url)}" target="_blank" rel="noopener noreferrer">View on Remotive</a>` : ""}
+          ${job.apply_url ? `<a class="apply" href="${escapeUrl(job.apply_url)}" target="_blank" rel="noopener noreferrer">View source</a>` : ""}
         </div>
       `).join("");
     }
