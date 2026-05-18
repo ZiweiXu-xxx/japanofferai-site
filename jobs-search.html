@@ -6,9 +6,7 @@
   <title>Global Job Search | JapanOffer AI</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -18,9 +16,9 @@
     }
 
     .wrap {
-      max-width: 1050px;
+      max-width: 1080px;
       margin: 0 auto;
-      padding: 42px 20px;
+      padding: 42px 20px 70px;
     }
 
     .top {
@@ -53,14 +51,21 @@
 
     .subtitle {
       color: #b8c4d6;
-      max-width: 760px;
+      max-width: 790px;
       line-height: 1.6;
       font-size: 17px;
       margin: 0;
     }
 
+    .source-note {
+      margin-top: 12px;
+      color: #91a3bd;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
     .search-card {
-      margin: 32px 0 26px;
+      margin: 32px 0 24px;
       padding: 20px;
       border-radius: 22px;
       background: rgba(255,255,255,0.08);
@@ -72,16 +77,13 @@
       gap: 10px;
     }
 
-    input, select {
+    input {
+      flex: 1;
       border: 0;
       border-radius: 12px;
       padding: 14px;
       font-size: 15px;
       outline: none;
-    }
-
-    input {
-      flex: 1;
     }
 
     button {
@@ -94,16 +96,26 @@
       cursor: pointer;
     }
 
-    .filters {
+    .quick {
       margin-top: 12px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .quick button {
+      padding: 9px 11px;
+      border-radius: 999px;
+      background: rgba(214,179,106,0.16);
+      border: 1px solid rgba(214,179,106,0.35);
+      color: #f4dfaa;
+      font-size: 13px;
     }
 
     .status {
       color: #b8c4d6;
       margin: 18px 0;
+      line-height: 1.5;
     }
 
     .job {
@@ -169,7 +181,7 @@
       font-weight: 800;
     }
 
-    .empty {
+    .empty, .error {
       padding: 28px;
       border-radius: 20px;
       background: rgba(255,255,255,0.08);
@@ -179,35 +191,16 @@
     }
 
     .error {
-      padding: 28px;
-      border-radius: 20px;
       background: rgba(255,80,80,0.12);
-      border: 1px solid rgba(255,120,120,0.25);
+      border-color: rgba(255,120,120,0.25);
       color: #ffd1d1;
-      line-height: 1.6;
     }
 
     @media (max-width: 760px) {
-      h1 {
-        font-size: 36px;
-      }
-
-      .top {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .search-box {
-        flex-direction: column;
-      }
-
-      .filters {
-        grid-template-columns: 1fr;
-      }
-
-      button {
-        width: 100%;
-      }
+      h1 { font-size: 36px; }
+      .top { align-items: flex-start; flex-direction: column; }
+      .search-box { flex-direction: column; }
+      button { width: 100%; }
     }
   </style>
 </head>
@@ -221,153 +214,80 @@
 
     <h1>Global Job Search</h1>
     <p class="subtitle">
-      Search legal, compliance, AML, KYC, Web3, business and operations roles across Japan,
-      Hong Kong, Singapore, the UK, Canada, Australia and remote markets.
+      Search real remote jobs from public job sources. This first live version connects to Remotive.
+      Next, we can add Adzuna for Japan, Hong Kong, Singapore, the UK, Canada and Australia.
     </p>
+    <div class="source-note">
+      Source currently connected: Remotive public jobs API. Results link back to Remotive as the source.
+    </div>
 
     <div class="search-card">
       <div class="search-box">
-        <input id="searchInput" placeholder="Search compliance, legal, web3, AML..." />
-        <button onclick="searchJobs()">Search jobs</button>
+        <input id="searchInput" placeholder="Try compliance, AML, legal, risk, web3, crypto..." />
+        <button onclick="searchRealJobs()">Search real jobs</button>
       </div>
 
-      <div class="filters">
-        <select id="countryFilter" onchange="searchJobs()">
-          <option value="">All countries</option>
-          <option value="Japan">Japan</option>
-          <option value="Hong Kong">Hong Kong</option>
-          <option value="Singapore">Singapore</option>
-          <option value="United Kingdom">United Kingdom</option>
-          <option value="Canada">Canada</option>
-          <option value="Australia">Australia</option>
-          <option value="Remote">Remote</option>
-        </select>
-
-        <select id="categoryFilter" onchange="searchJobs()">
-          <option value="">All directions</option>
-          <option value="Legal">Legal</option>
-          <option value="Compliance">Compliance</option>
-          <option value="AML">AML</option>
-          <option value="KYC">KYC</option>
-          <option value="Web3">Web3</option>
-          <option value="Business">Business</option>
-          <option value="Operations">Operations</option>
-        </select>
-
-        <select id="visaFilter" onchange="searchJobs()">
-          <option value="">All visa risks</option>
-          <option value="low">Low risk</option>
-          <option value="medium">Medium risk</option>
-          <option value="high">High risk</option>
-          <option value="unknown">Unknown</option>
-        </select>
+      <div class="quick">
+        <button onclick="quickSearch('compliance')">Compliance</button>
+        <button onclick="quickSearch('AML')">AML</button>
+        <button onclick="quickSearch('legal')">Legal</button>
+        <button onclick="quickSearch('risk')">Risk</button>
+        <button onclick="quickSearch('web3')">Web3</button>
+        <button onclick="quickSearch('crypto')">Crypto</button>
       </div>
     </div>
 
-    <div id="status" class="status">Loading jobs from Supabase...</div>
+    <div id="status" class="status">Type a keyword and search real jobs.</div>
     <div id="jobs"></div>
   </div>
 
   <script>
-    /*
-      Replace these two values with your Supabase values:
-
-      Supabase -> Project Settings -> API
-      1. Project URL
-      2. anon public key
-
-      Important:
-      Do NOT paste service_role key here.
-    */
-
-    const SUPABASE_URL = "https://ojpoegtnksfumvepxdpj.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qcG9lZ3Rua3NmdW12ZXB4ZHBqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwMzk2MDcsImV4cCI6MjA5NDYxNTYwN30.4uMgWfOjZ8kbdtILT1uRD3DFPkL2Wd8OwBPhaRpRhQU";
-
-    let allJobs = [];
-
     document.getElementById("searchInput").addEventListener("keydown", function(event) {
-      if (event.key === "Enter") {
-        searchJobs();
-      }
+      if (event.key === "Enter") searchRealJobs();
     });
 
-    async function loadJobs() {
-      const status = document.getElementById("status");
+    function quickSearch(keyword) {
+      document.getElementById("searchInput").value = keyword;
+      searchRealJobs();
+    }
 
-      if (
-        !SUPABASE_URL.startsWith("https://") ||
-        SUPABASE_URL.includes("PASTE_YOUR") ||
-        SUPABASE_ANON_KEY.includes("PASTE_YOUR")
-      ) {
-        status.innerHTML = "";
-        document.getElementById("jobs").innerHTML = `
-          <div class="error">
-            Supabase is not connected yet.<br><br>
-            Open this file and replace SUPABASE_URL and SUPABASE_ANON_KEY at the bottom of the code.
-          </div>
-        `;
+    async function searchRealJobs() {
+      const keyword = document.getElementById("searchInput").value.trim();
+      const status = document.getElementById("status");
+      const box = document.getElementById("jobs");
+
+      if (!keyword) {
+        box.innerHTML = "";
+        status.textContent = "Please type a keyword first.";
         return;
       }
 
+      status.textContent = "Searching real job data...";
+      box.innerHTML = "";
+
       try {
-        const url = `${SUPABASE_URL.replace(/\/$/, "")}/rest/v1/jobs?is_active=eq.true&select=*&order=created_at.desc`;
+        const response = await fetch("/api/search-real-jobs?q=" + encodeURIComponent(keyword) + "&limit=20");
 
-        const res = await fetch(url, {
-          headers: {
-            apikey: SUPABASE_ANON_KEY,
-            Authorization: `Bearer ${SUPABASE_ANON_KEY}`
-          }
-        });
-
-        if (!res.ok) {
-          throw new Error("Supabase request failed: " + res.status);
+        if (!response.ok) {
+          throw new Error("Search API failed.");
         }
 
-        allJobs = await res.json();
+        const data = await response.json();
+        const jobs = Array.isArray(data.jobs) ? data.jobs : [];
 
-        status.textContent = `Loaded ${allJobs.length} cached job${allJobs.length === 1 ? "" : "s"}.`;
-        renderJobs(allJobs);
+        status.textContent = `Showing ${jobs.length} real job${jobs.length === 1 ? "" : "s"} from ${data.source || "public sources"}.`;
+
+        renderJobs(jobs);
       } catch (error) {
-        status.innerHTML = "";
-        document.getElementById("jobs").innerHTML = `
+        status.textContent = "";
+        box.innerHTML = `
           <div class="error">
-            Could not load jobs from Supabase.<br><br>
-            Check your Project URL, anon public key, jobs table, and RLS policy.
+            Real job search is not connected yet.<br><br>
+            Make sure the file <strong>api/search-real-jobs.js</strong> is uploaded inside your GitHub api folder,
+            then wait for Vercel to redeploy.
           </div>
         `;
       }
-    }
-
-    function searchJobs() {
-      const keyword = document.getElementById("searchInput").value.trim().toLowerCase();
-      const country = document.getElementById("countryFilter").value.toLowerCase();
-      const category = document.getElementById("categoryFilter").value.toLowerCase();
-      const visa = document.getElementById("visaFilter").value.toLowerCase();
-
-      const filtered = allJobs.filter(job => {
-        const text = [
-          job.title,
-          job.company,
-          job.country,
-          job.city,
-          job.category,
-          job.visa_risk,
-          job.seniority,
-          job.description
-        ].join(" ").toLowerCase();
-
-        if (keyword && !text.includes(keyword)) return false;
-        if (country && String(job.country || "").toLowerCase() !== country) return false;
-        if (category && !text.includes(category)) return false;
-        if (visa && String(job.visa_risk || "").toLowerCase() !== visa) return false;
-
-        return true;
-      });
-
-      document.getElementById("status").textContent =
-        `Showing ${filtered.length} matching job${filtered.length === 1 ? "" : "s"}.`;
-
-      renderJobs(filtered);
     }
 
     function renderJobs(jobs) {
@@ -376,75 +296,40 @@
       if (!jobs.length) {
         box.innerHTML = `
           <div class="empty">
-            No matching jobs found yet.<br><br>
-            This is where the next step will trigger real job-source expansion and save new results into Supabase.
+            No real jobs found for this keyword yet. Try compliance, AML, legal, risk, web3 or crypto.
           </div>
         `;
         return;
       }
 
-      box.innerHTML = jobs.map(job => {
-        const matchScore = calculateMatchScore(job);
-        const priority = calculatePriority(matchScore, job.visa_risk);
-        const visaRisk = job.visa_risk || "unknown";
+      box.innerHTML = jobs.map(job => `
+        <div class="job">
+          <h2>${escapeHtml(job.title)}</h2>
 
-        return `
-          <div class="job">
-            <h2>${escapeHtml(job.title || "Untitled role")}</h2>
-
-            <div class="meta">
-              ${escapeHtml(job.company || "Unknown company")} ·
-              ${escapeHtml(job.country || "Unknown country")} ·
-              ${escapeHtml(job.city || "")}
-            </div>
-
-            <p class="desc">${escapeHtml(job.description || "No description available.")}</p>
-
-            <div class="score">
-              <span class="tag">Match score: ${matchScore}</span>
-              <span class="tag">Visa risk: ${escapeHtml(visaRisk)}</span>
-              <span class="tag">Apply priority: ${priority}</span>
-            </div>
-
-            <div class="advice">
-              AI advice: This role is most relevant if you can connect your background to
-              ${escapeHtml(job.category || "this field")}. Before applying, check whether the company has
-              sponsorship signals, international hiring history, or a clear graduate route.
-            </div>
-
-            ${job.apply_url ? `<a class="apply" href="${escapeUrl(job.apply_url)}" target="_blank" rel="noopener noreferrer">Apply from source</a>` : ""}
+          <div class="meta">
+            ${escapeHtml(job.company)} ·
+            ${escapeHtml(job.country)} ·
+            ${escapeHtml(job.city || "Remote")} ·
+            Source: ${escapeHtml(job.source_name || "Public API")}
           </div>
-        `;
-      }).join("");
-    }
 
-    function calculateMatchScore(job) {
-      let score = 58;
+          <p class="desc">${escapeHtml(job.description || "No description available.")}</p>
 
-      const text = [
-        job.title,
-        job.category,
-        job.description
-      ].join(" ").toLowerCase();
+          <div class="score">
+            <span class="tag">Match score: ${escapeHtml(job.match_score || "N/A")}</span>
+            <span class="tag">Visa risk: ${escapeHtml(job.visa_risk || "unknown")}</span>
+            <span class="tag">Apply priority: ${escapeHtml(job.apply_priority || "Medium")}</span>
+          </div>
 
-      if (text.includes("compliance")) score += 8;
-      if (text.includes("aml")) score += 8;
-      if (text.includes("kyc")) score += 8;
-      if (text.includes("legal")) score += 6;
-      if (text.includes("web3") || text.includes("crypto")) score += 8;
+          <div class="advice">
+            AI advice: This role may be worth checking if your background fits
+            ${escapeHtml(job.category || "this field")}. Because this is a remote-source role,
+            confirm location restrictions, contractor status, sponsorship and employment conditions before applying.
+          </div>
 
-      if (String(job.visa_risk || "").toLowerCase() === "low") score += 6;
-      if (String(job.visa_risk || "").toLowerCase() === "high") score -= 8;
-
-      return Math.max(40, Math.min(score, 88));
-    }
-
-    function calculatePriority(score, visaRisk) {
-      const risk = String(visaRisk || "").toLowerCase();
-
-      if (score >= 72 && risk !== "high") return "High";
-      if (score >= 62) return "Medium";
-      return "Low";
+          ${job.apply_url ? `<a class="apply" href="${escapeUrl(job.apply_url)}" target="_blank" rel="noopener noreferrer">View on Remotive</a>` : ""}
+        </div>
+      `).join("");
     }
 
     function escapeHtml(value) {
@@ -458,15 +343,9 @@
 
     function escapeUrl(value) {
       const url = String(value || "").trim();
-
-      if (url.startsWith("https://") || url.startsWith("http://")) {
-        return escapeHtml(url);
-      }
-
+      if (url.startsWith("https://") || url.startsWith("http://")) return escapeHtml(url);
       return "#";
     }
-
-    loadJobs();
   </script>
 </body>
 </html>
