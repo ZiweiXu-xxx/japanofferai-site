@@ -273,7 +273,7 @@
 
     <label class="searchbox">
       <span>⌕</span>
-      <input id="searchPageInput" placeholder="搜索职位、公司、人脉或功能" autofocus />
+      <input id="searchPageInput" placeholder="搜索真实岗位或站内功能" autofocus />
     </label>
 
     <nav class="nav">
@@ -287,16 +287,14 @@
 
   <main>
     <section class="hero">
-      <div class="eyebrow">Search everything</div>
-      <h1>搜索职位、公司、<span>人脉和申请工具。</span></h1>
-      <p id="summary">输入关键词后，系统会从 JapanOffer AI 的职位库、公司库、人脉路线和核心功能里找结果。</p>
+      <div class="eyebrow">Search real public jobs</div>
+      <h1>搜索真实公开岗位，<span>不是 demo 数据。</span></h1>
+      <p id="summary">请输入关键词搜索。只有通过公开岗位导入系统进入数据库的岗位，才会显示为岗位结果。</p>
     </section>
 
     <div class="tabs">
       <button class="tab active" data-type="all">全部</button>
-      <button class="tab" data-type="job">职位</button>
-      <button class="tab" data-type="company">公司</button>
-      <button class="tab" data-type="network">人脉</button>
+      <button class="tab" data-type="job">真实岗位</button>
       <button class="tab" data-type="page">页面</button>
     </div>
 
@@ -305,7 +303,6 @@
 
   <script src="auth-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="search-data.js"></script>
   <script src="global-search.js"></script>
   <script>
     (function () {
@@ -314,10 +311,6 @@
       const summary = document.getElementById("summary");
       const tabs = Array.from(document.querySelectorAll(".tab"));
       let activeType = "all";
-
-      function typeLabel(type) {
-        return { job: "职位", company: "公司", network: "人脉", page: "页面" }[type] || "结果";
-      }
 
       function escapeHtml(value) {
         return String(value ?? "")
@@ -330,38 +323,38 @@
 
       function render() {
         const q = input.value.trim();
+        const realJobCount = window.JAPANOFFER_SEARCH?.getRealJobCount?.() || 0;
 
         if (!q) {
-          summary.textContent = "请输入关键词搜索真实公开岗位或站内功能。";
-          resultsEl.innerHTML = `<div class="empty">现在不会再默认展示 demo 岗位。搜索 legal、web3、compliance、AML 等关键词。如果没有真实岗位，请先去 admin-jobs.html 运行公开岗位导入。</div>`;
+          summary.textContent = `当前真实公开岗位：${realJobCount} 个。请输入关键词搜索。`;
+          resultsEl.innerHTML = `<div class="empty">不会再展示 demo 岗位。如果这里显示 0 个真实岗位，先去 admin-jobs.html 运行 Remotive 导入。</div>`;
           return;
         }
 
-        let list = window.JAPANOFFER_SEARCH?.search(q, 50) || [];
+        let list = window.JAPANOFFER_SEARCH?.search(q, 80) || [];
+        if (activeType !== "all") list = list.filter((item) => item.type === activeType);
 
-        if (activeType !== "all") {
-          list = list.filter((item) => item.type === activeType);
-        }
-
-        const realJobCount = window.JAPANOFFER_SEARCH?.getRealJobCount?.() || 0;
         summary.textContent = `搜索「${q}」：找到 ${list.length} 个结果。当前真实公开岗位：${realJobCount} 个。`;
 
         if (!list.length) {
-          resultsEl.innerHTML = `<div class="empty">没有找到真实公开岗位结果。请先去 admin-jobs.html 用 Remotive 导入公开岗位，或者换一个关键词。</div>`;
+          resultsEl.innerHTML = `<div class="empty">没有找到真实公开岗位。先去 admin-jobs.html 导入岗位，或者换关键词搜索。</div>`;
           return;
         }
 
-        resultsEl.innerHTML = list.map((item) => `
-          <a class="result" href="${escapeHtml(item.href)}" ${item.type === "job" ? 'target="_blank" rel="noopener"' : ""}>
-            <div class="result-top">
-              <span class="badge">${escapeHtml(item.type === "job" ? "真实岗位" : typeLabel(item.type))}</span>
-              <span class="badge">${escapeHtml(item.raw?.source_name || item.market || "Global")}</span>
-            </div>
-            <h2>${escapeHtml(item.title)}</h2>
-            <p>${escapeHtml(item.subtitle || item.description || "")}</p>
-            <strong>打开 →</strong>
-          </a>
-        `).join("");
+        resultsEl.innerHTML = list.map((item) => {
+          const isJob = item.type === "job";
+          return `
+            <a class="result" href="${escapeHtml(item.href)}" ${isJob ? 'target="_blank" rel="noopener"' : ""}>
+              <div class="result-top">
+                <span class="badge">${escapeHtml(isJob ? "真实岗位" : "页面")}</span>
+                <span class="badge">${escapeHtml(item.raw?.source_name || item.market || "Global")}</span>
+              </div>
+              <h2>${escapeHtml(item.title)}</h2>
+              <p>${escapeHtml(item.subtitle || item.description || "")}</p>
+              <strong>打开 →</strong>
+            </a>
+          `;
+        }).join("");
       }
 
       input.addEventListener("input", render);
@@ -379,6 +372,6 @@
       input.value = params.get("q") || "";
       render();
     })();
-  </script>  </script>
+  </script>
 </body>
 </html>

@@ -1,11 +1,13 @@
-// JapanOffer AI homepage focus placeholder
+// JapanOffer AI Step 37 - homepage focus hard fix
+// This file intentionally focuses on fixing the homepage search behavior.
+// It removes old broken search dropdowns and loads the strict Step 37 search.
 
-
-// Step 33: enable real global search on homepage search bar
 (function () {
   function loadScript(src) {
     return new Promise((resolve, reject) => {
-      if (document.querySelector(`script[src="${src}"]`)) return resolve();
+      const existing = document.querySelector(`script[src="${src}"]`);
+      if (existing) return resolve();
+
       const script = document.createElement("script");
       script.src = src;
       script.onload = resolve;
@@ -14,19 +16,33 @@
     });
   }
 
-  async function enableJapanOfferSearch() {
+  function removeOldPanels() {
+    document
+      .querySelectorAll(".jo33-search-panel, .jo34-search-panel, .jo36-search-panel")
+      .forEach((el) => el.remove());
+  }
+
+  async function boot() {
     try {
-      await loadScript("search-data.js");
+      removeOldPanels();
+
+      await loadScript("auth-config.js");
+      await loadScript("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2");
       await loadScript("global-search.js");
-      if (window.JAPANOFFER_SEARCH?.init) window.JAPANOFFER_SEARCH.init();
+
+      removeOldPanels();
+
+      if (window.JAPANOFFER_SEARCH?.init) {
+        window.JAPANOFFER_SEARCH.init();
+      }
     } catch (error) {
-      console.warn("JapanOffer search failed to load", error);
+      console.warn("Homepage strict search boot failed", error);
     }
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", enableJapanOfferSearch);
+    document.addEventListener("DOMContentLoaded", boot);
   } else {
-    enableJapanOfferSearch();
+    boot();
   }
 })();
