@@ -4,79 +4,521 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sign up | JapanOffer AI</title>
-  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --ink: #101828;
+      --muted: #667085;
+      --line: rgba(16, 24, 40, 0.1);
+      --blue: #1f57c8;
+      --blue-2: #2f6df6;
+      --gold: #d6b36a;
+      --card: rgba(255, 255, 255, 0.82);
+      --shadow: 0 26px 80px rgba(31, 87, 200, 0.14);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(47, 109, 246, 0.15), transparent 34%),
+        radial-gradient(circle at 78% 10%, rgba(214, 179, 106, 0.13), transparent 30%),
+        linear-gradient(180deg, #f8fbff 0%, #f1f5fb 55%, #edf3fa 100%);
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .topbar {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 18px 0;
+      display: grid;
+      grid-template-columns: 215px 1fr auto auto;
+      gap: 18px;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--blue), #6aa2ff);
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 950;
+      box-shadow: 0 18px 38px rgba(31, 87, 200, 0.22);
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+
+    .brand small {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+      margin-top: 2px;
+      line-height: 1.15;
+    }
+
+    .top-search {
+      height: 46px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.72);
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 14px;
+      min-width: 0;
+      box-shadow: 0 12px 40px rgba(16,24,40,.06);
+    }
+
+    .top-search span {
+      color: var(--blue);
+      font-weight: 900;
+    }
+
+    .top-search input {
+      width: 100%;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      font-size: 14px;
+      color: var(--ink);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: #344054;
+      font-size: 14px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .nav a:hover { color: var(--blue); }
+
+    .auth-links {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      white-space: nowrap;
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    .auth-links a:last-child,
+    .logout-button {
+      padding: 10px 15px;
+      border-radius: 999px;
+      background: var(--blue);
+      color: white;
+      box-shadow: 0 15px 35px rgba(31, 87, 200, 0.24);
+    }
+
+    .signup-shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 72px 0 74px;
+      display: grid;
+      grid-template-columns: minmax(0, .95fr) minmax(420px, 1.05fr);
+      gap: 48px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      margin: 0 0 18px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(50px, 6.5vw, 82px);
+      line-height: .92;
+      letter-spacing: -0.085em;
+    }
+
+    h1 span {
+      display: block;
+      color: var(--blue);
+    }
+
+    .lede {
+      margin: 24px 0 0;
+      color: #475467;
+      font-size: 18px;
+      line-height: 1.7;
+      max-width: 620px;
+    }
+
+    .benefits {
+      margin-top: 28px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .benefit {
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(255,255,255,.68);
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 13px;
+      align-items: start;
+      box-shadow: 0 14px 38px rgba(16,24,40,.05);
+    }
+
+    .benefit span {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      background: #eaf2ff;
+      color: var(--blue);
+      display: grid;
+      place-items: center;
+      font-weight: 950;
+    }
+
+    .benefit strong {
+      display: block;
+      margin-bottom: 4px;
+      letter-spacing: -0.03em;
+    }
+
+    .benefit p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .signup-card {
+      border: 1px solid var(--line);
+      background: var(--card);
+      border-radius: 34px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .signup-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 6px;
+      background: linear-gradient(90deg, var(--blue), #6aa2ff, var(--gold));
+    }
+
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 22px;
+    }
+
+    .card-head h2 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: -0.055em;
+    }
+
+    .card-head p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .badge {
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(31,87,200,.09);
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      color: #344054;
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    input,
+    select {
+      width: 100%;
+      height: 48px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: #fff;
+      color: var(--ink);
+      outline: 0;
+      padding: 0 14px;
+      font-size: 15px;
+      font-weight: 650;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: rgba(31,87,200,.45);
+      box-shadow: 0 0 0 4px rgba(31,87,200,.1);
+    }
+
+    .submit-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 18px;
+    }
+
+    button[type="submit"] {
+      border: 0;
+      min-height: 50px;
+      padding: 0 20px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--blue), var(--blue-2));
+      color: white;
+      font-weight: 950;
+      cursor: pointer;
+      box-shadow: 0 18px 40px rgba(31,87,200,.24);
+    }
+
+    .secondary-link {
+      color: var(--blue);
+      font-weight: 900;
+    }
+
+    .auth-message {
+      margin-top: 16px;
+      padding: 13px 14px;
+      border-radius: 16px;
+      background: rgba(31,87,200,.08);
+      color: #234b9a;
+      line-height: 1.55;
+      font-size: 14px;
+      display: none;
+    }
+
+    .auth-message.info,
+    .auth-message.success,
+    .auth-message.error {
+      display: block;
+    }
+
+    .auth-message.success {
+      background: rgba(16,185,129,.1);
+      color: #047857;
+    }
+
+    .auth-message.error {
+      background: rgba(239,68,68,.1);
+      color: #b42318;
+    }
+
+    .fine-print {
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 980px) {
+      .topbar,
+      .signup-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .nav,
+      .auth-links {
+        flex-wrap: wrap;
+      }
+
+      .signup-shell {
+        padding-top: 38px;
+      }
+    }
+
+    @media (max-width: 620px) {
+      h1 {
+        font-size: 46px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .signup-card {
+        padding: 22px;
+      }
+
+      .card-head {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
-<body class="auth-body">
+
+<body>
   <header class="topbar">
     <a class="brand" href="index.html">
       <span class="brand-mark">J</span>
-      <span class="brand-copy">
+      <span>
         <strong>JapanOffer AI</strong>
         <small>Cross-border Talent Network</small>
       </span>
     </a>
-    <div class="top-search"><span>⌕</span><input value="Search roles, talent or companies" /></div>
+
+    <form class="top-search" onsubmit="event.preventDefault(); location.href='jobs-search.html?q=' + encodeURIComponent(this.q.value || 'legal compliance')">
+      <span>⌕</span>
+      <input name="q" placeholder="Search roles, talent or companies" />
+    </form>
+
     <nav class="nav">
-      <a href="jobs.html">Jobs</a>
+      <a href="jobs-search.html">Jobs</a>
       <a href="talent.html">Talent</a>
       <a href="companies.html">Companies</a>
       <a href="employers.html">Employers</a>
     </nav>
-    <div class="auth-links"><a class="signin-link" href="login.html">Sign in</a><a class="nav-cta" href="signup.html">Sign up</a></div>
+
+    <div class="auth-links">
+      <a href="login.html">Sign in</a>
+      <a href="signup.html">Sign up</a>
+    </div>
   </header>
 
-  <main>
-    <section class="auth-page">
-      <div class="auth-copy">
-        <p class="eyebrow">Create account</p>
-        <h1>Build your cross-border talent profile.</h1>
-        <p>
-          Create an account so JapanOffer AI can become more than a landing page: profiles, saved roles, reports and employer matching can sit behind the login.
-        </p>
+  <main class="signup-shell">
+    <section>
+      <p class="eyebrow">Create account</p>
+      <h1>Build your <span>cross-border profile.</span></h1>
+      <p class="lede">
+        Create one profile for saved roles, AI match reports and future employer matching. Start as a job seeker, employer or university-side beta user.
+      </p>
+
+      <div class="benefits">
+        <div class="benefit">
+          <span>01</span>
+          <div>
+            <strong>Save roles and reports</strong>
+            <p>Keep your best job opportunities and match reports in one place.</p>
+          </div>
+        </div>
+
+        <div class="benefit">
+          <span>02</span>
+          <div>
+            <strong>Build a stronger profile</strong>
+            <p>Use education, languages, target countries and career direction as matching signals.</p>
+          </div>
+        </div>
+
+        <div class="benefit">
+          <span>03</span>
+          <div>
+            <strong>Prepare for employer matching</strong>
+            <p>Turn the landing page into a real cross-border talent network.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="signup-card">
+      <div class="card-head">
+        <div>
+          <h2>Sign up</h2>
+          <p>Start with email and password. You may need to confirm your email after signing up.</p>
+        </div>
+        <span class="badge">Beta access</span>
       </div>
 
-      <div class="auth-panel">
-        <h2>Sign up</h2>
-        <p class="auth-muted">Start as a job seeker or employer beta user.</p>
+      <form data-signup-form>
+        <div class="form-grid">
+          <div class="field">
+            <label for="fullName">Full name</label>
+            <input id="fullName" name="fullName" autocomplete="name" placeholder="Your name" required />
+          </div>
 
-        <form class="auth-form" data-signup-form>
-          <label>Full name
-            <input name="fullName" type="text" required placeholder="Your name" />
-          </label>
-
-          <label>Email
-            <input name="email" type="email" required placeholder="you@example.com" />
-          </label>
-
-          <label>Password
-            <input name="password" type="password" required minlength="6" placeholder="At least 6 characters" />
-          </label>
-
-          <label>Account type
-            <select name="role">
-              <option value="Job seeker">Job seeker</option>
-              <option value="Employer">Employer</option>
-              <option value="University / Agency">University / Agency</option>
+          <div class="field">
+            <label for="role">Account type</label>
+            <select id="role" name="role">
+              <option value="job_seeker">Job seeker</option>
+              <option value="employer">Employer</option>
+              <option value="university_agency">University / Agency</option>
             </select>
-          </label>
+          </div>
 
-          <button class="btn primary" type="submit">Create account</button>
-        </form>
+          <div class="field full">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
+          </div>
 
-        <div data-auth-message class="auth-message info">You may need to confirm your email after signing up.</div>
+          <div class="field full">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" autocomplete="new-password" placeholder="At least 6 characters" minlength="6" required />
+          </div>
+        </div>
 
-        <p class="auth-switch">
-          Already have an account? <a href="login.html">Sign in</a>
+        <div class="submit-row">
+          <button type="submit">Create account</button>
+          <a class="secondary-link" href="login.html">Already have an account? Sign in</a>
+        </div>
+
+        <div data-auth-message class="auth-message"></div>
+        <p class="fine-print">
+          By creating an account, you are joining the JapanOffer AI beta. Profile and saved-role features will be expanded gradually.
         </p>
-      </div>
+      </form>
     </section>
   </main>
 
   <script src="auth-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="auth.js"></script>
-  <script src="analytics.js"></script>
-  <script src="effects.js"></script>
-  <script src="platform-actions.js"></script>
 </body>
 </html>

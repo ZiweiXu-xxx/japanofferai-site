@@ -1,168 +1,179 @@
-// JapanOffer AI - homepage focus + real job search bridge
-// Keeps the existing strict homepage search boot, then connects homepage search actions to jobs-search.html.
+// JapanOffer AI homepage focus bridge + UI repair
+// Safe patch: fixes blank CTA text/color and keeps homepage search connected to jobs-search.html.
 
 (function () {
-  function loadScript(src) {
-    return new Promise((resolve, reject) => {
-      const existing = document.querySelector(`script[src="${src}"]`);
-      if (existing) return resolve();
+  const LANG_KEY = "japanoffer_lang";
 
-      const script = document.createElement("script");
-      script.src = src;
-      script.onload = resolve;
-      script.onerror = reject;
-      document.head.appendChild(script);
+  function lang() {
+    return localStorage.getItem(LANG_KEY) || document.documentElement.lang || "en";
+  }
+
+  function copy(key) {
+    const l = lang().toLowerCase();
+    const table = {
+      signUp: {
+        en: "Sign up",
+        zh: "注册",
+        ja: "登録"
+      },
+      searchDefault: {
+        en: "legal compliance",
+        zh: "法律 合规",
+        ja: "法務 コンプライアンス"
+      }
+    };
+
+    if (l.startsWith("zh")) return table[key].zh;
+    if (l.startsWith("ja")) return table[key].ja;
+    return table[key].en;
+  }
+
+  function injectStyle() {
+    if (document.getElementById("jo-home-ui-fix-style")) return;
+
+    const style = document.createElement("style");
+    style.id = "jo-home-ui-fix-style";
+    style.textContent = `
+      .final .btn,
+      .final-card .btn,
+      .center-actions .btn,
+      .hero-actions.center-actions .btn {
+        color: #101828 !important;
+      }
+
+      .final .btn.primary,
+      .final-card .btn.primary,
+      .center-actions .btn.primary,
+      .hero-actions.center-actions .btn.primary {
+        color: #ffffff !important;
+      }
+
+      .final .btn.secondary,
+      .final-card .btn.secondary,
+      .center-actions .btn.secondary,
+      .hero-actions.center-actions .btn.secondary,
+      .final .btn:not(.primary),
+      .final-card .btn:not(.primary),
+      .center-actions .btn:not(.primary),
+      .hero-actions.center-actions .btn:not(.primary) {
+        min-width: 112px;
+        color: #101828 !important;
+        background: #ffffff !important;
+      }
+
+      .auth-shell,
+      .signup-shell {
+        min-height: calc(100vh - 80px);
+      }
+    `;
+
+    document.head.appendChild(style);
+  }
+
+  function repairBlankButtons() {
+    const candidates = document.querySelectorAll(
+      'a[href*="signup"], button[data-signup], .final a, .final-card a, .center-actions a, .hero-actions.center-actions a'
+    );
+
+    candidates.forEach((el) => {
+      const text = (el.textContent || "").trim();
+      const href = (el.getAttribute("href") || "").toLowerCase();
+
+      if (!text && href.includes("signup")) {
+        el.textContent = copy("signUp");
+      }
+
+      if (href.includes("signup") && (text === "Sign up" || text === "注册" || text === "登録")) {
+        // keep visible language-aware copy
+        el.textContent = copy("signUp");
+      }
     });
-  }
-
-  function removeOldPanels() {
-    document
-      .querySelectorAll(".jo33-search-panel, .jo34-search-panel, .jo36-search-panel")
-      .forEach((el) => el.remove());
-  }
-
-  function normalisePlaceholderValue(value) {
-    const text = String(value || "").trim();
-
-    if (!text) return "";
-
-    const placeholderValues = [
-      "Search roles, talent or companies",
-      "Legal, compliance, business, technology",
-      "Japan, Singapore, Hong Kong"
-    ];
-
-    return placeholderValues.includes(text) ? "" : text;
   }
 
   function buildHeroQuery() {
-    const roleInput = document.querySelector(".premium-search-row label:nth-child(1) input");
-    const marketInput = document.querySelector(".premium-search-row label:nth-child(2) input");
+    const roleInput =
+      document.querySelector("#roleInput") ||
+      document.querySelector(".premium-search-row label:nth-child(1) input") ||
+      document.querySelector(".search-row input");
 
-    const role = normalisePlaceholderValue(roleInput?.value) || "legal compliance";
-    const market = normalisePlaceholderValue(marketInput?.value) || "";
+    const marketInput =
+      document.querySelector("#marketInput") ||
+      document.querySelector(".premium-search-row label:nth-child(2) input") ||
+      document.querySelectorAll(".search-row input")[1];
 
-    return [market, role].filter(Boolean).join(" ").trim();
+    const role = roleInput && roleInput.value ? roleInput.value.trim() : "";
+    const market = marketInput && marketInput.value ? marketInput.value.trim() : "";
+
+    return [market, role].filter(Boolean).join(" ").trim() || copy("searchDefault");
   }
 
-  function goToRealJobSearch(query) {
-    const q = String(query || "").trim() || buildHeroQuery() || "legal compliance";
+  function goToJobSearch(query) {
+    const q = String(query || "").trim() || buildHeroQuery() || copy("searchDefault");
     window.location.href = "jobs-search.html?q=" + encodeURIComponent(q);
   }
 
-  function connectHomepageToRealSearch() {
-    // Top navigation Jobs
-    document.querySelectorAll('a').forEach((link) => {
+  function connectSearch() {
+    document.querySelectorAll("a").forEach((link) => {
       const text = String(link.textContent || "").trim().toLowerCase();
 
-      if (text === "jobs" || text === "find jobs") {
-        link.href = "jobs-search.html";
-      }
-
-      if (text.includes("search live jobs")) {
-        link.href = "jobs-search.html?q=" + encodeURIComponent("legal compliance visa sponsorship");
+      if (text === "jobs" || text === "岗位" || text === "求人" || text === "find jobs" || text === "找岗位" || text === "求人を探す") {
+        if (!link.href.includes("jobs-search.html")) link.href = "jobs-search.html";
       }
     });
 
-    // Top search bar
     const topSearchInput = document.querySelector(".top-search input");
+    const topSearchForm = document.querySelector(".top-search");
 
     if (topSearchInput) {
-      topSearchInput.removeAttribute("value");
-      topSearchInput.placeholder = "Search UK legal, Singapore compliance, Japan legal, Hong Kong AML...";
-
       topSearchInput.addEventListener("keydown", (event) => {
         if (event.key === "Enter") {
           event.preventDefault();
-          goToRealJobSearch(topSearchInput.value);
+          goToJobSearch(topSearchInput.value);
         }
       });
     }
 
-    const topSearchBox = document.querySelector(".top-search");
-    if (topSearchBox) {
-      topSearchBox.addEventListener("click", () => {
-        topSearchInput?.focus();
-      });
-    }
-
-    // Main hero search button
-    const heroButton = document.querySelector(".premium-search-button");
-
-    if (heroButton) {
-      heroButton.textContent = "Search jobs";
-      heroButton.href = "jobs-search.html";
-
-      heroButton.addEventListener("click", (event) => {
+    if (topSearchForm && topSearchForm.tagName === "FORM") {
+      topSearchForm.addEventListener("submit", (event) => {
         event.preventDefault();
-        goToRealJobSearch(buildHeroQuery());
+        goToJobSearch(topSearchInput ? topSearchInput.value : "");
       });
     }
 
-    // Hero inputs press Enter
-    document.querySelectorAll(".premium-search-row input").forEach((input) => {
-      input.addEventListener("keydown", (event) => {
-        if (event.key === "Enter") {
+    const heroButtons = document.querySelectorAll(".premium-search-button, .search-btn, a[href='jobs-search.html']");
+    heroButtons.forEach((button) => {
+      const text = String(button.textContent || "").trim().toLowerCase();
+
+      if (
+        text.includes("search") ||
+        text.includes("岗位") ||
+        text.includes("求人") ||
+        text.includes("find jobs")
+      ) {
+        button.addEventListener("click", (event) => {
           event.preventDefault();
-          goToRealJobSearch(buildHeroQuery());
-        }
-      });
-    });
-
-    // Quick tags
-    const tagQueries = {
-      "entry-level": "UK entry level legal compliance",
-      "visa-aware": "visa sponsorship analyst",
-      "english + japanese": "Japanese English legal compliance",
-      "legal / compliance": "legal compliance AML"
-    };
-
-    document.querySelectorAll(".quick-tags span").forEach((tag) => {
-      const text = String(tag.textContent || "").trim().toLowerCase();
-      tag.style.cursor = "pointer";
-      tag.setAttribute("role", "button");
-      tag.setAttribute("tabindex", "0");
-
-      const run = () => goToRealJobSearch(tagQueries[text] || text);
-
-      tag.addEventListener("click", run);
-      tag.addEventListener("keydown", (event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          run();
-        }
-      });
-    });
-
-    // Beta / final CTA copy stays report/account unless it explicitly says jobs.
-    document.querySelectorAll(".studio-card").forEach((card) => {
-      const text = String(card.textContent || "").toLowerCase();
-
-      if (text.includes("search live jobs")) {
-        card.href = "jobs-search.html?q=" + encodeURIComponent("legal compliance");
+          goToJobSearch(buildHeroQuery());
+        });
       }
+    });
+
+    document.querySelectorAll(".quick-tags span, .premium-tags span, .tags button, [data-query]").forEach((tag) => {
+      tag.style.cursor = "pointer";
+      tag.addEventListener("click", () => {
+        goToJobSearch(tag.getAttribute("data-query") || tag.textContent || "");
+      });
     });
   }
 
-  async function boot() {
-    try {
-      removeOldPanels();
+  function boot() {
+    injectStyle();
+    repairBlankButtons();
+    connectSearch();
 
-      await loadScript("auth-config.js");
-      await loadScript("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2");
-      await loadScript("global-search.js");
+    setTimeout(repairBlankButtons, 300);
+    setTimeout(repairBlankButtons, 1000);
 
-      removeOldPanels();
-
-      if (window.JAPANOFFER_SEARCH?.init) {
-        window.JAPANOFFER_SEARCH.init();
-      }
-
-      connectHomepageToRealSearch();
-    } catch (error) {
-      console.warn("Homepage search boot failed", error);
-      connectHomepageToRealSearch();
-    }
+    window.addEventListener("japanoffer:languagechange", repairBlankButtons);
   }
 
   if (document.readyState === "loading") {
