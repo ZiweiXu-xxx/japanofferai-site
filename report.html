@@ -4,147 +4,1435 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AI Match Report | JapanOffer AI</title>
-  <meta name="description" content="Generate a JapanOffer AI cross-border career match report in Chinese or English." />
-  <link rel="stylesheet" href="styles.css" />
+  <meta name="description" content="Generate a structured cross-border career and job matching report with JapanOffer AI." />
+
+  <style>
+    :root {
+      --ink: #07111f;
+      --muted: #667085;
+      --muted-2: #8a97aa;
+      --blue: #1f57c8;
+      --blue-2: #5b8dff;
+      --gold: #d7b66f;
+      --cyan: #78d7ff;
+      --green: #14b8a6;
+      --red: #f04438;
+      --line: rgba(16, 24, 40, 0.10);
+      --glass: rgba(255, 255, 255, 0.76);
+      --glass-strong: rgba(255, 255, 255, 0.92);
+      --dark: #07111f;
+      --shadow: 0 28px 80px rgba(31, 87, 200, 0.14);
+      --shadow-dark: 0 38px 110px rgba(7, 17, 31, 0.22);
+      --radius: 30px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 8% 4%, rgba(91, 141, 255, 0.18), transparent 30%),
+        radial-gradient(circle at 82% 9%, rgba(215, 182, 111, 0.16), transparent 28%),
+        radial-gradient(circle at 52% 52%, rgba(120, 215, 255, 0.09), transparent 42%),
+        linear-gradient(180deg, #f9fbff 0%, #eff5fc 54%, #edf4fb 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(31, 87, 200, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(31, 87, 200, 0.045) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(to bottom, black, transparent 76%);
+      z-index: -3;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    input, select, textarea, button {
+      font: inherit;
+    }
+
+    .aurora {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: -2;
+    }
+
+    .aurora span {
+      position: absolute;
+      width: 34vw;
+      height: 34vw;
+      min-width: 320px;
+      min-height: 320px;
+      border-radius: 999px;
+      filter: blur(38px);
+      opacity: .32;
+      animation: drift 14s ease-in-out infinite alternate;
+    }
+
+    .aurora .a1 { left: -8vw; top: 5vh; background: rgba(79, 140, 255, .45); }
+    .aurora .a2 { right: -8vw; top: 12vh; background: rgba(215, 182, 111, .34); animation-delay: -4s; }
+    .aurora .a3 { left: 42vw; bottom: 4vh; background: rgba(20, 184, 166, .18); animation-delay: -7s; }
+
+    @keyframes drift {
+      from { transform: translate3d(0, 0, 0) scale(1); }
+      to { transform: translate3d(42px, -28px, 0) scale(1.08); }
+    }
+
+    .shell {
+      width: min(1220px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 16px 0;
+      backdrop-filter: blur(20px);
+    }
+
+    .topbar-inner {
+      display: grid;
+      grid-template-columns: 210px minmax(220px, 1fr) auto auto auto;
+      align-items: center;
+      gap: 16px;
+      border: 1px solid rgba(255, 255, 255, .74);
+      background: rgba(255, 255, 255, .68);
+      box-shadow: 0 18px 60px rgba(16, 24, 40, .08);
+      border-radius: 24px;
+      padding: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 46px;
+      height: 46px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 950;
+      letter-spacing: -.06em;
+      background: linear-gradient(135deg, var(--blue), var(--blue-2));
+      box-shadow: 0 18px 38px rgba(31, 87, 200, .28);
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 16px;
+      font-weight: 950;
+      letter-spacing: -.045em;
+      white-space: nowrap;
+    }
+
+    .brand small {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+      line-height: 1.15;
+      margin-top: 2px;
+    }
+
+    .top-search {
+      height: 46px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, .80);
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 16px;
+      min-width: 0;
+      box-shadow: 0 12px 34px rgba(16, 24, 40, .06);
+    }
+
+    .top-search span {
+      color: var(--blue);
+      font-weight: 950;
+    }
+
+    .top-search input {
+      width: 100%;
+      min-width: 0;
+      border: 0;
+      background: transparent;
+      outline: 0;
+      font-size: 14px;
+      color: var(--ink);
+      font-weight: 650;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 17px;
+      color: #27364a;
+      font-size: 14px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .nav a:hover { color: var(--blue); }
+
+    .lang-select {
+      height: 36px;
+      width: 88px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, .88);
+      color: #27364a;
+      outline: none;
+      padding: 0 9px;
+      font-size: 12px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .auth-links {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      white-space: nowrap;
+    }
+
+    .auth-links a {
+      font-size: 14px;
+      font-weight: 900;
+      color: #27364a;
+    }
+
+    .auth-links a:last-child {
+      padding: 10px 15px;
+      border-radius: 999px;
+      background: var(--blue);
+      color: #fff;
+      box-shadow: 0 16px 38px rgba(31, 87, 200, .25);
+    }
+
+    .hero {
+      padding: 82px 0 36px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.02fr) minmax(430px, .98fr);
+      gap: 54px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: .17em;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(52px, 7vw, 88px);
+      line-height: .91;
+      letter-spacing: -.09em;
+    }
+
+    h1 span {
+      display: block;
+      color: var(--blue);
+      position: relative;
+    }
+
+    h1 span::after {
+      content: "";
+      position: absolute;
+      left: 6px;
+      bottom: 7px;
+      width: min(72%, 460px);
+      height: 14px;
+      border-radius: 999px;
+      background: rgba(215, 182, 111, .30);
+      z-index: -1;
+    }
+
+    .lede {
+      margin: 26px 0 0;
+      color: #44546a;
+      font-size: 18px;
+      line-height: 1.72;
+      max-width: 760px;
+      font-weight: 550;
+    }
+
+    .hero-pills {
+      margin-top: 24px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .hero-pills span {
+      padding: 10px 13px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .78);
+      border: 1px solid var(--line);
+      color: #344054;
+      font-weight: 850;
+      font-size: 13px;
+      box-shadow: 0 12px 30px rgba(16, 24, 40, .05);
+    }
+
+    .report-orb {
+      position: relative;
+      min-height: 500px;
+      display: grid;
+      place-items: center;
+      perspective: 1200px;
+    }
+
+    .orb-card {
+      width: min(100%, 520px);
+      border-radius: 38px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.68)),
+        radial-gradient(circle at 20% 12%, rgba(79, 140, 255, .20), transparent 35%);
+      border: 1px solid rgba(255,255,255,.78);
+      box-shadow: var(--shadow-dark);
+      backdrop-filter: blur(20px);
+      overflow: hidden;
+      transform: rotateX(3deg) rotateY(-5deg);
+      animation: floatCard 7s ease-in-out infinite;
+    }
+
+    @keyframes floatCard {
+      0%, 100% { transform: rotateX(3deg) rotateY(-5deg) translateY(0); }
+      50% { transform: rotateX(3deg) rotateY(-5deg) translateY(-12px); }
+    }
+
+    .orb-toolbar {
+      display: grid;
+      grid-template-columns: auto auto auto 1fr auto;
+      gap: 8px;
+      align-items: center;
+      padding: 17px 20px;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .orb-toolbar i {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: #ff6b6b;
+    }
+
+    .orb-toolbar i:nth-child(2) { background: #f4c95d; }
+    .orb-toolbar i:nth-child(3) { background: #44d07b; }
+    .orb-toolbar strong { text-align: center; color: #344054; }
+    .orb-toolbar em { font-style: normal; color: var(--muted-2); font-size: 12px; }
+
+    .score-stage {
+      padding: 28px;
+    }
+
+    .score-ring {
+      width: 178px;
+      height: 178px;
+      margin: 0 auto 24px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background:
+        conic-gradient(var(--blue) 0deg 310deg, rgba(31,87,200,.12) 310deg 360deg);
+      position: relative;
+      box-shadow: 0 24px 60px rgba(31,87,200,.16);
+    }
+
+    .score-ring::before {
+      content: "";
+      position: absolute;
+      inset: 13px;
+      border-radius: 50%;
+      background: #fff;
+    }
+
+    .score-ring strong {
+      position: relative;
+      font-size: 44px;
+      letter-spacing: -.06em;
+      color: var(--blue);
+    }
+
+    .score-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .score-row div {
+      padding: 14px;
+      border-radius: 18px;
+      background: #fff;
+      border: 1px solid var(--line);
+    }
+
+    .score-row span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      margin-bottom: 5px;
+    }
+
+    .score-row strong {
+      color: var(--ink);
+      font-size: 14px;
+    }
+
+    .floating-note {
+      position: absolute;
+      padding: 13px 15px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.86);
+      border: 1px solid rgba(255,255,255,.78);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      animation: floatNote 5.5s ease-in-out infinite;
+    }
+
+    .floating-note span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .floating-note strong {
+      display: block;
+      color: var(--blue);
+      margin-top: 3px;
+      font-size: 20px;
+      font-weight: 950;
+    }
+
+    .note-a { left: 0; top: 72px; }
+    .note-b { right: -8px; bottom: 76px; animation-delay: -2s; }
+
+    @keyframes floatNote {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .workspace {
+      padding: 46px 0 82px;
+    }
+
+    .workspace-card {
+      display: grid;
+      grid-template-columns: minmax(360px, .92fr) minmax(0, 1.08fr);
+      gap: 18px;
+      padding: 18px;
+      border-radius: 38px;
+      background: rgba(255, 255, 255, .70);
+      border: 1px solid rgba(255,255,255,.78);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(22px);
+    }
+
+    .panel {
+      border-radius: 30px;
+      background: rgba(255,255,255,.88);
+      border: 1px solid var(--line);
+      box-shadow: 0 20px 54px rgba(16,24,40,.07);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      padding: 22px 24px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .panel-head h2 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: -.055em;
+    }
+
+    .panel-head p {
+      margin: 7px 0 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .badge {
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(31,87,200,.09);
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
+    .form-body {
+      padding: 22px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 900;
+      color: #344054;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #fff;
+      color: var(--ink);
+      outline: 0;
+      padding: 13px 14px;
+      font-size: 15px;
+      font-weight: 650;
+    }
+
+    select {
+      height: 50px;
+      cursor: pointer;
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+      line-height: 1.55;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: rgba(31,87,200,.48);
+      box-shadow: 0 0 0 4px rgba(31,87,200,.10);
+    }
+
+    .mode-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .mode-tabs button {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 10px 12px;
+      background: #f5f8fd;
+      color: #344054;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .mode-tabs button.active {
+      background: var(--blue);
+      color: #fff;
+      border-color: var(--blue);
+    }
+
+    .generate {
+      border: 0;
+      border-radius: 18px;
+      min-height: 54px;
+      background: linear-gradient(135deg, var(--blue), var(--blue-2));
+      color: #fff;
+      font-weight: 950;
+      cursor: pointer;
+      box-shadow: 0 20px 46px rgba(31,87,200,.26);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+
+    .generate:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 26px 58px rgba(31,87,200,.30);
+    }
+
+    .output {
+      background:
+        radial-gradient(circle at 12% 0%, rgba(79,140,255,.20), transparent 34%),
+        linear-gradient(180deg, #0b1220, #070b13);
+      color: #fff;
+      min-height: 720px;
+    }
+
+    .output .panel-head {
+      border-bottom-color: rgba(255,255,255,.10);
+    }
+
+    .output .panel-head h2 {
+      color: #fff;
+    }
+
+    .output .panel-head p {
+      color: #aab6c8;
+    }
+
+    .report-body {
+      padding: 22px;
+    }
+
+    .empty-state {
+      min-height: 520px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: #aab6c8;
+      padding: 30px;
+    }
+
+    .empty-state strong {
+      display: block;
+      color: #fff;
+      font-size: 28px;
+      letter-spacing: -.055em;
+      margin-bottom: 10px;
+    }
+
+    .report-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .report-top {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .report-score-card,
+    .report-summary,
+    .insight-card {
+      border-radius: 24px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      padding: 18px;
+    }
+
+    .report-score-ring {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      margin: 0 auto 14px;
+      display: grid;
+      place-items: center;
+      background: conic-gradient(#93c5fd 0deg 306deg, rgba(255,255,255,.12) 306deg 360deg);
+      position: relative;
+    }
+
+    .report-score-ring::before {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border-radius: 50%;
+      background: #0b1220;
+    }
+
+    .report-score-ring strong {
+      position: relative;
+      font-size: 34px;
+      color: #93c5fd;
+      letter-spacing: -.055em;
+    }
+
+    .report-score-card p {
+      text-align: center;
+      color: #cbd5e1;
+      margin: 0;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .report-summary h3,
+    .insight-card h3 {
+      margin: 0 0 10px;
+      color: #fff;
+      font-size: 19px;
+      letter-spacing: -.04em;
+    }
+
+    .report-summary p,
+    .insight-card p,
+    .insight-card li {
+      color: #cbd5e1;
+      line-height: 1.65;
+      font-size: 14px;
+    }
+
+    .chip-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .chip {
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(147,197,253,.12);
+      border: 1px solid rgba(147,197,253,.24);
+      color: #dbeafe;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .insights {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .insight-card ul {
+      margin: 10px 0 0;
+      padding-left: 18px;
+    }
+
+    .cover-letter {
+      background: rgba(215, 182, 111, .12);
+      border-color: rgba(215, 182, 111, .30);
+    }
+
+    .copy-btn {
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.10);
+      color: #fff;
+      border-radius: 999px;
+      padding: 9px 12px;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+
+    .reveal.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 1080px) {
+      .topbar-inner {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+      }
+
+      .nav, .auth-links {
+        flex-wrap: wrap;
+      }
+
+      .hero,
+      .workspace-card {
+        grid-template-columns: 1fr;
+      }
+
+      .report-orb {
+        order: -1;
+        min-height: 420px;
+      }
+
+      .orb-card {
+        transform: none;
+      }
+
+      .note-a, .note-b {
+        display: none;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .hero {
+        padding-top: 42px;
+      }
+
+      h1 {
+        font-size: 48px;
+      }
+
+      .form-grid,
+      .report-top,
+      .insights,
+      .score-row {
+        grid-template-columns: 1fr;
+      }
+
+      .workspace-card {
+        padding: 12px;
+        border-radius: 28px;
+      }
+
+      .panel {
+        border-radius: 24px;
+      }
+
+      .report-orb {
+        min-height: auto;
+      }
+    }
+  </style>
 </head>
-<body class="auth-body">
+
+<body>
+  <div class="aurora" aria-hidden="true">
+    <span class="a1"></span>
+    <span class="a2"></span>
+    <span class="a3"></span>
+  </div>
+
   <header class="topbar">
-    <a class="brand" href="index.html" aria-label="JapanOffer AI home">
-      <span class="brand-mark">J</span>
-      <span class="brand-copy">
-        <strong>JapanOffer AI</strong>
-        <small>AI Match Report</small>
-      </span>
-    </a>
+    <div class="shell">
+      <div class="topbar-inner">
+        <a class="brand" href="index.html">
+          <span class="brand-mark">J</span>
+          <span>
+            <strong>JapanOffer AI</strong>
+            <small data-i18n="brand.subtitle">Cross-border Talent Network</small>
+          </span>
+        </a>
 
-    <div class="top-search" aria-label="Global platform search">
-      <span>⌕</span>
-      <input value="Search roles, talent or companies" aria-label="Search roles, talent or companies" />
-    </div>
+        <form class="top-search" id="topSearchForm">
+          <span>⌕</span>
+          <input data-i18n-placeholder="top.search" placeholder="Search UK legal, Singapore compliance..." />
+        </form>
 
-    <nav class="nav" aria-label="Main navigation">
-      <a href="jobs.html">Jobs</a>
-      <a href="talent.html">Talent</a>
-      <a href="companies.html">Companies</a>
-      <a href="feedback.html">Feedback</a>
-    </nav>
+        <nav class="nav">
+          <a href="jobs-search.html" data-i18n="nav.jobs">Jobs</a>
+          <a href="talent.html" data-i18n="nav.talent">Talent</a>
+          <a href="companies.html" data-i18n="nav.companies">Companies</a>
+          <a href="feedback.html" data-i18n="nav.feedback">Feedback</a>
+        </nav>
 
-    <div class="auth-links">
-      <a class="signin-link" href="login.html">Sign in</a>
-      <a class="nav-cta" href="signup.html">Sign up</a>
+        <select class="lang-select" id="languageSelect" aria-label="Language">
+          <option value="en">EN</option>
+          <option value="zh">中文</option>
+          <option value="ja">日本語</option>
+        </select>
+
+        <div class="auth-links">
+          <a href="login.html" data-i18n="auth.signIn">Sign in</a>
+          <a href="signup.html" data-i18n="auth.signUp">Sign up</a>
+        </div>
+      </div>
     </div>
   </header>
 
-  <main>
-    <section class="report-hero">
-      <div>
-        <p class="eyebrow">Auto match report</p>
-        <h1>Generate your cross-border opportunity report.</h1>
-        <p>
-          Answer a few questions and get a structured JapanOffer AI report: target market, role direction,
-          match score, visa/language risk and application priority.
+  <main class="shell">
+    <section class="hero">
+      <div class="reveal">
+        <p class="eyebrow" data-i18n="hero.kicker">AI Match Report</p>
+        <h1 data-i18n-html="hero.title">Generate your<span>cross-border opportunity report.</span></h1>
+        <p class="lede" data-i18n="hero.copy">
+          Build a structured international career report in one page: target market, role direction, match score, visa and language risk, application priority and cover letter opening.
         </p>
-        <p class="cn-report-intro">
-          填写几个基础信息后，系统会自动生成一份跨境岗位匹配报告，包括目标市场、岗位方向、匹配分数、签证/语言风险和申请优先级。
-        </p>
+
+        <div class="hero-pills">
+          <span data-i18n="pills.market">Target market</span>
+          <span data-i18n="pills.visa">Visa risk</span>
+          <span data-i18n="pills.language">Language fit</span>
+          <span data-i18n="pills.priority">Apply priority</span>
+        </div>
       </div>
 
-      <div class="report-status-card">
-        <span>Live demo</span>
-        <strong>AI Match Report</strong>
-        <p>No questionnaire redirect. The report is generated directly on this website.</p>
-      </div>
+      <aside class="report-orb reveal">
+        <div class="orb-card">
+          <div class="orb-toolbar">
+            <i></i><i></i><i></i>
+            <strong data-i18n="preview.title">JapanOffer Report OS</strong>
+            <em data-i18n="preview.live">Live demo</em>
+          </div>
+
+          <div class="score-stage">
+            <div class="score-ring"><strong>86%</strong></div>
+            <div class="score-row">
+              <div>
+                <span data-i18n="preview.fit">Role fit</span>
+                <strong data-i18n="preview.strong">Strong</strong>
+              </div>
+              <div>
+                <span data-i18n="preview.visa">Visa risk</span>
+                <strong data-i18n="preview.medium">Medium</strong>
+              </div>
+              <div>
+                <span data-i18n="preview.priority">Priority</span>
+                <strong data-i18n="preview.high">High</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="floating-note note-a">
+          <span data-i18n="note.market">Market</span>
+          <strong>Japan</strong>
+        </div>
+
+        <div class="floating-note note-b">
+          <span data-i18n="note.route">Route</span>
+          <strong>Legal / AML</strong>
+        </div>
+      </aside>
     </section>
 
-    <section class="report-shell">
-      <aside class="report-tabs" aria-label="Report language">
-        <button class="active" data-report-lang="zh">中文报告</button>
-        <button data-report-lang="en">English report</button>
-        <a href="feedback.html">反馈问卷 / Feedback</a>
-      </aside>
-
-      <section class="report-panel">
-        <div class="report-panel-head">
-          <div>
-            <p class="eyebrow">Step 1</p>
-            <h2>Build your match profile</h2>
+    <section class="workspace">
+      <div class="workspace-card reveal">
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <h2 data-i18n="form.title">Build your match profile</h2>
+              <p data-i18n="form.subtitle">Answer a few focused questions. The report is generated instantly on this page.</p>
+            </div>
+            <span class="badge" data-i18n="form.badge">Step 1</span>
           </div>
-          <span id="reportModeLabel">中文模式</span>
-        </div>
 
-        <form class="report-form" id="autoReportForm">
-          <label>
-            Education / 学历背景
-            <input name="education" required placeholder="Example: LLB student, business graduate, computer science student" />
-          </label>
+          <div class="form-body">
+            <div class="mode-tabs">
+              <button type="button" class="active" data-report-lang="zh">中文报告</button>
+              <button type="button" data-report-lang="en">English report</button>
+              <button type="button" data-report-lang="ja">日本語レポート</button>
+            </div>
 
-          <label>
-            Languages / 语言能力
-            <input name="languages" required placeholder="Example: English, Japanese N1, Mandarin" />
-          </label>
+            <div class="form-grid">
+              <div class="field">
+                <label for="education" data-i18n="form.education">Education background</label>
+                <input id="education" data-i18n-placeholder="form.educationPh" placeholder="Example: LLB student, business graduate" />
+              </div>
 
-          <label>
-            Target market / 目标市场
-            <select name="market">
-              <option>Japan</option>
-              <option>Singapore</option>
-              <option>Hong Kong</option>
-              <option>United Kingdom</option>
-              <option>Japan + Singapore + Hong Kong</option>
-            </select>
-          </label>
+              <div class="field">
+                <label for="languages" data-i18n="form.languages">Languages</label>
+                <input id="languages" data-i18n-placeholder="form.languagesPh" placeholder="Example: English, Japanese, Mandarin" />
+              </div>
 
-          <label>
-            Career direction / 职业方向
-            <select name="career">
-              <option>Legal / Compliance</option>
-              <option>Business Development</option>
-              <option>Technology</option>
-              <option>Marketing</option>
-              <option>Not sure yet</option>
-            </select>
-          </label>
+              <div class="field">
+                <label for="market" data-i18n="form.market">Target market</label>
+                <select id="market">
+                  <option value="Japan">Japan</option>
+                  <option value="United Kingdom">United Kingdom</option>
+                  <option value="Singapore">Singapore</option>
+                  <option value="Hong Kong">Hong Kong</option>
+                  <option value="Canada">Canada</option>
+                  <option value="Australia">Australia</option>
+                  <option value="Remote">Remote</option>
+                </select>
+              </div>
 
-          <label>
-            Work authorization / 签证或工作许可情况
-            <select name="visa">
-              <option>Need sponsorship</option>
-              <option>Already have work rights</option>
-              <option>Student visa / Graduate route</option>
-              <option>Not sure</option>
-            </select>
-          </label>
+              <div class="field">
+                <label for="career" data-i18n="form.career">Career direction</label>
+                <select id="career">
+                  <option value="Legal / Compliance">Legal / Compliance</option>
+                  <option value="AML / KYC">AML / KYC</option>
+                  <option value="Finance / Risk">Finance / Risk</option>
+                  <option value="Business / Operations">Business / Operations</option>
+                  <option value="Web3 / Crypto">Web3 / Crypto</option>
+                  <option value="Data / Product">Data / Product</option>
+                </select>
+              </div>
 
-          <label class="full">
-            Short background / 简短背景
-            <textarea name="background" placeholder="Briefly describe your degree, experience, target country and concerns."></textarea>
-          </label>
+              <div class="field">
+                <label for="visa" data-i18n="form.visa">Work authorisation</label>
+                <select id="visa">
+                  <option value="Need sponsorship">Need sponsorship</option>
+                  <option value="Student visa">Student visa</option>
+                  <option value="Graduate route">Graduate route</option>
+                  <option value="No sponsorship needed">No sponsorship needed</option>
+                  <option value="Not sure">Not sure</option>
+                </select>
+              </div>
 
-          <button class="btn primary" type="submit">Generate report / 生成报告</button>
-        </form>
-      </section>
+              <div class="field">
+                <label for="experience" data-i18n="form.experience">Experience level</label>
+                <select id="experience">
+                  <option value="Entry level">Entry level</option>
+                  <option value="Internship">Internship</option>
+                  <option value="Graduate">Graduate</option>
+                  <option value="Junior">Junior</option>
+                  <option value="Mid level">Mid level</option>
+                </select>
+              </div>
 
-      <section class="report-output" id="reportOutput">
-        <div class="empty-report">
-          <p class="eyebrow">Preview</p>
-          <h2>Your report will appear here.</h2>
-          <p>填写表格后，这里会显示你的 AI 匹配报告。This demo generates a structured report instantly.</p>
-        </div>
-      </section>
+              <div class="field full">
+                <label for="background" data-i18n="form.background">Short background</label>
+                <textarea id="background" data-i18n-placeholder="form.backgroundPh" placeholder="Briefly describe your degree, experience, target job, strengths or concerns."></textarea>
+              </div>
+            </div>
+
+            <button class="generate" type="button" id="generateButton" data-i18n="form.generate">Generate report</button>
+          </div>
+        </section>
+
+        <section class="panel output">
+          <div class="panel-head">
+            <div>
+              <h2 data-i18n="output.title">AI opportunity report</h2>
+              <p data-i18n="output.subtitle">Your structured report will appear here.</p>
+            </div>
+            <button class="copy-btn" type="button" id="copyButton" data-i18n="output.copy">Copy report</button>
+          </div>
+
+          <div class="report-body" id="reportBody">
+            <div class="empty-state">
+              <div>
+                <strong data-i18n="empty.title">Your report is ready to be generated.</strong>
+                <p data-i18n="empty.copy">Fill in the profile fields, choose a report language and click generate.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
     </section>
   </main>
 
-  <footer class="footer">
-    <strong>JapanOffer AI</strong>
-    <span>Cross-border talent matching network.</span>
-  </footer>
+  <script>
+    const LANG_KEY = "japanoffer_lang";
+    let reportLang = localStorage.getItem(LANG_KEY) || "en";
+    let lastReportText = "";
+
+    const I18N = {
+      en: {
+        brand: { subtitle: "Cross-border Talent Network" },
+        top: { search: "Search UK legal, Singapore compliance..." },
+        nav: { jobs: "Jobs", talent: "Talent", companies: "Companies", feedback: "Feedback" },
+        auth: { signIn: "Sign in", signUp: "Sign up" },
+        hero: {
+          kicker: "AI Match Report",
+          title: "Generate your<span>cross-border opportunity report.</span>",
+          copy: "Build a structured international career report in one page: target market, role direction, match score, visa and language risk, application priority and cover letter opening."
+        },
+        pills: { market: "Target market", visa: "Visa risk", language: "Language fit", priority: "Apply priority" },
+        preview: { title: "JapanOffer Report OS", live: "Live demo", fit: "Role fit", strong: "Strong", visa: "Visa risk", medium: "Medium", priority: "Priority", high: "High" },
+        note: { market: "Market", route: "Route" },
+        form: {
+          title: "Build your match profile",
+          subtitle: "Answer a few focused questions. The report is generated instantly on this page.",
+          badge: "Step 1",
+          education: "Education background",
+          educationPh: "Example: LLB student, business graduate",
+          languages: "Languages",
+          languagesPh: "Example: English, Japanese, Mandarin",
+          market: "Target market",
+          career: "Career direction",
+          visa: "Work authorisation",
+          experience: "Experience level",
+          background: "Short background",
+          backgroundPh: "Briefly describe your degree, experience, target job, strengths or concerns.",
+          generate: "Generate report"
+        },
+        output: { title: "AI opportunity report", subtitle: "Your structured report will appear here.", copy: "Copy report" },
+        empty: { title: "Your report is ready to be generated.", copy: "Fill in the profile fields, choose a report language and click generate." },
+        report: {
+          score: "Overall match score",
+          summary: "Strategic summary",
+          summaryText: "Your profile is a practical fit for the selected market and direction. The strongest angle is to connect your education, language ability and cross-border background with a clearly defined role family.",
+          bestRoles: "Best role targets",
+          risks: "Main risks",
+          actions: "Next actions",
+          cover: "Cover letter opening",
+          role1: "Legal Compliance Analyst",
+          role2: "KYC / AML Analyst",
+          role3: "Business Operations Associate",
+          risk1: "Confirm visa sponsorship or graduate-route eligibility before applying.",
+          risk2: "Avoid applying too broadly. Focus on roles where your language and legal or compliance background matter.",
+          risk3: "Add one concrete project or writing sample to prove practical ability.",
+          action1: "Search 20 roles in the target market and shortlist 5 with lower visa friction.",
+          action2: "Rewrite your CV summary around the selected role direction.",
+          action3: "Prepare one tailored cover letter opening for each priority role.",
+          coverText: "I am applying because this role sits at the intersection of international background, legal and compliance thinking, and cross-border communication. My education and language profile allow me to support teams that work across markets and regulatory expectations."
+        },
+        copied: "Report copied."
+      },
+
+      zh: {
+        brand: { subtitle: "跨境人才匹配网络" },
+        top: { search: "搜索英国法律、新加坡合规..." },
+        nav: { jobs: "岗位", talent: "人才", companies: "企业", feedback: "反馈" },
+        auth: { signIn: "登录", signUp: "注册" },
+        hero: {
+          kicker: "AI 匹配报告",
+          title: "生成你的<span>跨境机会报告。</span>",
+          copy: "在一个页面里生成结构化国际求职报告：目标市场、岗位方向、匹配分数、签证和语言风险、申请优先级以及 Cover Letter 开头。"
+        },
+        pills: { market: "目标市场", visa: "签证风险", language: "语言匹配", priority: "申请优先级" },
+        preview: { title: "JapanOffer 报告系统", live: "在线演示", fit: "岗位匹配", strong: "较强", visa: "签证风险", medium: "中等", priority: "优先级", high: "高" },
+        note: { market: "市场", route: "路线" },
+        form: {
+          title: "建立你的匹配档案",
+          subtitle: "回答几个关键问题，系统会在本页面即时生成报告。",
+          badge: "第 1 步",
+          education: "教育背景",
+          educationPh: "例如：LLB 学生，商科毕业生",
+          languages: "语言能力",
+          languagesPh: "例如：英语、日语、中文",
+          market: "目标市场",
+          career: "职业方向",
+          visa: "签证或工作许可情况",
+          experience: "经验级别",
+          background: "简短背景",
+          backgroundPh: "简单描述你的学历、经历、目标岗位、优势或担忧。",
+          generate: "生成报告"
+        },
+        output: { title: "AI 机会报告", subtitle: "你的结构化报告会显示在这里。", copy: "复制报告" },
+        empty: { title: "你的报告已经准备好生成。", copy: "填写档案信息，选择报告语言，然后点击生成。" },
+        report: {
+          score: "综合匹配分数",
+          summary: "战略总结",
+          summaryText: "你的背景与所选市场和方向具有现实匹配度。最强的申请角度，是把你的教育背景、语言能力和跨境经历，与一个清晰的岗位族群连接起来。",
+          bestRoles: "最适合优先申请的岗位",
+          risks: "主要风险",
+          actions: "下一步行动",
+          cover: "Cover Letter 开头建议",
+          role1: "法务合规分析师",
+          role2: "KYC / AML 分析师",
+          role3: "跨境商务运营助理",
+          risk1: "申请前先确认签证担保或毕业生签证路径是否可行。",
+          risk2: "不要过度海投，要集中申请能体现语言、法律或合规背景优势的岗位。",
+          risk3: "补充一个具体项目、文章或作品，用来证明实际能力。",
+          action1: "在目标市场搜索 20 个岗位，并筛选出 5 个签证阻力较低的岗位。",
+          action2: "围绕所选职业方向重写 CV Summary。",
+          action3: "为每个高优先级岗位准备一个定制化 Cover Letter 开头。",
+          coverText: "I am applying because this role sits at the intersection of international background, legal and compliance thinking, and cross-border communication. My education and language profile allow me to support teams that work across markets and regulatory expectations."
+        },
+        copied: "报告已复制。"
+      },
+
+      ja: {
+        brand: { subtitle: "クロスボーダー人材ネットワーク" },
+        top: { search: "英国 法務、シンガポール コンプライアンスを検索..." },
+        nav: { jobs: "求人", talent: "人材", companies: "企業", feedback: "フィードバック" },
+        auth: { signIn: "ログイン", signUp: "登録" },
+        hero: {
+          kicker: "AI マッチングレポート",
+          title: "クロスボーダー向け<span>機会レポートを生成。</span>",
+          copy: "対象市場、職種方向、マッチスコア、ビザと言語リスク、応募優先度、カバーレター冒頭文を一つのページで整理します。"
+        },
+        pills: { market: "対象市場", visa: "ビザリスク", language: "言語マッチ", priority: "応募優先度" },
+        preview: { title: "JapanOffer Report OS", live: "ライブデモ", fit: "職種適性", strong: "高い", visa: "ビザリスク", medium: "中程度", priority: "優先度", high: "高" },
+        note: { market: "市場", route: "ルート" },
+        form: {
+          title: "マッチングプロフィール作成",
+          subtitle: "いくつかの質問に答えるだけで、このページ上で即時にレポートを生成します。",
+          badge: "Step 1",
+          education: "学歴・教育背景",
+          educationPh: "例：LLB 学生、ビジネス系卒業生",
+          languages: "言語能力",
+          languagesPh: "例：英語、日本語、中国語",
+          market: "対象市場",
+          career: "キャリア方向",
+          visa: "就労資格",
+          experience: "経験レベル",
+          background: "簡単な背景",
+          backgroundPh: "学歴、経験、目標職種、強みや不安点を簡単に記入してください。",
+          generate: "レポート生成"
+        },
+        output: { title: "AI 機会レポート", subtitle: "構造化されたレポートがここに表示されます。", copy: "レポートをコピー" },
+        empty: { title: "レポートを生成できます。", copy: "プロフィール項目を入力し、レポート言語を選んで生成してください。" },
+        report: {
+          score: "総合マッチスコア",
+          summary: "戦略サマリー",
+          summaryText: "あなたのプロフィールは、選択した市場と方向性に対して現実的な適合性があります。最も強い打ち出し方は、学歴、語学力、クロスボーダー経験を明確な職種群に結びつけることです。",
+          bestRoles: "優先して狙うべき職種",
+          risks: "主なリスク",
+          actions: "次のアクション",
+          cover: "カバーレター冒頭案",
+          role1: "法務コンプライアンスアナリスト",
+          role2: "KYC / AML アナリスト",
+          role3: "クロスボーダービジネスオペレーション",
+          risk1: "応募前にビザスポンサーまたは就労資格の可能性を確認してください。",
+          risk2: "広く応募しすぎず、語学力や法務・コンプライアンス背景が活きる職種に集中してください。",
+          risk3: "実務力を示す具体的なプロジェクト、文章、成果物を追加してください。",
+          action1: "対象市場で 20 件の求人を検索し、ビザ面の摩擦が低い 5 件を選びます。",
+          action2: "選択した職種方向に合わせて CV Summary を書き直します。",
+          action3: "優先度の高い求人ごとにカバーレター冒頭文を用意します。",
+          coverText: "I am applying because this role sits at the intersection of international background, legal and compliance thinking, and cross-border communication. My education and language profile allow me to support teams that work across markets and regulatory expectations."
+        },
+        copied: "レポートをコピーしました。"
+      }
+    };
+
+    function get(obj, path) {
+      return path.split(".").reduce((acc, key) => acc && acc[key], obj);
+    }
+
+    function getLang() {
+      return localStorage.getItem(LANG_KEY) || "en";
+    }
+
+    function applyLang(lang) {
+      const pack = I18N[lang] || I18N.en;
+      localStorage.setItem(LANG_KEY, lang);
+      document.documentElement.lang = lang === "zh" ? "zh-CN" : lang;
+      document.body.dataset.lang = lang;
+      document.getElementById("languageSelect").value = lang;
+
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const value = get(pack, el.dataset.i18n);
+        if (value !== undefined) el.textContent = value;
+      });
+
+      document.querySelectorAll("[data-i18n-html]").forEach(el => {
+        const value = get(pack, el.dataset.i18nHtml);
+        if (value !== undefined) el.innerHTML = value;
+      });
+
+      document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+        const value = get(pack, el.dataset.i18nPlaceholder);
+        if (value !== undefined) el.placeholder = value;
+      });
+
+      document.title =
+        lang === "zh" ? "AI 匹配报告 | JapanOffer AI" :
+        lang === "ja" ? "AI マッチングレポート | JapanOffer AI" :
+        "AI Match Report | JapanOffer AI";
+
+      if (!document.getElementById("reportBody").querySelector(".empty-state")) {
+        generateReport(false);
+      }
+    }
+
+    function t(path) {
+      const pack = I18N[reportLang] || I18N.en;
+      return get(pack, path) || get(I18N.en, path) || path;
+    }
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function readProfile() {
+      return {
+        education: document.getElementById("education").value.trim() || "LLB / international background",
+        languages: document.getElementById("languages").value.trim() || "English, Japanese, Mandarin",
+        market: document.getElementById("market").value,
+        career: document.getElementById("career").value,
+        visa: document.getElementById("visa").value,
+        experience: document.getElementById("experience").value,
+        background: document.getElementById("background").value.trim()
+      };
+    }
+
+    function calculateScore(profile) {
+      let score = 64;
+      const lang = profile.languages.toLowerCase();
+      const edu = profile.education.toLowerCase();
+      const bg = profile.background.toLowerCase();
+
+      if (lang.includes("japanese") || lang.includes("日") || lang.includes("japan")) score += 8;
+      if (lang.includes("english") || lang.includes("英")) score += 5;
+      if (lang.includes("mandarin") || lang.includes("中文") || lang.includes("chinese")) score += 5;
+      if (edu.includes("law") || edu.includes("llb") || edu.includes("legal") || edu.includes("法")) score += 8;
+      if (profile.career.includes("Compliance") || profile.career.includes("AML") || profile.career.includes("Legal")) score += 5;
+      if (profile.visa.includes("No sponsorship")) score += 8;
+      if (profile.visa.includes("Graduate route")) score += 4;
+      if (profile.visa.includes("Need sponsorship")) score -= 4;
+      if (bg.length > 40) score += 3;
+
+      return Math.max(48, Math.min(score, 92));
+    }
+
+    function risk(profile) {
+      if (profile.visa.includes("No sponsorship")) return reportLang === "zh" ? "低" : reportLang === "ja" ? "低い" : "Low";
+      if (profile.visa.includes("Need sponsorship")) return reportLang === "zh" ? "中高" : reportLang === "ja" ? "中から高" : "Medium high";
+      return reportLang === "zh" ? "中等" : reportLang === "ja" ? "中程度" : "Medium";
+    }
+
+    function priority(score) {
+      if (score >= 82) return reportLang === "zh" ? "高" : reportLang === "ja" ? "高" : "High";
+      if (score >= 68) return reportLang === "zh" ? "中高" : reportLang === "ja" ? "中から高" : "Medium high";
+      return reportLang === "zh" ? "中等" : reportLang === "ja" ? "中程度" : "Medium";
+    }
+
+    function generateReport(scroll = true) {
+      const profile = readProfile();
+      const score = calculateScore(profile);
+      const riskLabel = risk(profile);
+      const priorityLabel = priority(score);
+
+      const langPrefix =
+        reportLang === "zh"
+          ? `基于你的背景：${profile.education}，语言能力：${profile.languages}，目标市场：${profile.market}，方向：${profile.career}。`
+          : reportLang === "ja"
+            ? `あなたの背景：${profile.education}、言語能力：${profile.languages}、対象市場：${profile.market}、方向性：${profile.career}。`
+            : `Based on your background: ${profile.education}, languages: ${profile.languages}, target market: ${profile.market}, direction: ${profile.career}.`;
+
+      const html = `
+        <div class="report-grid">
+          <div class="report-top">
+            <div class="report-score-card">
+              <div class="report-score-ring"><strong>${score}%</strong></div>
+              <p>${escapeHtml(t("report.score"))}</p>
+            </div>
+
+            <div class="report-summary">
+              <h3>${escapeHtml(t("report.summary"))}</h3>
+              <p>${escapeHtml(langPrefix)} ${escapeHtml(t("report.summaryText"))}</p>
+              <div class="chip-row">
+                <span class="chip">${escapeHtml(profile.market)}</span>
+                <span class="chip">${escapeHtml(profile.career)}</span>
+                <span class="chip">${escapeHtml(t("preview.visa"))}: ${escapeHtml(riskLabel)}</span>
+                <span class="chip">${escapeHtml(t("preview.priority"))}: ${escapeHtml(priorityLabel)}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="insights">
+            <div class="insight-card">
+              <h3>${escapeHtml(t("report.bestRoles"))}</h3>
+              <ul>
+                <li>${escapeHtml(t("report.role1"))}</li>
+                <li>${escapeHtml(t("report.role2"))}</li>
+                <li>${escapeHtml(t("report.role3"))}</li>
+              </ul>
+            </div>
+
+            <div class="insight-card">
+              <h3>${escapeHtml(t("report.risks"))}</h3>
+              <ul>
+                <li>${escapeHtml(t("report.risk1"))}</li>
+                <li>${escapeHtml(t("report.risk2"))}</li>
+                <li>${escapeHtml(t("report.risk3"))}</li>
+              </ul>
+            </div>
+
+            <div class="insight-card">
+              <h3>${escapeHtml(t("report.actions"))}</h3>
+              <ul>
+                <li>${escapeHtml(t("report.action1"))}</li>
+                <li>${escapeHtml(t("report.action2"))}</li>
+                <li>${escapeHtml(t("report.action3"))}</li>
+              </ul>
+            </div>
+
+            <div class="insight-card cover-letter">
+              <h3>${escapeHtml(t("report.cover"))}</h3>
+              <p>${escapeHtml(t("report.coverText"))}</p>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("reportBody").innerHTML = html;
+
+      lastReportText = [
+        t("report.score") + ": " + score + "%",
+        t("report.summary") + ": " + langPrefix + " " + t("report.summaryText"),
+        t("report.bestRoles") + ": " + [t("report.role1"), t("report.role2"), t("report.role3")].join(", "),
+        t("report.risks") + ": " + [t("report.risk1"), t("report.risk2"), t("report.risk3")].join(" "),
+        t("report.actions") + ": " + [t("report.action1"), t("report.action2"), t("report.action3")].join(" "),
+        t("report.cover") + ": " + t("report.coverText")
+      ].join("\n\n");
+
+      if (scroll) {
+        document.querySelector(".output").scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+
+    document.getElementById("languageSelect").addEventListener("change", e => {
+      reportLang = e.target.value;
+      document.querySelectorAll("[data-report-lang]").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.reportLang === reportLang);
+      });
+      applyLang(e.target.value);
+    });
+
+    document.querySelectorAll("[data-report-lang]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        reportLang = btn.dataset.reportLang;
+        document.querySelectorAll("[data-report-lang]").forEach(item => item.classList.toggle("active", item === btn));
+        generateReport();
+      });
+    });
+
+    document.getElementById("generateButton").addEventListener("click", () => generateReport());
+
+    document.getElementById("copyButton").addEventListener("click", async () => {
+      if (!lastReportText) generateReport(false);
+      try {
+        await navigator.clipboard.writeText(lastReportText);
+        document.getElementById("copyButton").textContent = I18N[reportLang].copied;
+        setTimeout(() => document.getElementById("copyButton").textContent = I18N[reportLang].output.copy, 1200);
+      } catch (e) {
+        alert(lastReportText);
+      }
+    });
+
+    document.getElementById("topSearchForm").addEventListener("submit", e => {
+      e.preventDefault();
+      const q = e.target.querySelector("input").value || "legal compliance";
+      location.href = "jobs-search.html?q=" + encodeURIComponent(q);
+    });
+
+    function setupReveal() {
+      const nodes = document.querySelectorAll(".reveal");
+      if (!("IntersectionObserver" in window)) {
+        nodes.forEach(n => n.classList.add("show"));
+        return;
+      }
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) entry.target.classList.add("show");
+        });
+      }, { threshold: .12 });
+      nodes.forEach(n => observer.observe(n));
+    }
+
+    applyLang(getLang());
+    reportLang = getLang();
+    document.querySelectorAll("[data-report-lang]").forEach(btn => btn.classList.toggle("active", btn.dataset.reportLang === reportLang));
+    setupReveal();
+  </script>
 
   <script src="auth-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="auth.js"></script>
-  <script src="analytics.js"></script>
-  <script src="platform-actions.js"></script>
-  <script src="report.js"></script>
-  <script src="effects.js"></script>
 </body>
 </html>
