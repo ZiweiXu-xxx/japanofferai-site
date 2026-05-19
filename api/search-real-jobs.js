@@ -437,16 +437,54 @@ function dedupeJobs(jobs) {
 }
 
 function stripHtml(value) {
-  return String(value)
-    .replace(/<style[\s\S]*?<\/style>/gi, " ")
-    .replace(/<script[\s\S]*?<\/script>/gi, " ")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
+  let text = String(value || "");
+
+  // Some public APIs return real HTML. Others return escaped HTML like
+  // &lt;p class="h3"&gt;...&lt;/p&gt;. Decode first, then strip tags.
+  for (let i = 0; i < 3; i++) {
+    text = decodeHtmlEntities(text)
+      .replace(/\\u003c/gi, "<")
+      .replace(/\\u003e/gi, ">")
+      .replace(/\\u0026/gi, "&")
+      .replace(/<style[\s\S]*?<\/style>/gi, " ")
+      .replace(/<script[\s\S]*?<\/script>/gi, " ")
+      .replace(/<br\s*\/?>/gi, ". ")
+      .replace(/<\/(p|div|section|article|h1|h2|h3|h4|li|ul|ol)>/gi, ". ")
+      .replace(/<li[^>]*>/gi, "• ")
+      .replace(/<[^>]+>/g, " ");
+  }
+
+  return text
     .replace(/\s+/g, " ")
+    .replace(/\s+([,.;:!?])/g, "$1")
+    .replace(/([.!?]){2,}/g, "$1")
+    .replace(/\s+\./g, ".")
     .trim();
+}
+
+function decodeHtmlEntities(value) {
+  return String(value || "")
+    .replace(/&nbsp;|&#160;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;|&apos;/gi, "'")
+    .replace(/&rsquo;/gi, "’")
+    .replace(/&lsquo;/gi, "‘")
+    .replace(/&rdquo;/gi, "”")
+    .replace(/&ldquo;/gi, "“")
+    .replace(/&ndash;/gi, "–")
+    .replace(/&mdash;/gi, "—")
+    .replace(/&bull;/gi, "•")
+    .replace(/&#x([0-9a-f]+);/gi, (_, hex) => {
+      const code = parseInt(hex, 16);
+      return Number.isFinite(code) ? String.fromCodePoint(code) : " ";
+    })
+    .replace(/&#(\d+);/g, (_, num) => {
+      const code = parseInt(num, 10);
+      return Number.isFinite(code) ? String.fromCodePoint(code) : " ";
+    });
 }
 
 function truncate(value, max) {
