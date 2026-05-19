@@ -4,7 +4,6 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sign in | JapanOffer AI</title>
-  <meta name="description" content="Sign in to JapanOffer AI member network." />
 
   <style>
     :root {
@@ -12,10 +11,10 @@
       --muted:#667085;
       --blue:#1f57c8;
       --blue2:#5b8dff;
-      --gold:#d7b66f;
+      --red:#b42318;
+      --green:#067647;
       --line:rgba(16,24,40,.10);
       --shadow:0 30px 90px rgba(31,87,200,.16);
-      --shadow2:0 42px 120px rgba(7,17,31,.22);
     }
 
     * { box-sizing:border-box; }
@@ -26,8 +25,8 @@
       font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
       color:var(--ink);
       background:
-        radial-gradient(circle at 8% 4%,rgba(91,141,255,.20),transparent 30%),
-        radial-gradient(circle at 82% 12%,rgba(215,182,111,.18),transparent 30%),
+        radial-gradient(circle at 10% 6%,rgba(91,141,255,.20),transparent 30%),
+        radial-gradient(circle at 84% 12%,rgba(215,182,111,.18),transparent 30%),
         linear-gradient(180deg,#fbfdff 0%,#eef5fc 100%);
       display:grid;
       place-items:center;
@@ -44,19 +43,20 @@
       background-size:44px 44px;
       mask-image:linear-gradient(to bottom,black,transparent 80%);
       pointer-events:none;
-      z-index:-2;
+      z-index:-1;
     }
 
+    a { color:inherit; text-decoration:none; }
+
     .wrap {
-      width:min(1050px,100%);
+      width:min(1040px,100%);
       display:grid;
-      grid-template-columns:1fr 440px;
+      grid-template-columns:1fr 450px;
       gap:22px;
       align-items:stretch;
     }
 
-    .brand-panel,
-    .login-panel {
+    .panel {
       border-radius:36px;
       background:rgba(255,255,255,.78);
       border:1px solid rgba(255,255,255,.82);
@@ -65,8 +65,7 @@
       overflow:hidden;
     }
 
-    .brand-panel {
-      position:relative;
+    .left {
       padding:42px;
       min-height:620px;
       display:flex;
@@ -74,23 +73,10 @@
       justify-content:space-between;
     }
 
-    .brand-panel::before {
-      content:"";
-      position:absolute;
-      inset:auto -80px -90px auto;
-      width:360px;
-      height:360px;
-      border-radius:50%;
-      background:radial-gradient(circle,rgba(31,87,200,.28),transparent 68%);
-      filter:blur(10px);
-    }
-
     .brand {
       display:flex;
       gap:12px;
       align-items:center;
-      position:relative;
-      z-index:1;
     }
 
     .mark {
@@ -118,12 +104,10 @@
     }
 
     h1 {
-      margin:40px 0 0;
+      margin:42px 0 0;
       font-size:clamp(44px,6vw,76px);
       line-height:.9;
       letter-spacing:-.085em;
-      position:relative;
-      z-index:1;
     }
 
     h1 span {
@@ -136,27 +120,22 @@
       font-size:18px;
       line-height:1.7;
       max-width:640px;
-      position:relative;
-      z-index:1;
     }
 
-    .mini-card {
-      position:relative;
-      z-index:1;
+    .black {
       border-radius:26px;
       background:#07111f;
       color:#fff;
       padding:22px;
-      box-shadow:var(--shadow2);
     }
 
-    .mini-card p {
+    .black p {
       color:#cbd5e1;
       line-height:1.6;
       margin:10px 0 0;
     }
 
-    .login-panel {
+    .right {
       padding:26px;
     }
 
@@ -171,7 +150,6 @@
     .top a {
       color:var(--blue);
       font-weight:950;
-      text-decoration:none;
       font-size:14px;
     }
 
@@ -186,13 +164,13 @@
       outline:0;
     }
 
-    .login-panel h2 {
+    h2 {
       margin:0;
       font-size:34px;
       letter-spacing:-.065em;
     }
 
-    .login-panel > p {
+    .copy {
       color:var(--muted);
       line-height:1.6;
       margin:10px 0 22px;
@@ -247,10 +225,11 @@
 
     .message {
       min-height:22px;
-      color:#b42318;
+      color:var(--red);
       font-size:13px;
-      font-weight:800;
-      line-height:1.5;
+      font-weight:850;
+      line-height:1.55;
+      white-space:pre-wrap;
     }
 
     .hint {
@@ -263,19 +242,42 @@
     .hint a {
       color:var(--blue);
       font-weight:950;
-      text-decoration:none;
+    }
+
+    .debug {
+      margin-top:18px;
+      padding:14px;
+      border-radius:18px;
+      background:#f8fafc;
+      border:1px solid var(--line);
+      color:#475467;
+      font-size:12px;
+      line-height:1.6;
+      word-break:break-all;
+    }
+
+    .debug strong {
+      color:#101828;
+    }
+
+    .secondary {
+      background:#111827;
+      margin-top:10px;
+      width:100%;
+      min-height:44px;
+      box-shadow:none;
     }
 
     @media(max-width:900px) {
       .wrap { grid-template-columns:1fr; }
-      .brand-panel { min-height:auto; }
+      .left { min-height:auto; }
     }
   </style>
 </head>
 
 <body>
   <main class="wrap">
-    <section class="brand-panel">
+    <section class="panel left">
       <div>
         <a class="brand" href="index.html">
           <span class="mark">J</span>
@@ -289,13 +291,13 @@
         <p class="lead" data-i18n="lead">After signing in, you will be taken back to the member network automatically.</p>
       </div>
 
-      <div class="mini-card">
-        <strong data-i18n="cardTitle">Member Network</strong>
-        <p data-i18n="cardText">Post updates, connect with other cross-border candidates and chat privately inside JapanOffer AI.</p>
+      <div class="black">
+        <strong data-i18n="debugTitle">Diagnostic login version</strong>
+        <p data-i18n="debugText">This page shows the real Supabase login error, so we can identify whether the issue is email confirmation, password, or wrong Supabase project.</p>
       </div>
     </section>
 
-    <section class="login-panel">
+    <section class="panel right">
       <div class="top">
         <a href="index.html" data-i18n="back">← Back to home</a>
         <select class="lang" id="languageSelect">
@@ -306,7 +308,7 @@
       </div>
 
       <h2 data-i18n="formTitle">Sign in</h2>
-      <p data-i18n="formCopy">Use the email and password you registered with.</p>
+      <p class="copy" data-i18n="formCopy">Use your registered email and password.</p>
 
       <form id="loginForm">
         <label>
@@ -323,10 +325,17 @@
         <div class="message" id="message"></div>
       </form>
 
+      <button class="secondary" type="button" id="checkSessionButton" data-i18n="check">Check current auth status</button>
+
       <p class="hint">
         <span data-i18n="noAccount">No account yet?</span>
-        <a id="signupLink" href="signup.html" data-i18n="create">Create account</a>
+        <a id="signupLink" href="signup.html?redirect=network.html" data-i18n="create">Create account</a>
       </p>
+
+      <div class="debug" id="debugBox">
+        <strong>Supabase:</strong>
+        <span id="projectInfo">Checking config...</span>
+      </div>
     </section>
   </main>
 
@@ -341,26 +350,31 @@
         brand:"Cross-border Talent Network",
         title:"Sign in to your<span>member network.</span>",
         lead:"After signing in, you will be taken back to the member network automatically.",
-        cardTitle:"Member Network",
-        cardText:"Post updates, connect with other cross-border candidates and chat privately inside JapanOffer AI.",
+        debugTitle:"Diagnostic login version",
+        debugText:"This page shows the real Supabase login error, so we can identify whether the issue is email confirmation, password, or wrong Supabase project.",
         back:"← Back to home",
         formTitle:"Sign in",
-        formCopy:"Use the email and password you registered with.",
+        formCopy:"Use your registered email and password.",
         email:"Email",
         password:"Password",
         submit:"Sign in",
         noAccount:"No account yet?",
         create:"Create account",
+        check:"Check current auth status",
         loading:"Signing in...",
         success:"Signed in. Opening member network...",
-        error:"Could not sign in. Please check your email and password."
+        missing:"Supabase config is missing. Check auth-config.js.",
+        sessionYes:"Current status: already signed in.",
+        sessionNo:"Current status: not signed in.",
+        hintConfirmed:"If Supabase says Email not confirmed, the user is still unconfirmed in Authentication → Users.",
+        hintInvalid:"If Supabase says Invalid login credentials, it is either wrong password, no user in this project, or signup/login are pointing to different Supabase projects."
       },
       zh: {
         brand:"跨境人才匹配网络",
         title:"登录你的<span>会员网络。</span>",
         lead:"登录成功后，系统会自动把你带回会员网络页面。",
-        cardTitle:"会员网络",
-        cardText:"在 JapanOffer AI 内发布动态、连接其他跨境求职者，并进行私聊。",
+        debugTitle:"诊断版登录页",
+        debugText:"这个页面会显示 Supabase 返回的真实错误，这样我们能判断到底是邮箱未确认、密码问题，还是连接了错误的 Supabase 项目。",
         back:"← 返回首页",
         formTitle:"登录",
         formCopy:"使用你注册时的邮箱和密码。",
@@ -369,32 +383,48 @@
         submit:"登录",
         noAccount:"还没有账号？",
         create:"创建账号",
+        check:"检查当前登录状态",
         loading:"正在登录...",
         success:"登录成功，正在进入会员网络...",
-        error:"登录失败，请检查邮箱和密码。"
+        missing:"Supabase 配置缺失，请检查 auth-config.js。",
+        sessionYes:"当前状态：已经登录。",
+        sessionNo:"当前状态：未登录。",
+        hintConfirmed:"如果 Supabase 返回 Email not confirmed，说明这个用户在 Authentication → Users 里仍然未确认。",
+        hintInvalid:"如果 Supabase 返回 Invalid login credentials，通常是密码不对、这个项目里没有该用户，或注册页和登录页连接的不是同一个 Supabase 项目。"
       },
       ja: {
         brand:"クロスボーダー人材ネットワーク",
         title:"メンバー<span>ネットワークへログイン。</span>",
         lead:"ログイン後、自動的にメンバーネットワークへ戻ります。",
-        cardTitle:"メンバーネットワーク",
-        cardText:"JapanOffer AI 内で投稿、接続、プライベートチャットができます。",
+        debugTitle:"診断用ログインページ",
+        debugText:"Supabase の実際のエラーを表示し、メール未確認、パスワード、またはプロジェクト違いを確認します。",
         back:"← ホームへ戻る",
         formTitle:"ログイン",
-        formCopy:"登録したメールアドレスとパスワードを使用してください。",
+        formCopy:"登録したメールとパスワードを入力してください。",
         email:"メール",
         password:"パスワード",
         submit:"ログイン",
         noAccount:"アカウントがありませんか？",
         create:"登録",
+        check:"現在のログイン状態を確認",
         loading:"ログイン中...",
         success:"ログインしました。ネットワークを開きます...",
-        error:"ログインできません。メールとパスワードを確認してください。"
+        missing:"Supabase 設定がありません。auth-config.js を確認してください。",
+        sessionYes:"現在の状態：ログイン済み。",
+        sessionNo:"現在の状態：未ログイン。",
+        hintConfirmed:"Email not confirmed の場合、Authentication → Users で未確認のままです。",
+        hintInvalid:"Invalid login credentials の場合、パスワード違い、ユーザー不存在、または Supabase プロジェクト違いの可能性があります。"
       }
     };
 
+    let client = null;
+
     function getLang() {
       return localStorage.getItem(LANG_KEY) || "en";
+    }
+
+    function t(key) {
+      return (COPY[getLang()] || COPY.en)[key] || key;
     }
 
     function applyLang(lang) {
@@ -412,76 +442,84 @@
       });
 
       document.title = lang === "zh" ? "登录 | JapanOffer AI" : lang === "ja" ? "ログイン | JapanOffer AI" : "Sign in | JapanOffer AI";
-      updateSignupLink();
     }
 
     function safeRedirectTarget() {
       const params = new URLSearchParams(location.search);
-      let target = params.get("redirect") || sessionStorage.getItem("japanoffer_after_login") || localStorage.getItem("japanoffer_after_login") || "";
-
-      if (!target && document.referrer) {
-        try {
-          const ref = new URL(document.referrer);
-          if (ref.origin === location.origin && !ref.pathname.endsWith("/login.html")) {
-            target = ref.pathname.replace("/", "") + ref.search;
-          }
-        } catch (e) {}
-      }
-
-      if (!target || target.includes("://") || target.startsWith("//") || target.includes("login.html")) {
-        target = "network.html";
-      }
-
+      let target = params.get("redirect") || sessionStorage.getItem("japanoffer_after_login") || localStorage.getItem("japanoffer_after_login") || "network.html";
+      if (!target || target.includes("://") || target.startsWith("//") || target.includes("login.html")) target = "network.html";
       return target;
     }
 
-    function updateSignupLink() {
-      const target = safeRedirectTarget();
-      document.getElementById("signupLink").href = "signup.html?redirect=" + encodeURIComponent(target);
-    }
-
-    let client = null;
-
-    function getSupabaseClient() {
+    function getSupabaseConfig() {
       const supabaseUrl = typeof SUPABASE_URL !== "undefined" ? SUPABASE_URL : window.SUPABASE_URL;
       const supabaseKey = typeof SUPABASE_ANON_KEY !== "undefined" ? SUPABASE_ANON_KEY : window.SUPABASE_ANON_KEY;
+      return { supabaseUrl, supabaseKey };
+    }
 
-      if (!supabaseUrl || !supabaseKey || !window.supabase) {
-        throw new Error("Missing Supabase config");
-      }
-
+    function getSupabaseClient() {
+      const { supabaseUrl, supabaseKey } = getSupabaseConfig();
+      if (!supabaseUrl || !supabaseKey || !window.supabase) throw new Error(t("missing"));
       return window.supabase.createClient(supabaseUrl, supabaseKey);
+    }
+
+    function showProjectInfo() {
+      const box = document.getElementById("projectInfo");
+      try {
+        const { supabaseUrl, supabaseKey } = getSupabaseConfig();
+        if (!supabaseUrl || !supabaseKey) {
+          box.textContent = t("missing");
+          return;
+        }
+        const host = new URL(supabaseUrl).host;
+        const ref = host.split(".")[0];
+        box.textContent = "Connected project ref: " + ref + " | URL: " + supabaseUrl;
+      } catch (e) {
+        box.textContent = String(e.message || e);
+      }
     }
 
     async function boot() {
       applyLang(getLang());
+      showProjectInfo();
 
       try {
         client = getSupabaseClient();
         const { data } = await client.auth.getSession();
-        const target = safeRedirectTarget();
-
-        if (data && data.session && !location.search.includes("stay=1")) {
-          location.href = target;
+        if (data && data.session) {
+          document.getElementById("message").style.color = "#067647";
+          document.getElementById("message").textContent = t("sessionYes");
         }
       } catch (error) {
-        document.getElementById("message").textContent = "Supabase config is missing.";
+        document.getElementById("message").textContent = error.message || t("missing");
       }
     }
 
     document.getElementById("languageSelect").addEventListener("change", e => applyLang(e.target.value));
 
+    document.getElementById("checkSessionButton").addEventListener("click", async () => {
+      const message = document.getElementById("message");
+      try {
+        if (!client) client = getSupabaseClient();
+        const { data, error } = await client.auth.getSession();
+        if (error) throw error;
+        message.style.color = data.session ? "#067647" : "#b42318";
+        message.textContent = data.session ? t("sessionYes") : t("sessionNo");
+      } catch (error) {
+        message.style.color = "#b42318";
+        message.textContent = "Supabase error: " + (error.message || error);
+      }
+    });
+
     document.getElementById("loginForm").addEventListener("submit", async e => {
       e.preventDefault();
 
-      const lang = getLang();
-      const pack = COPY[lang] || COPY.en;
       const message = document.getElementById("message");
       const button = document.getElementById("submitButton");
-
+      message.style.color = "#b42318";
       message.textContent = "";
       button.disabled = true;
-      button.textContent = pack.loading;
+      button.textContent = t("loading");
 
       try {
         if (!client) client = getSupabaseClient();
@@ -489,25 +527,34 @@
         const email = document.getElementById("email").value.trim();
         const password = document.getElementById("password").value;
 
-        const { error } = await client.auth.signInWithPassword({ email, password });
+        const { data, error } = await client.auth.signInWithPassword({ email, password });
 
-        if (error) throw error;
+        if (error) {
+          let detail = "Supabase error: " + error.message;
+          if ((error.message || "").toLowerCase().includes("email not confirmed")) {
+            detail += "\n\n" + t("hintConfirmed");
+          }
+          if ((error.message || "").toLowerCase().includes("invalid login credentials")) {
+            detail += "\n\n" + t("hintInvalid");
+          }
+          throw new Error(detail);
+        }
 
         const target = safeRedirectTarget();
         localStorage.setItem("japanoffer_after_login", target);
         sessionStorage.setItem("japanoffer_after_login", target);
 
         message.style.color = "#067647";
-        message.textContent = pack.success;
+        message.textContent = t("success");
 
         setTimeout(() => {
           location.href = target;
-        }, 450);
+        }, 500);
       } catch (error) {
         message.style.color = "#b42318";
-        message.textContent = pack.error;
+        message.textContent = error.message || String(error);
         button.disabled = false;
-        button.textContent = pack.submit;
+        button.textContent = t("submit");
       }
     });
 
