@@ -1,17 +1,12 @@
-// JapanOffer AI homepage focus bridge + final CTA hard repair
+// JapanOffer AI homepage-focus.js
+// Final clean patch: remove the unnecessary blank white CTA in the final black section,
+// and keep homepage search connected to jobs-search.html.
 
 (function () {
   const LANG_KEY = "japanoffer_lang";
 
   function getLang() {
     return (localStorage.getItem(LANG_KEY) || document.documentElement.lang || "en").toLowerCase();
-  }
-
-  function signupText() {
-    const lang = getLang();
-    if (lang.startsWith("zh")) return "注册";
-    if (lang.startsWith("ja")) return "登録";
-    return "Sign up";
   }
 
   function defaultSearch() {
@@ -22,43 +17,40 @@
   }
 
   function injectStyle() {
-    if (document.getElementById("jo-home-hard-fix-style")) return;
+    if (document.getElementById("jo-final-blank-cta-remove")) return;
 
     const style = document.createElement("style");
-    style.id = "jo-home-hard-fix-style";
+    style.id = "jo-final-blank-cta-remove";
     style.textContent = `
-      a[href*="signup"].btn,
-      .final a[href*="signup"],
-      .final-card a[href*="signup"],
-      .center-actions a[href*="signup"],
-      .hero-actions.center-actions a[href*="signup"] {
-        display: inline-flex !important;
-        align-items: center !important;
+      /* Hide the second white CTA in the final black section.
+         It was the Sign up/Register button, but the top nav already has account entry,
+         so keeping only the blue job-search CTA is cleaner and avoids the blank pill. */
+      .final-card .hero-actions a:nth-child(2),
+      .final-card .center-actions a:nth-child(2),
+      .final-card .actions a:nth-child(2),
+      .final .hero-actions a:nth-child(2),
+      .final .center-actions a:nth-child(2),
+      .final .actions a:nth-child(2),
+      section.final-cta .hero-actions a:nth-child(2),
+      section.final-cta .center-actions a:nth-child(2),
+      section.final-cta .actions a:nth-child(2) {
+        display: none !important;
+      }
+
+      .final-card .hero-actions,
+      .final-card .center-actions,
+      .final-card .actions,
+      .final .hero-actions,
+      .final .center-actions,
+      .final .actions,
+      section.final-cta .hero-actions,
+      section.final-cta .center-actions,
+      section.final-cta .actions {
         justify-content: center !important;
-        min-width: 118px !important;
-        min-height: 46px !important;
-        padding: 13px 18px !important;
-        border-radius: 999px !important;
-        background: #ffffff !important;
-        color: #101828 !important;
-        font-weight: 900 !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-        text-shadow: none !important;
       }
     `;
 
     document.head.appendChild(style);
-  }
-
-  function repairSignupCta() {
-    document.querySelectorAll('a[href*="signup"]').forEach((el) => {
-      if (!el.closest(".auth-links")) {
-        el.textContent = signupText();
-      } else if (!el.textContent.trim()) {
-        el.textContent = signupText();
-      }
-    });
   }
 
   function buildHeroQuery() {
@@ -135,14 +127,12 @@
 
   function boot() {
     injectStyle();
-    repairSignupCta();
     connectSearch();
 
-    setTimeout(repairSignupCta, 100);
-    setTimeout(repairSignupCta, 500);
-    setTimeout(repairSignupCta, 1200);
-
-    window.addEventListener("japanoffer:languagechange", repairSignupCta);
+    // Re-inject in case another script mutates the page after load.
+    setTimeout(injectStyle, 300);
+    setTimeout(injectStyle, 1000);
+    window.addEventListener("japanoffer:languagechange", injectStyle);
   }
 
   if (document.readyState === "loading") {
