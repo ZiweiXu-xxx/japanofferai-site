@@ -1011,8 +1011,8 @@
         </select>
 
         <div class="auth-links" id="authLinks">
-          <a href="login.html" data-i18n="auth.signIn">Sign in</a>
-          <a class="primary" href="signup.html" data-i18n="auth.signUp">Sign up</a>
+          <a href="login.html?redirect=network.html" data-i18n="auth.signIn">Sign in</a>
+          <a class="primary" href="signup.html?redirect=network.html" data-i18n="auth.signUp">Sign up</a>
         </div>
       </div>
     </div>
@@ -1028,7 +1028,7 @@
         </p>
 
         <div class="hero-actions">
-          <a class="btn primary" href="signup.html" data-i18n="hero.join">Join the network</a>
+          <a class="btn primary" href="signup.html?redirect=network.html" data-i18n="hero.join">Join the network</a>
           <button class="btn" type="button" id="openProfileButton" data-i18n="hero.editProfile">Edit profile</button>
         </div>
       </div>
@@ -1068,8 +1068,8 @@
       <h2 data-i18n="locked.title">Sign in to enter the member network.</h2>
       <p data-i18n="locked.copy">Posts, member profiles and chat are only available to registered users.</p>
       <div class="hero-actions" style="justify-content:center">
-        <a class="btn primary" href="login.html" data-i18n="auth.signIn">Sign in</a>
-        <a class="btn" href="signup.html" data-i18n="auth.signUp">Sign up</a>
+        <a class="btn primary" href="login.html?redirect=network.html" data-i18n="auth.signIn">Sign in</a>
+        <a class="btn" href="signup.html?redirect=network.html" data-i18n="auth.signUp">Sign up</a>
       </div>
     </section>
 
@@ -1395,7 +1395,10 @@
 
     async function initSupabase() {
       try {
-        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabaseUrl = typeof SUPABASE_URL !== "undefined" ? SUPABASE_URL : window.SUPABASE_URL;
+        const supabaseKey = typeof SUPABASE_ANON_KEY !== "undefined" ? SUPABASE_ANON_KEY : window.SUPABASE_ANON_KEY;
+        if (!supabaseUrl || !supabaseKey) throw new Error("Missing Supabase config");
+        supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
       } catch (error) {
         document.getElementById("lockedState").classList.add("show");
         return;

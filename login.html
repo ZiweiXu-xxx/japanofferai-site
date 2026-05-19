@@ -4,67 +4,514 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sign in | JapanOffer AI</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta name="description" content="Sign in to JapanOffer AI member network." />
+
+  <style>
+    :root {
+      --ink:#07111f;
+      --muted:#667085;
+      --blue:#1f57c8;
+      --blue2:#5b8dff;
+      --gold:#d7b66f;
+      --line:rgba(16,24,40,.10);
+      --shadow:0 30px 90px rgba(31,87,200,.16);
+      --shadow2:0 42px 120px rgba(7,17,31,.22);
+    }
+
+    * { box-sizing:border-box; }
+
+    body {
+      margin:0;
+      min-height:100vh;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 8% 4%,rgba(91,141,255,.20),transparent 30%),
+        radial-gradient(circle at 82% 12%,rgba(215,182,111,.18),transparent 30%),
+        linear-gradient(180deg,#fbfdff 0%,#eef5fc 100%);
+      display:grid;
+      place-items:center;
+      padding:24px;
+    }
+
+    body::before {
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image:
+        linear-gradient(rgba(31,87,200,.045) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(31,87,200,.045) 1px,transparent 1px);
+      background-size:44px 44px;
+      mask-image:linear-gradient(to bottom,black,transparent 80%);
+      pointer-events:none;
+      z-index:-2;
+    }
+
+    .wrap {
+      width:min(1050px,100%);
+      display:grid;
+      grid-template-columns:1fr 440px;
+      gap:22px;
+      align-items:stretch;
+    }
+
+    .brand-panel,
+    .login-panel {
+      border-radius:36px;
+      background:rgba(255,255,255,.78);
+      border:1px solid rgba(255,255,255,.82);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(22px);
+      overflow:hidden;
+    }
+
+    .brand-panel {
+      position:relative;
+      padding:42px;
+      min-height:620px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+
+    .brand-panel::before {
+      content:"";
+      position:absolute;
+      inset:auto -80px -90px auto;
+      width:360px;
+      height:360px;
+      border-radius:50%;
+      background:radial-gradient(circle,rgba(31,87,200,.28),transparent 68%);
+      filter:blur(10px);
+    }
+
+    .brand {
+      display:flex;
+      gap:12px;
+      align-items:center;
+      position:relative;
+      z-index:1;
+    }
+
+    .mark {
+      width:48px;
+      height:48px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,var(--blue),var(--blue2));
+      color:#fff;
+      font-weight:950;
+      box-shadow:0 18px 40px rgba(31,87,200,.28);
+    }
+
+    .brand strong {
+      display:block;
+      font-size:17px;
+      letter-spacing:-.045em;
+    }
+
+    .brand small {
+      color:var(--muted);
+      font-weight:750;
+      font-size:12px;
+    }
+
+    h1 {
+      margin:40px 0 0;
+      font-size:clamp(44px,6vw,76px);
+      line-height:.9;
+      letter-spacing:-.085em;
+      position:relative;
+      z-index:1;
+    }
+
+    h1 span {
+      display:block;
+      color:var(--blue);
+    }
+
+    .lead {
+      color:#44546a;
+      font-size:18px;
+      line-height:1.7;
+      max-width:640px;
+      position:relative;
+      z-index:1;
+    }
+
+    .mini-card {
+      position:relative;
+      z-index:1;
+      border-radius:26px;
+      background:#07111f;
+      color:#fff;
+      padding:22px;
+      box-shadow:var(--shadow2);
+    }
+
+    .mini-card p {
+      color:#cbd5e1;
+      line-height:1.6;
+      margin:10px 0 0;
+    }
+
+    .login-panel {
+      padding:26px;
+    }
+
+    .top {
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+      margin-bottom:24px;
+    }
+
+    .top a {
+      color:var(--blue);
+      font-weight:950;
+      text-decoration:none;
+      font-size:14px;
+    }
+
+    .lang {
+      height:36px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:#fff;
+      color:#27364a;
+      font-weight:900;
+      padding:0 10px;
+      outline:0;
+    }
+
+    .login-panel h2 {
+      margin:0;
+      font-size:34px;
+      letter-spacing:-.065em;
+    }
+
+    .login-panel > p {
+      color:var(--muted);
+      line-height:1.6;
+      margin:10px 0 22px;
+    }
+
+    form {
+      display:grid;
+      gap:14px;
+    }
+
+    label {
+      display:grid;
+      gap:7px;
+      color:#344054;
+      font-size:13px;
+      font-weight:900;
+    }
+
+    input {
+      width:100%;
+      height:52px;
+      border:1px solid var(--line);
+      border-radius:17px;
+      background:#fff;
+      color:var(--ink);
+      outline:0;
+      padding:0 14px;
+      font-size:15px;
+      font-weight:650;
+    }
+
+    input:focus {
+      border-color:rgba(31,87,200,.48);
+      box-shadow:0 0 0 4px rgba(31,87,200,.10);
+    }
+
+    button {
+      border:0;
+      min-height:54px;
+      border-radius:18px;
+      background:linear-gradient(135deg,var(--blue),var(--blue2));
+      color:#fff;
+      font-weight:950;
+      cursor:pointer;
+      box-shadow:0 20px 48px rgba(31,87,200,.26);
+    }
+
+    button:disabled {
+      opacity:.7;
+      cursor:not-allowed;
+    }
+
+    .message {
+      min-height:22px;
+      color:#b42318;
+      font-size:13px;
+      font-weight:800;
+      line-height:1.5;
+    }
+
+    .hint {
+      margin-top:18px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    .hint a {
+      color:var(--blue);
+      font-weight:950;
+      text-decoration:none;
+    }
+
+    @media(max-width:900px) {
+      .wrap { grid-template-columns:1fr; }
+      .brand-panel { min-height:auto; }
+    }
+  </style>
 </head>
-<body class="auth-body">
-  <header class="topbar">
-    <a class="brand" href="index.html">
-      <span class="brand-mark">J</span>
-      <span class="brand-copy">
-        <strong>JapanOffer AI</strong>
-        <small>Cross-border Talent Network</small>
-      </span>
-    </a>
-    <div class="top-search"><span>⌕</span><input value="Search roles, talent or companies" /></div>
-    <nav class="nav">
-      <a href="jobs.html">Jobs</a>
-      <a href="talent.html">Talent</a>
-      <a href="companies.html">Companies</a>
-      <a href="employers.html">Employers</a>
-    </nav>
-    <div class="auth-links"><a class="signin-link" href="login.html">Sign in</a><a class="nav-cta" href="signup.html">Sign up</a></div>
-  </header>
 
-  <main>
-    <section class="auth-page">
-      <div class="auth-copy">
-        <p class="eyebrow">Sign in</p>
-        <h1>Welcome back to your cross-border match profile.</h1>
-        <p>
-          Sign in to continue your job matching journey, compare roles and build your JapanOffer AI profile.
-        </p>
+<body>
+  <main class="wrap">
+    <section class="brand-panel">
+      <div>
+        <a class="brand" href="index.html">
+          <span class="mark">J</span>
+          <span>
+            <strong>JapanOffer AI</strong>
+            <small data-i18n="brand">Cross-border Talent Network</small>
+          </span>
+        </a>
+
+        <h1 data-i18n-html="title">Sign in to your<span>member network.</span></h1>
+        <p class="lead" data-i18n="lead">After signing in, you will be taken back to the member network automatically.</p>
       </div>
 
-      <div class="auth-panel">
-        <h2>Sign in</h2>
-        <p class="auth-muted">Use your email and password.</p>
-
-        <form class="auth-form" data-login-form>
-          <label>Email
-            <input name="email" type="email" required placeholder="you@example.com" />
-          </label>
-
-          <label>Password
-            <input name="password" type="password" required placeholder="Your password" />
-          </label>
-
-          <button class="btn primary" type="submit">Sign in</button>
-        </form>
-
-        <div data-auth-message class="auth-message info">Create an account first if you are new.</div>
-
-        <p class="auth-switch">
-          New to JapanOffer AI? <a href="signup.html">Create account</a>
-        </p>
+      <div class="mini-card">
+        <strong data-i18n="cardTitle">Member Network</strong>
+        <p data-i18n="cardText">Post updates, connect with other cross-border candidates and chat privately inside JapanOffer AI.</p>
       </div>
+    </section>
+
+    <section class="login-panel">
+      <div class="top">
+        <a href="index.html" data-i18n="back">← Back to home</a>
+        <select class="lang" id="languageSelect">
+          <option value="en">EN</option>
+          <option value="zh">中文</option>
+          <option value="ja">日本語</option>
+        </select>
+      </div>
+
+      <h2 data-i18n="formTitle">Sign in</h2>
+      <p data-i18n="formCopy">Use the email and password you registered with.</p>
+
+      <form id="loginForm">
+        <label>
+          <span data-i18n="email">Email</span>
+          <input id="email" type="email" autocomplete="email" required placeholder="you@example.com" />
+        </label>
+
+        <label>
+          <span data-i18n="password">Password</span>
+          <input id="password" type="password" autocomplete="current-password" required placeholder="At least 6 characters" />
+        </label>
+
+        <button id="submitButton" type="submit" data-i18n="submit">Sign in</button>
+        <div class="message" id="message"></div>
+      </form>
+
+      <p class="hint">
+        <span data-i18n="noAccount">No account yet?</span>
+        <a id="signupLink" href="signup.html" data-i18n="create">Create account</a>
+      </p>
     </section>
   </main>
 
   <script src="auth-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="auth.js"></script>
-  <script src="analytics.js"></script>
-  <script src="effects.js"></script>
-  <script src="platform-actions.js"></script>
+
+  <script>
+    const LANG_KEY = "japanoffer_lang";
+
+    const COPY = {
+      en: {
+        brand:"Cross-border Talent Network",
+        title:"Sign in to your<span>member network.</span>",
+        lead:"After signing in, you will be taken back to the member network automatically.",
+        cardTitle:"Member Network",
+        cardText:"Post updates, connect with other cross-border candidates and chat privately inside JapanOffer AI.",
+        back:"← Back to home",
+        formTitle:"Sign in",
+        formCopy:"Use the email and password you registered with.",
+        email:"Email",
+        password:"Password",
+        submit:"Sign in",
+        noAccount:"No account yet?",
+        create:"Create account",
+        loading:"Signing in...",
+        success:"Signed in. Opening member network...",
+        error:"Could not sign in. Please check your email and password."
+      },
+      zh: {
+        brand:"跨境人才匹配网络",
+        title:"登录你的<span>会员网络。</span>",
+        lead:"登录成功后，系统会自动把你带回会员网络页面。",
+        cardTitle:"会员网络",
+        cardText:"在 JapanOffer AI 内发布动态、连接其他跨境求职者，并进行私聊。",
+        back:"← 返回首页",
+        formTitle:"登录",
+        formCopy:"使用你注册时的邮箱和密码。",
+        email:"邮箱",
+        password:"密码",
+        submit:"登录",
+        noAccount:"还没有账号？",
+        create:"创建账号",
+        loading:"正在登录...",
+        success:"登录成功，正在进入会员网络...",
+        error:"登录失败，请检查邮箱和密码。"
+      },
+      ja: {
+        brand:"クロスボーダー人材ネットワーク",
+        title:"メンバー<span>ネットワークへログイン。</span>",
+        lead:"ログイン後、自動的にメンバーネットワークへ戻ります。",
+        cardTitle:"メンバーネットワーク",
+        cardText:"JapanOffer AI 内で投稿、接続、プライベートチャットができます。",
+        back:"← ホームへ戻る",
+        formTitle:"ログイン",
+        formCopy:"登録したメールアドレスとパスワードを使用してください。",
+        email:"メール",
+        password:"パスワード",
+        submit:"ログイン",
+        noAccount:"アカウントがありませんか？",
+        create:"登録",
+        loading:"ログイン中...",
+        success:"ログインしました。ネットワークを開きます...",
+        error:"ログインできません。メールとパスワードを確認してください。"
+      }
+    };
+
+    function getLang() {
+      return localStorage.getItem(LANG_KEY) || "en";
+    }
+
+    function applyLang(lang) {
+      localStorage.setItem(LANG_KEY, lang);
+      document.documentElement.lang = lang === "zh" ? "zh-CN" : lang;
+      document.getElementById("languageSelect").value = lang;
+      const pack = COPY[lang] || COPY.en;
+
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        el.textContent = pack[el.dataset.i18n] || el.textContent;
+      });
+
+      document.querySelectorAll("[data-i18n-html]").forEach(el => {
+        el.innerHTML = pack[el.dataset.i18nHtml] || el.innerHTML;
+      });
+
+      document.title = lang === "zh" ? "登录 | JapanOffer AI" : lang === "ja" ? "ログイン | JapanOffer AI" : "Sign in | JapanOffer AI";
+      updateSignupLink();
+    }
+
+    function safeRedirectTarget() {
+      const params = new URLSearchParams(location.search);
+      let target = params.get("redirect") || sessionStorage.getItem("japanoffer_after_login") || localStorage.getItem("japanoffer_after_login") || "";
+
+      if (!target && document.referrer) {
+        try {
+          const ref = new URL(document.referrer);
+          if (ref.origin === location.origin && !ref.pathname.endsWith("/login.html")) {
+            target = ref.pathname.replace("/", "") + ref.search;
+          }
+        } catch (e) {}
+      }
+
+      if (!target || target.includes("://") || target.startsWith("//") || target.includes("login.html")) {
+        target = "network.html";
+      }
+
+      return target;
+    }
+
+    function updateSignupLink() {
+      const target = safeRedirectTarget();
+      document.getElementById("signupLink").href = "signup.html?redirect=" + encodeURIComponent(target);
+    }
+
+    let client = null;
+
+    function getSupabaseClient() {
+      const supabaseUrl = typeof SUPABASE_URL !== "undefined" ? SUPABASE_URL : window.SUPABASE_URL;
+      const supabaseKey = typeof SUPABASE_ANON_KEY !== "undefined" ? SUPABASE_ANON_KEY : window.SUPABASE_ANON_KEY;
+
+      if (!supabaseUrl || !supabaseKey || !window.supabase) {
+        throw new Error("Missing Supabase config");
+      }
+
+      return window.supabase.createClient(supabaseUrl, supabaseKey);
+    }
+
+    async function boot() {
+      applyLang(getLang());
+
+      try {
+        client = getSupabaseClient();
+        const { data } = await client.auth.getSession();
+        const target = safeRedirectTarget();
+
+        if (data && data.session && !location.search.includes("stay=1")) {
+          location.href = target;
+        }
+      } catch (error) {
+        document.getElementById("message").textContent = "Supabase config is missing.";
+      }
+    }
+
+    document.getElementById("languageSelect").addEventListener("change", e => applyLang(e.target.value));
+
+    document.getElementById("loginForm").addEventListener("submit", async e => {
+      e.preventDefault();
+
+      const lang = getLang();
+      const pack = COPY[lang] || COPY.en;
+      const message = document.getElementById("message");
+      const button = document.getElementById("submitButton");
+
+      message.textContent = "";
+      button.disabled = true;
+      button.textContent = pack.loading;
+
+      try {
+        if (!client) client = getSupabaseClient();
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+
+        const { error } = await client.auth.signInWithPassword({ email, password });
+
+        if (error) throw error;
+
+        const target = safeRedirectTarget();
+        localStorage.setItem("japanoffer_after_login", target);
+        sessionStorage.setItem("japanoffer_after_login", target);
+
+        message.style.color = "#067647";
+        message.textContent = pack.success;
+
+        setTimeout(() => {
+          location.href = target;
+        }, 450);
+      } catch (error) {
+        message.style.color = "#b42318";
+        message.textContent = pack.error;
+        button.disabled = false;
+        button.textContent = pack.submit;
+      }
+    });
+
+    boot();
+  </script>
 </body>
 </html>
