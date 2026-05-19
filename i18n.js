@@ -1,5 +1,5 @@
-// JapanOffer AI professional i18n system
-// data-i18n based. No text sniffing. No mixed-language homepage.
+// JapanOffer AI i18n stable patch
+// One source of truth for homepage language + CTA repair.
 
 (function () {
   const STORAGE_KEY = "japanoffer_lang";
@@ -9,22 +9,11 @@
     en: {
       meta: {
         title: "JapanOffer AI | Cross-border Talent Matching Network",
-        description:
-          "JapanOffer AI is a cross-border talent matching network that helps international job seekers and employers find better matches through AI match scores."
+        description: "JapanOffer AI helps international job seekers and employers find better matches through AI match scores."
       },
       brand: { subtitle: "Cross-border Talent Network" },
-      nav: {
-        network: "Network",
-        jobs: "Jobs",
-        report: "Report",
-        companies: "Companies",
-        feedback: "Feedback"
-      },
-      auth: {
-        signIn: "Sign in",
-        signUp: "Sign up",
-        logOut: "Log out"
-      },
+      nav: { network: "Network", jobs: "Jobs", report: "Report", companies: "Companies", feedback: "Feedback" },
+      auth: { signIn: "Sign in", signUp: "Sign up", logOut: "Log out" },
       search: {
         topPlaceholder: "Search UK legal, Singapore compliance, Japan legal, Hong Kong AML...",
         findJobs: "Find jobs",
@@ -39,22 +28,11 @@
       hero: {
         eyebrow: "AI-powered cross-border hiring network",
         title: "Search less.<span>Match smarter.</span>",
-        lead:
-          "JapanOffer AI helps cross-border talent and overseas employers find better matches through structured role fit, language fit, visa risk and career direction scoring.",
-        sublead:
-          "Search fewer roles. Apply with more precision. JapanOffer AI helps you decide which cross-border opportunities are truly worth applying for first."
+        lead: "JapanOffer AI helps cross-border talent and overseas employers find better matches through structured role fit, language fit, visa risk and career direction scoring.",
+        sublead: "Search fewer roles. Apply with more precision. JapanOffer AI helps you decide which cross-border opportunities are truly worth applying for first."
       },
-      tags: {
-        entry: "Entry-level",
-        visa: "Visa-aware",
-        language: "English + Japanese",
-        legal: "Legal / Compliance"
-      },
-      actions: {
-        zhReport: "Chinese AI Match Report",
-        enReport: "English Auto Report",
-        feedback: "Feedback"
-      },
+      tags: { entry: "Entry-level", visa: "Visa-aware", language: "English + Japanese", legal: "Legal / Compliance" },
+      actions: { zhReport: "Chinese AI Match Report", enReport: "English Auto Report", feedback: "Feedback" },
       preview: {
         title: "Talent Match OS",
         live: "Live beta",
@@ -75,11 +53,7 @@
         candidateMeta: "LLB · English / Japanese / Mandarin · Compliance target",
         viewProfile: "View profile"
       },
-      proof: {
-        matchScore: "Match score",
-        visaRisk: "Visa risk",
-        medium: "Medium"
-      },
+      proof: { matchScore: "Match score", visaRisk: "Visa risk", medium: "Medium" },
       marquee: {
         roleMatching: "Role matching",
         visaScoring: "Visa-aware scoring",
@@ -91,8 +65,7 @@
       network: {
         kicker: "From search to match",
         title: "The job board era shows information. The next era decides fit.",
-        copy:
-          "LinkedIn and job boards are built around search. JapanOffer AI adds a cross-border matching layer: candidate profile, role requirements, market rules and risk signals become one practical score.",
+        copy: "LinkedIn and job boards are built around search. JapanOffer AI adds a cross-border matching layer: candidate profile, role requirements, market rules and risk signals become one practical score.",
         link: "Generate your match report →"
       },
       steps: {
@@ -106,8 +79,7 @@
       report: {
         kicker: "AI Match Report",
         title: "A product flow that feels real, not a survey redirect.",
-        copy:
-          "The core user action is now real job search and report generation. Feedback research is separated into its own page, so users feel they are using a product, not filling an external questionnaire.",
+        copy: "The core user action is now real job search and report generation. Feedback research is separated into its own page, so users feel they are using a product, not filling an external questionnaire.",
         generate: "Generate report",
         feedback: "Give feedback",
         overall: "Overall match",
@@ -135,8 +107,7 @@
       final: {
         kicker: "Beta access",
         title: "Build your cross-border match profile.",
-        copy:
-          "Start with one real job search. Then compare roles, save opportunities and move toward a structured international career route.",
+        copy: "Start with one real job search. Then compare roles, save opportunities and move toward a structured international career route.",
         searchJobs: "Search jobs"
       },
       footer: { copy: "Cross-border talent matching network." }
@@ -145,22 +116,11 @@
     zh: {
       meta: {
         title: "JapanOffer AI | 跨境人才匹配网络",
-        description:
-          "JapanOffer AI 是一个跨境人才匹配平台，帮助国际求职者和海外雇主通过 AI 匹配分数找到更合适的机会。"
+        description: "JapanOffer AI 帮助国际求职者和海外雇主通过 AI 匹配分数找到更合适的机会。"
       },
       brand: { subtitle: "跨境人才匹配网络" },
-      nav: {
-        network: "网络",
-        jobs: "岗位",
-        report: "报告",
-        companies: "企业",
-        feedback: "反馈"
-      },
-      auth: {
-        signIn: "登录",
-        signUp: "注册",
-        logOut: "退出登录"
-      },
+      nav: { network: "网络", jobs: "岗位", report: "报告", companies: "企业", feedback: "反馈" },
+      auth: { signIn: "登录", signUp: "注册", logOut: "退出登录" },
       search: {
         topPlaceholder: "搜索英国法律、新加坡合规、日本法务、香港 AML...",
         findJobs: "找岗位",
@@ -175,22 +135,11 @@
       hero: {
         eyebrow: "AI 驱动的跨境求职与招聘网络",
         title: "少一点海投。<span>多一点精准匹配。</span>",
-        lead:
-          "JapanOffer AI 通过岗位匹配、语言匹配、签证风险和职业方向评分，帮助跨境求职者和海外雇主找到更合适的机会。",
-        sublead:
-          "它不只是告诉你有哪些岗位，而是帮你判断哪些跨境机会真正值得优先申请。"
+        lead: "JapanOffer AI 通过岗位匹配、语言匹配、签证风险和职业方向评分，帮助跨境求职者和海外雇主找到更合适的机会。",
+        sublead: "它不只是告诉你有哪些岗位，而是帮你判断哪些跨境机会真正值得优先申请。"
       },
-      tags: {
-        entry: "入门级",
-        visa: "签证友好",
-        language: "英语 + 日语",
-        legal: "法律 / 合规"
-      },
-      actions: {
-        zhReport: "中文版 AI 匹配报告",
-        enReport: "英文自动报告",
-        feedback: "反馈"
-      },
+      tags: { entry: "入门级", visa: "签证友好", language: "英语 + 日语", legal: "法律 / 合规" },
+      actions: { zhReport: "中文版 AI 匹配报告", enReport: "英文自动报告", feedback: "反馈" },
       preview: {
         title: "人才匹配系统",
         live: "测试版",
@@ -211,11 +160,7 @@
         candidateMeta: "LLB · 英语 / 日语 / 中文 · 合规方向",
         viewProfile: "查看档案"
       },
-      proof: {
-        matchScore: "匹配分数",
-        visaRisk: "签证风险",
-        medium: "中等"
-      },
+      proof: { matchScore: "匹配分数", visaRisk: "签证风险", medium: "中等" },
       marquee: {
         roleMatching: "岗位匹配",
         visaScoring: "签证风险评分",
@@ -227,8 +172,7 @@
       network: {
         kicker: "从搜索到匹配",
         title: "传统招聘网站只展示信息，下一代平台应该判断适配度。",
-        copy:
-          "LinkedIn 和传统招聘网站围绕搜索展开。JapanOffer AI 增加了跨境匹配层，把候选人背景、岗位要求、市场规则和风险信号整合成一个可执行的匹配分数。",
+        copy: "LinkedIn 和传统招聘网站围绕搜索展开。JapanOffer AI 增加了跨境匹配层，把候选人背景、岗位要求、市场规则和风险信号整合成一个可执行的匹配分数。",
         link: "生成你的匹配报告 →"
       },
       steps: {
@@ -242,8 +186,7 @@
       report: {
         kicker: "AI 匹配报告",
         title: "产品流程应该像真实工具，而不是问卷跳转。",
-        copy:
-          "核心动作现在是真实岗位搜索和报告生成。反馈研究被分离到独立页面，所以用户会感觉自己在使用一个产品，而不是填写外部问卷。",
+        copy: "核心动作现在是真实岗位搜索和报告生成。反馈研究被分离到独立页面，所以用户会感觉自己在使用一个产品，而不是填写外部问卷。",
         generate: "生成报告",
         feedback: "提交反馈",
         overall: "综合匹配",
@@ -271,8 +214,7 @@
       final: {
         kicker: "测试版入口",
         title: "建立你的跨境求职匹配档案。",
-        copy:
-          "从一次真实岗位搜索开始，比较岗位、保存机会，并逐步形成清晰的国际职业路径。",
+        copy: "从一次真实岗位搜索开始，比较岗位、保存机会，并逐步形成清晰的国际职业路径。",
         searchJobs: "搜索岗位"
       },
       footer: { copy: "跨境人才匹配网络。" }
@@ -281,22 +223,11 @@
     ja: {
       meta: {
         title: "JapanOffer AI | クロスボーダー人材マッチングネットワーク",
-        description:
-          "JapanOffer AI は、AI マッチスコアを通じて国際的な求職者と海外企業のより良いマッチングを支援するクロスボーダー人材プラットフォームです。"
+        description: "JapanOffer AI は、AI マッチスコアを通じて国際的な求職者と海外企業のより良いマッチングを支援します。"
       },
       brand: { subtitle: "クロスボーダー人材ネットワーク" },
-      nav: {
-        network: "ネットワーク",
-        jobs: "求人",
-        report: "レポート",
-        companies: "企業",
-        feedback: "フィードバック"
-      },
-      auth: {
-        signIn: "ログイン",
-        signUp: "登録",
-        logOut: "ログアウト"
-      },
+      nav: { network: "ネットワーク", jobs: "求人", report: "レポート", companies: "企業", feedback: "フィードバック" },
+      auth: { signIn: "ログイン", signUp: "登録", logOut: "ログアウト" },
       search: {
         topPlaceholder: "英国 法務、シンガポール コンプライアンス、日本 法務、香港 AML を検索...",
         findJobs: "求人を探す",
@@ -311,22 +242,11 @@
       hero: {
         eyebrow: "AI を活用したクロスボーダー採用ネットワーク",
         title: "探す時間を減らし、<span>より精度の高いマッチングへ。</span>",
-        lead:
-          "JapanOffer AI は、職種適性、語学力、ビザリスク、キャリア方向性をもとに、海外人材と企業のより良いマッチングを支援します。",
-        sublead:
-          "求人を並べるだけでなく、どの海外求人に優先して応募すべきかを判断できるようにします。"
+        lead: "JapanOffer AI は、職種適性、語学力、ビザリスク、キャリア方向性をもとに、海外人材と企業のより良いマッチングを支援します。",
+        sublead: "求人を並べるだけでなく、どの海外求人に優先して応募すべきかを判断できるようにします。"
       },
-      tags: {
-        entry: "未経験・初級",
-        visa: "ビザ考慮",
-        language: "英語 + 日本語",
-        legal: "法務 / コンプライアンス"
-      },
-      actions: {
-        zhReport: "中国語版 AI マッチングレポート",
-        enReport: "英語版レポート",
-        feedback: "フィードバック"
-      },
+      tags: { entry: "未経験・初級", visa: "ビザ考慮", language: "英語 + 日本語", legal: "法務 / コンプライアンス" },
+      actions: { zhReport: "中国語版 AI マッチングレポート", enReport: "英語版レポート", feedback: "フィードバック" },
       preview: {
         title: "Talent Match OS",
         live: "ベータ版",
@@ -347,11 +267,7 @@
         candidateMeta: "LLB · 英語 / 日本語 / 中国語 · コンプライアンス志向",
         viewProfile: "プロフィールを見る"
       },
-      proof: {
-        matchScore: "マッチスコア",
-        visaRisk: "ビザリスク",
-        medium: "中程度"
-      },
+      proof: { matchScore: "マッチスコア", visaRisk: "ビザリスク", medium: "中程度" },
       marquee: {
         roleMatching: "求人マッチング",
         visaScoring: "ビザリスク評価",
@@ -363,8 +279,7 @@
       network: {
         kicker: "検索からマッチングへ",
         title: "求人サイトは情報を見せるだけ。次の時代は適性を判断する。",
-        copy:
-          "LinkedIn や従来の求人サイトは検索を中心に設計されています。JapanOffer AI は、候補者プロフィール、求人要件、市場ルール、リスクシグナルを一つの実用的なスコアに統合します。",
+        copy: "LinkedIn や従来の求人サイトは検索を中心に設計されています。JapanOffer AI は、候補者プロフィール、求人要件、市場ルール、リスクシグナルを一つの実用的なスコアに統合します。",
         link: "マッチングレポートを生成 →"
       },
       steps: {
@@ -378,8 +293,7 @@
       report: {
         kicker: "AI マッチングレポート",
         title: "アンケートではなく、本物のプロダクト体験へ。",
-        copy:
-          "主要なユーザー行動は、実際の求人検索とレポート生成です。フィードバック調査は独立ページに分け、ユーザーが外部フォームではなくプロダクトを使っていると感じられる設計にしています。",
+        copy: "主要なユーザー行動は、実際の求人検索とレポート生成です。フィードバック調査は独立ページに分け、ユーザーが外部フォームではなくプロダクトを使っていると感じられる設計にしています。",
         generate: "レポート生成",
         feedback: "フィードバック",
         overall: "総合マッチ",
@@ -407,18 +321,11 @@
       final: {
         kicker: "ベータ版アクセス",
         title: "クロスボーダー向けのマッチングプロフィールを作成。",
-        copy:
-          "まずは実際の求人検索から始め、求人を比較し、機会を保存しながら国際的なキャリアルートを整理できます。",
+        copy: "まずは実際の求人検索から始め、求人を比較し、機会を保存しながら国際的なキャリアルートを整理できます。",
         searchJobs: "求人を検索"
       },
       footer: { copy: "クロスボーダー人材マッチングネットワーク。" }
     }
-  };
-
-  const languageNames = {
-    en: "EN",
-    zh: "中文",
-    ja: "日本語"
   };
 
   function getNestedValue(obj, path) {
@@ -439,7 +346,6 @@
 
   function setLanguage(lang) {
     if (!translations[lang]) return;
-
     localStorage.setItem(STORAGE_KEY, lang);
     applyTranslations(lang);
   }
@@ -448,6 +354,7 @@
     const t = translations[lang] || translations[DEFAULT_LANG];
 
     document.documentElement.lang = lang === "zh" ? "zh-CN" : lang;
+    document.body.dataset.lang = lang;
 
     document.querySelectorAll("[data-i18n]").forEach((el) => {
       const value = getNestedValue(t, el.dataset.i18n);
@@ -485,57 +392,46 @@
     const select = document.getElementById("languageSelect");
     if (select) select.value = lang;
 
-    document.body.dataset.lang = lang;
+    repairCtas(t);
+    injectCtaStyle();
 
-    const event = new CustomEvent("japanoffer:languagechange", {
-      detail: { lang, label: languageNames[lang] }
-    });
-
-    window.dispatchEvent(event);
+    window.dispatchEvent(new CustomEvent("japanoffer:languagechange", { detail: { lang } }));
   }
 
-  function injectStyles() {
-    if (document.getElementById("japanoffer-i18n-style")) return;
+  function repairCtas(t) {
+    document.querySelectorAll('a[href*="signup"], button[data-signup]').forEach((el) => {
+      if (el.closest(".auth-links")) {
+        if (!el.textContent.trim() || ["Sign up", "注册", "登録"].includes(el.textContent.trim())) {
+          el.textContent = t.auth.signUp;
+        }
+        return;
+      }
 
+      if (!el.textContent.trim() || ["Sign up", "注册", "登録", "Create account", "创建账户", "アカウント作成"].includes(el.textContent.trim())) {
+        el.textContent = t.auth.signUp;
+      }
+    });
+  }
+
+  function injectCtaStyle() {
+    if (document.getElementById("jo-i18n-cta-fix")) return;
     const style = document.createElement("style");
-    style.id = "japanoffer-i18n-style";
+    style.id = "jo-i18n-cta-fix";
     style.textContent = `
-      .locale-picker {
-        flex: 0 0 auto;
-        display: inline-flex;
-        align-items: center;
-        margin-left: 8px;
+      .final-card a[href*="signup"],
+      .final a[href*="signup"],
+      .center-actions a[href*="signup"],
+      .hero-actions.center-actions a[href*="signup"] {
+        color: #101828 !important;
+        background: #ffffff !important;
+        min-width: 118px !important;
+        text-shadow: none !important;
+        opacity: 1 !important;
       }
-
-      .locale-picker select {
-        width: 82px;
-        height: 34px;
-        border-radius: 999px;
-        border: 1px solid rgba(16, 24, 40, 0.12);
-        background: rgba(255, 255, 255, 0.86);
-        color: #344054;
-        font-size: 12px;
-        font-weight: 850;
-        padding: 0 8px;
-        outline: none;
-        cursor: pointer;
-        box-shadow: 0 10px 25px rgba(16, 24, 40, 0.08);
-      }
-
-      body[data-lang="ja"] .hero-lede,
-      body[data-lang="zh"] .hero-lede {
-        letter-spacing: normal;
-      }
-
-      @media (max-width: 920px) {
-        .locale-picker {
-          order: 9;
-          margin-left: 0;
-        }
-
-        .locale-picker select {
-          width: 78px;
-        }
+      .final-card a[href*="signup"] *,
+      .final a[href*="signup"] *,
+      .center-actions a[href*="signup"] * {
+        color: #101828 !important;
       }
     `;
     document.head.appendChild(style);
@@ -543,7 +439,6 @@
 
   function setupLanguageSelector() {
     const select = document.getElementById("languageSelect");
-
     if (!select) return;
 
     select.addEventListener("change", () => {
@@ -567,8 +462,8 @@
       });
     }
 
-    const heroButton = document.querySelector(".premium-search-button");
-    const heroInputs = document.querySelectorAll(".premium-search-row input");
+    const heroButton = document.querySelector(".premium-search-button, .search-btn");
+    const heroInputs = document.querySelectorAll(".premium-search-row input, .search-row input");
 
     function buildHeroQuery() {
       const values = Array.from(heroInputs).map((input) => input.value.trim()).filter(Boolean);
@@ -591,7 +486,7 @@
       });
     });
 
-    document.querySelectorAll(".quick-tags [data-query]").forEach((tag) => {
+    document.querySelectorAll(".quick-tags [data-query], .premium-tags [data-query], .tags [data-query]").forEach((tag) => {
       tag.style.cursor = "pointer";
       tag.addEventListener("click", () => goToSearch(tag.dataset.query));
     });
@@ -599,8 +494,7 @@
 
   function setupAuthLanguageSync() {
     const observer = new MutationObserver(() => {
-      const lang = getLanguage();
-      const t = translations[lang] || translations[DEFAULT_LANG];
+      const t = translations[getLanguage()] || translations[DEFAULT_LANG];
 
       document.querySelectorAll("a, button").forEach((el) => {
         const text = (el.textContent || "").trim();
@@ -609,17 +503,20 @@
         if (["Sign up", "注册", "登録"].includes(text)) el.textContent = t.auth.signUp;
         if (["Log out", "退出登录", "ログアウト"].includes(text)) el.textContent = t.auth.logOut;
       });
+
+      repairCtas(t);
     });
 
     observer.observe(document.body, { childList: true, subtree: true });
   }
 
   function boot() {
-    injectStyles();
     setupLanguageSelector();
     setupSearchBridge();
     setupAuthLanguageSync();
     applyTranslations(getLanguage());
+    setTimeout(() => applyTranslations(getLanguage()), 300);
+    setTimeout(() => applyTranslations(getLanguage()), 1000);
   }
 
   if (document.readyState === "loading") {

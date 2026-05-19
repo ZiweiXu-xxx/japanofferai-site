@@ -13,9 +13,8 @@
       --line: rgba(16, 24, 40, 0.1);
       --blue: #1f57c8;
       --blue-2: #2f6df6;
-      --gold: #d6b36a;
-      --card: rgba(255, 255, 255, 0.82);
-      --shadow: 0 26px 80px rgba(31, 87, 200, 0.14);
+      --card: rgba(255,255,255,.82);
+      --shadow: 0 26px 80px rgba(31,87,200,.14);
     }
 
     * { box-sizing: border-box; }
@@ -26,8 +25,8 @@
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
       color: var(--ink);
       background:
-        radial-gradient(circle at top left, rgba(47, 109, 246, 0.15), transparent 34%),
-        radial-gradient(circle at 78% 10%, rgba(214, 179, 106, 0.13), transparent 30%),
+        radial-gradient(circle at top left, rgba(47,109,246,.15), transparent 34%),
+        radial-gradient(circle at 78% 10%, rgba(214,179,106,.13), transparent 30%),
         linear-gradient(180deg, #f8fbff 0%, #f1f5fb 55%, #edf3fa 100%);
       overflow-x: hidden;
     }
@@ -39,8 +38,8 @@
       margin: 0 auto;
       padding: 18px 0;
       display: grid;
-      grid-template-columns: 215px 1fr auto auto;
-      gap: 18px;
+      grid-template-columns: 215px 1fr auto auto auto;
+      gap: 16px;
       align-items: center;
       position: sticky;
       top: 0;
@@ -63,7 +62,7 @@
       place-items: center;
       color: #fff;
       font-weight: 950;
-      box-shadow: 0 18px 38px rgba(31, 87, 200, 0.22);
+      box-shadow: 0 18px 38px rgba(31,87,200,.22);
     }
 
     .brand strong {
@@ -121,6 +120,19 @@
 
     .nav a:hover { color: var(--blue); }
 
+    .lang select {
+      height: 34px;
+      width: 84px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.86);
+      color: #344054;
+      padding: 0 8px;
+      font-size: 12px;
+      font-weight: 850;
+      outline: none;
+    }
+
     .auth-links {
       display: flex;
       align-items: center;
@@ -136,7 +148,7 @@
       border-radius: 999px;
       background: var(--blue);
       color: white;
-      box-shadow: 0 15px 35px rgba(31, 87, 200, 0.24);
+      box-shadow: 0 15px 35px rgba(31,87,200,.24);
     }
 
     .signup-shell {
@@ -236,7 +248,7 @@
       position: absolute;
       inset: 0 0 auto;
       height: 6px;
-      background: linear-gradient(90deg, var(--blue), #6aa2ff, var(--gold));
+      background: linear-gradient(90deg, var(--blue), #6aa2ff, #d6b36a);
     }
 
     .card-head {
@@ -386,21 +398,10 @@
     }
 
     @media (max-width: 620px) {
-      h1 {
-        font-size: 46px;
-      }
-
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .signup-card {
-        padding: 22px;
-      }
-
-      .card-head {
-        flex-direction: column;
-      }
+      h1 { font-size: 46px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .signup-card { padding: 22px; }
+      .card-head { flex-direction: column; }
     }
   </style>
 </head>
@@ -411,33 +412,41 @@
       <span class="brand-mark">J</span>
       <span>
         <strong>JapanOffer AI</strong>
-        <small>Cross-border Talent Network</small>
+        <small data-i18n="brand.subtitle">Cross-border Talent Network</small>
       </span>
     </a>
 
-    <form class="top-search" onsubmit="event.preventDefault(); location.href='jobs-search.html?q=' + encodeURIComponent(this.q.value || 'legal compliance')">
+    <form class="top-search" id="topSearchForm">
       <span>⌕</span>
-      <input name="q" placeholder="Search roles, talent or companies" />
+      <input name="q" data-i18n-placeholder="top.placeholder" placeholder="Search roles, talent or companies" />
     </form>
 
     <nav class="nav">
-      <a href="jobs-search.html">Jobs</a>
-      <a href="talent.html">Talent</a>
-      <a href="companies.html">Companies</a>
-      <a href="employers.html">Employers</a>
+      <a href="jobs-search.html" data-i18n="nav.jobs">Jobs</a>
+      <a href="talent.html" data-i18n="nav.talent">Talent</a>
+      <a href="companies.html" data-i18n="nav.companies">Companies</a>
+      <a href="employers.html" data-i18n="nav.employers">Employers</a>
     </nav>
 
+    <div class="lang">
+      <select id="languageSelect" aria-label="Language">
+        <option value="en">EN</option>
+        <option value="zh">中文</option>
+        <option value="ja">日本語</option>
+      </select>
+    </div>
+
     <div class="auth-links">
-      <a href="login.html">Sign in</a>
-      <a href="signup.html">Sign up</a>
+      <a href="login.html" data-i18n="auth.signIn">Sign in</a>
+      <a href="signup.html" data-i18n="auth.signUp">Sign up</a>
     </div>
   </header>
 
   <main class="signup-shell">
     <section>
-      <p class="eyebrow">Create account</p>
-      <h1>Build your <span>cross-border profile.</span></h1>
-      <p class="lede">
+      <p class="eyebrow" data-i18n="hero.kicker">Create account</p>
+      <h1 data-i18n-html="hero.title">Build your <span>cross-border profile.</span></h1>
+      <p class="lede" data-i18n="hero.copy">
         Create one profile for saved roles, AI match reports and future employer matching. Start as a job seeker, employer or university-side beta user.
       </p>
 
@@ -445,24 +454,24 @@
         <div class="benefit">
           <span>01</span>
           <div>
-            <strong>Save roles and reports</strong>
-            <p>Keep your best job opportunities and match reports in one place.</p>
+            <strong data-i18n="benefits.oneTitle">Save roles and reports</strong>
+            <p data-i18n="benefits.oneCopy">Keep your best job opportunities and match reports in one place.</p>
           </div>
         </div>
 
         <div class="benefit">
           <span>02</span>
           <div>
-            <strong>Build a stronger profile</strong>
-            <p>Use education, languages, target countries and career direction as matching signals.</p>
+            <strong data-i18n="benefits.twoTitle">Build a stronger profile</strong>
+            <p data-i18n="benefits.twoCopy">Use education, languages, target countries and career direction as matching signals.</p>
           </div>
         </div>
 
         <div class="benefit">
           <span>03</span>
           <div>
-            <strong>Prepare for employer matching</strong>
-            <p>Turn the landing page into a real cross-border talent network.</p>
+            <strong data-i18n="benefits.threeTitle">Prepare for employer matching</strong>
+            <p data-i18n="benefits.threeCopy">Turn the landing page into a real cross-border talent network.</p>
           </div>
         </div>
       </div>
@@ -471,51 +480,222 @@
     <section class="signup-card">
       <div class="card-head">
         <div>
-          <h2>Sign up</h2>
-          <p>Start with email and password. You may need to confirm your email after signing up.</p>
+          <h2 data-i18n="form.title">Sign up</h2>
+          <p data-i18n="form.subtitle">Start with email and password. You may need to confirm your email after signing up.</p>
         </div>
-        <span class="badge">Beta access</span>
+        <span class="badge" data-i18n="form.badge">Beta access</span>
       </div>
 
       <form data-signup-form>
         <div class="form-grid">
           <div class="field">
-            <label for="fullName">Full name</label>
-            <input id="fullName" name="fullName" autocomplete="name" placeholder="Your name" required />
+            <label for="fullName" data-i18n="form.fullName">Full name</label>
+            <input id="fullName" name="fullName" autocomplete="name" data-i18n-placeholder="form.fullNamePlaceholder" placeholder="Your name" required />
           </div>
 
           <div class="field">
-            <label for="role">Account type</label>
+            <label for="role" data-i18n="form.accountType">Account type</label>
             <select id="role" name="role">
-              <option value="job_seeker">Job seeker</option>
-              <option value="employer">Employer</option>
-              <option value="university_agency">University / Agency</option>
+              <option value="job_seeker" data-i18n-option="form.jobSeeker">Job seeker</option>
+              <option value="employer" data-i18n-option="form.employer">Employer</option>
+              <option value="university_agency" data-i18n-option="form.university">University / Agency</option>
             </select>
           </div>
 
           <div class="field full">
-            <label for="email">Email</label>
+            <label for="email" data-i18n="form.email">Email</label>
             <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
           </div>
 
           <div class="field full">
-            <label for="password">Password</label>
-            <input id="password" name="password" type="password" autocomplete="new-password" placeholder="At least 6 characters" minlength="6" required />
+            <label for="password" data-i18n="form.password">Password</label>
+            <input id="password" name="password" type="password" autocomplete="new-password" data-i18n-placeholder="form.passwordPlaceholder" placeholder="At least 6 characters" minlength="6" required />
           </div>
         </div>
 
         <div class="submit-row">
-          <button type="submit">Create account</button>
-          <a class="secondary-link" href="login.html">Already have an account? Sign in</a>
+          <button type="submit" data-i18n="form.create">Create account</button>
+          <a class="secondary-link" href="login.html" data-i18n="form.haveAccount">Already have an account? Sign in</a>
         </div>
 
         <div data-auth-message class="auth-message"></div>
-        <p class="fine-print">
+        <p class="fine-print" data-i18n="form.finePrint">
           By creating an account, you are joining the JapanOffer AI beta. Profile and saved-role features will be expanded gradually.
         </p>
       </form>
     </section>
   </main>
+
+  <script>
+    const LANG_KEY = "japanoffer_lang";
+
+    const SIGNUP_I18N = {
+      en: {
+        brand: { subtitle: "Cross-border Talent Network" },
+        top: { placeholder: "Search roles, talent or companies" },
+        nav: { jobs: "Jobs", talent: "Talent", companies: "Companies", employers: "Employers" },
+        auth: { signIn: "Sign in", signUp: "Sign up" },
+        hero: {
+          kicker: "Create account",
+          title: "Build your <span>cross-border profile.</span>",
+          copy: "Create one profile for saved roles, AI match reports and future employer matching. Start as a job seeker, employer or university-side beta user."
+        },
+        benefits: {
+          oneTitle: "Save roles and reports",
+          oneCopy: "Keep your best job opportunities and match reports in one place.",
+          twoTitle: "Build a stronger profile",
+          twoCopy: "Use education, languages, target countries and career direction as matching signals.",
+          threeTitle: "Prepare for employer matching",
+          threeCopy: "Turn the landing page into a real cross-border talent network."
+        },
+        form: {
+          title: "Sign up",
+          subtitle: "Start with email and password. You may need to confirm your email after signing up.",
+          badge: "Beta access",
+          fullName: "Full name",
+          fullNamePlaceholder: "Your name",
+          accountType: "Account type",
+          jobSeeker: "Job seeker",
+          employer: "Employer",
+          university: "University / Agency",
+          email: "Email",
+          password: "Password",
+          passwordPlaceholder: "At least 6 characters",
+          create: "Create account",
+          haveAccount: "Already have an account? Sign in",
+          finePrint: "By creating an account, you are joining the JapanOffer AI beta. Profile and saved-role features will be expanded gradually."
+        }
+      },
+
+      zh: {
+        brand: { subtitle: "跨境人才匹配网络" },
+        top: { placeholder: "搜索岗位、人才或企业" },
+        nav: { jobs: "岗位", talent: "人才", companies: "企业", employers: "雇主" },
+        auth: { signIn: "登录", signUp: "注册" },
+        hero: {
+          kicker: "创建账户",
+          title: "建立你的<span>跨境求职档案。</span>",
+          copy: "用一个档案保存岗位、AI 匹配报告和未来的雇主匹配信息。你可以作为求职者、雇主或学校/机构用户加入测试版。"
+        },
+        benefits: {
+          oneTitle: "保存岗位和报告",
+          oneCopy: "把最值得投递的岗位和匹配报告集中保存在一个地方。",
+          twoTitle: "建立更强的个人档案",
+          twoCopy: "把教育背景、语言能力、目标国家和职业方向作为匹配信号。",
+          threeTitle: "为雇主匹配做准备",
+          threeCopy: "把网站从展示页升级成真正的跨境人才网络。"
+        },
+        form: {
+          title: "注册",
+          subtitle: "使用邮箱和密码开始。注册后可能需要先确认邮箱。",
+          badge: "测试版入口",
+          fullName: "姓名",
+          fullNamePlaceholder: "你的姓名",
+          accountType: "账户类型",
+          jobSeeker: "求职者",
+          employer: "雇主",
+          university: "学校 / 机构",
+          email: "邮箱",
+          password: "密码",
+          passwordPlaceholder: "至少 6 位字符",
+          create: "创建账户",
+          haveAccount: "已有账户？去登录",
+          finePrint: "创建账户即表示你加入 JapanOffer AI 测试版。个人档案和岗位保存功能会逐步扩展。"
+        }
+      },
+
+      ja: {
+        brand: { subtitle: "クロスボーダー人材ネットワーク" },
+        top: { placeholder: "求人、人材、企業を検索" },
+        nav: { jobs: "求人", talent: "人材", companies: "企業", employers: "雇主" },
+        auth: { signIn: "ログイン", signUp: "登録" },
+        hero: {
+          kicker: "アカウント作成",
+          title: "クロスボーダー向け<span>プロフィールを作成。</span>",
+          copy: "保存した求人、AI マッチングレポート、将来の企業マッチングを一つのプロフィールで管理できます。求職者、企業、大学・機関ユーザーとしてベータ版に参加できます。"
+        },
+        benefits: {
+          oneTitle: "求人とレポートを保存",
+          oneCopy: "重要な求人機会とマッチングレポートを一か所にまとめられます。",
+          twoTitle: "より強いプロフィールを構築",
+          twoCopy: "学歴、語学力、対象国、キャリア方向性をマッチングシグナルとして活用します。",
+          threeTitle: "企業マッチングに備える",
+          threeCopy: "ランディングページから本格的なクロスボーダー人材ネットワークへ発展させます。"
+        },
+        form: {
+          title: "登録",
+          subtitle: "メールアドレスとパスワードで開始できます。登録後、メール確認が必要な場合があります。",
+          badge: "ベータ版アクセス",
+          fullName: "氏名",
+          fullNamePlaceholder: "あなたの名前",
+          accountType: "アカウント種別",
+          jobSeeker: "求職者",
+          employer: "雇主",
+          university: "大学 / 機関",
+          email: "メール",
+          password: "パスワード",
+          passwordPlaceholder: "6文字以上",
+          create: "アカウント作成",
+          haveAccount: "すでにアカウントをお持ちですか？ログイン",
+          finePrint: "アカウント作成により、JapanOffer AI ベータ版に参加します。プロフィールと保存求人機能は段階的に拡張されます。"
+        }
+      }
+    };
+
+    function get(obj, path) {
+      return path.split(".").reduce((acc, key) => acc && acc[key], obj);
+    }
+
+    function getLang() {
+      return localStorage.getItem(LANG_KEY) || "en";
+    }
+
+    function applyLang(lang) {
+      const pack = SIGNUP_I18N[lang] || SIGNUP_I18N.en;
+      localStorage.setItem(LANG_KEY, lang);
+      document.documentElement.lang = lang === "zh" ? "zh-CN" : lang;
+      document.body.dataset.lang = lang;
+      document.getElementById("languageSelect").value = lang;
+
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const value = get(pack, el.dataset.i18n);
+        if (value !== undefined) el.textContent = value;
+      });
+
+      document.querySelectorAll("[data-i18n-html]").forEach((el) => {
+        const value = get(pack, el.dataset.i18nHtml);
+        if (value !== undefined) el.innerHTML = value;
+      });
+
+      document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+        const value = get(pack, el.dataset.i18nPlaceholder);
+        if (value !== undefined) el.placeholder = value;
+      });
+
+      document.querySelectorAll("[data-i18n-option]").forEach((el) => {
+        const value = get(pack, el.dataset.i18nOption);
+        if (value !== undefined) el.textContent = value;
+      });
+
+      document.title =
+        lang === "zh" ? "注册 | JapanOffer AI" :
+        lang === "ja" ? "登録 | JapanOffer AI" :
+        "Sign up | JapanOffer AI";
+    }
+
+    document.getElementById("languageSelect").addEventListener("change", (event) => {
+      applyLang(event.target.value);
+    });
+
+    document.getElementById("topSearchForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const input = event.target.querySelector("input");
+      const q = input && input.value ? input.value.trim() : "legal compliance";
+      location.href = "jobs-search.html?q=" + encodeURIComponent(q);
+    });
+
+    applyLang(getLang());
+  </script>
 
   <script src="auth-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

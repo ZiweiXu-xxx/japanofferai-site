@@ -1,91 +1,62 @@
-// JapanOffer AI homepage focus bridge + UI repair
-// Safe patch: fixes blank CTA text/color and keeps homepage search connected to jobs-search.html.
+// JapanOffer AI homepage focus bridge + final CTA hard repair
 
 (function () {
   const LANG_KEY = "japanoffer_lang";
 
-  function lang() {
-    return localStorage.getItem(LANG_KEY) || document.documentElement.lang || "en";
+  function getLang() {
+    return (localStorage.getItem(LANG_KEY) || document.documentElement.lang || "en").toLowerCase();
   }
 
-  function copy(key) {
-    const l = lang().toLowerCase();
-    const table = {
-      signUp: {
-        en: "Sign up",
-        zh: "注册",
-        ja: "登録"
-      },
-      searchDefault: {
-        en: "legal compliance",
-        zh: "法律 合规",
-        ja: "法務 コンプライアンス"
-      }
-    };
+  function signupText() {
+    const lang = getLang();
+    if (lang.startsWith("zh")) return "注册";
+    if (lang.startsWith("ja")) return "登録";
+    return "Sign up";
+  }
 
-    if (l.startsWith("zh")) return table[key].zh;
-    if (l.startsWith("ja")) return table[key].ja;
-    return table[key].en;
+  function defaultSearch() {
+    const lang = getLang();
+    if (lang.startsWith("zh")) return "法律 合规";
+    if (lang.startsWith("ja")) return "法務 コンプライアンス";
+    return "legal compliance";
   }
 
   function injectStyle() {
-    if (document.getElementById("jo-home-ui-fix-style")) return;
+    if (document.getElementById("jo-home-hard-fix-style")) return;
 
     const style = document.createElement("style");
-    style.id = "jo-home-ui-fix-style";
+    style.id = "jo-home-hard-fix-style";
     style.textContent = `
-      .final .btn,
-      .final-card .btn,
-      .center-actions .btn,
-      .hero-actions.center-actions .btn {
-        color: #101828 !important;
-      }
-
-      .final .btn.primary,
-      .final-card .btn.primary,
-      .center-actions .btn.primary,
-      .hero-actions.center-actions .btn.primary {
-        color: #ffffff !important;
-      }
-
-      .final .btn.secondary,
-      .final-card .btn.secondary,
-      .center-actions .btn.secondary,
-      .hero-actions.center-actions .btn.secondary,
-      .final .btn:not(.primary),
-      .final-card .btn:not(.primary),
-      .center-actions .btn:not(.primary),
-      .hero-actions.center-actions .btn:not(.primary) {
-        min-width: 112px;
-        color: #101828 !important;
+      a[href*="signup"].btn,
+      .final a[href*="signup"],
+      .final-card a[href*="signup"],
+      .center-actions a[href*="signup"],
+      .hero-actions.center-actions a[href*="signup"] {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        min-width: 118px !important;
+        min-height: 46px !important;
+        padding: 13px 18px !important;
+        border-radius: 999px !important;
         background: #ffffff !important;
-      }
-
-      .auth-shell,
-      .signup-shell {
-        min-height: calc(100vh - 80px);
+        color: #101828 !important;
+        font-weight: 900 !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        text-shadow: none !important;
       }
     `;
 
     document.head.appendChild(style);
   }
 
-  function repairBlankButtons() {
-    const candidates = document.querySelectorAll(
-      'a[href*="signup"], button[data-signup], .final a, .final-card a, .center-actions a, .hero-actions.center-actions a'
-    );
-
-    candidates.forEach((el) => {
-      const text = (el.textContent || "").trim();
-      const href = (el.getAttribute("href") || "").toLowerCase();
-
-      if (!text && href.includes("signup")) {
-        el.textContent = copy("signUp");
-      }
-
-      if (href.includes("signup") && (text === "Sign up" || text === "注册" || text === "登録")) {
-        // keep visible language-aware copy
-        el.textContent = copy("signUp");
+  function repairSignupCta() {
+    document.querySelectorAll('a[href*="signup"]').forEach((el) => {
+      if (!el.closest(".auth-links")) {
+        el.textContent = signupText();
+      } else if (!el.textContent.trim()) {
+        el.textContent = signupText();
       }
     });
   }
@@ -104,11 +75,11 @@
     const role = roleInput && roleInput.value ? roleInput.value.trim() : "";
     const market = marketInput && marketInput.value ? marketInput.value.trim() : "";
 
-    return [market, role].filter(Boolean).join(" ").trim() || copy("searchDefault");
+    return [market, role].filter(Boolean).join(" ").trim() || defaultSearch();
   }
 
   function goToJobSearch(query) {
-    const q = String(query || "").trim() || buildHeroQuery() || copy("searchDefault");
+    const q = String(query || "").trim() || buildHeroQuery() || defaultSearch();
     window.location.href = "jobs-search.html?q=" + encodeURIComponent(q);
   }
 
@@ -116,7 +87,14 @@
     document.querySelectorAll("a").forEach((link) => {
       const text = String(link.textContent || "").trim().toLowerCase();
 
-      if (text === "jobs" || text === "岗位" || text === "求人" || text === "find jobs" || text === "找岗位" || text === "求人を探す") {
+      if (
+        text === "jobs" ||
+        text === "岗位" ||
+        text === "求人" ||
+        text === "find jobs" ||
+        text === "找岗位" ||
+        text === "求人を探す"
+      ) {
         if (!link.href.includes("jobs-search.html")) link.href = "jobs-search.html";
       }
     });
@@ -140,21 +118,11 @@
       });
     }
 
-    const heroButtons = document.querySelectorAll(".premium-search-button, .search-btn, a[href='jobs-search.html']");
-    heroButtons.forEach((button) => {
-      const text = String(button.textContent || "").trim().toLowerCase();
-
-      if (
-        text.includes("search") ||
-        text.includes("岗位") ||
-        text.includes("求人") ||
-        text.includes("find jobs")
-      ) {
-        button.addEventListener("click", (event) => {
-          event.preventDefault();
-          goToJobSearch(buildHeroQuery());
-        });
-      }
+    document.querySelectorAll(".premium-search-button, .search-btn").forEach((button) => {
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        goToJobSearch(buildHeroQuery());
+      });
     });
 
     document.querySelectorAll(".quick-tags span, .premium-tags span, .tags button, [data-query]").forEach((tag) => {
@@ -167,13 +135,14 @@
 
   function boot() {
     injectStyle();
-    repairBlankButtons();
+    repairSignupCta();
     connectSearch();
 
-    setTimeout(repairBlankButtons, 300);
-    setTimeout(repairBlankButtons, 1000);
+    setTimeout(repairSignupCta, 100);
+    setTimeout(repairSignupCta, 500);
+    setTimeout(repairSignupCta, 1200);
 
-    window.addEventListener("japanoffer:languagechange", repairBlankButtons);
+    window.addEventListener("japanoffer:languagechange", repairSignupCta);
   }
 
   if (document.readyState === "loading") {
