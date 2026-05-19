@@ -1,10 +1,5 @@
-// JapanOffer AI Auth Configuration
-// Step 1: Create a Supabase project.
-// Step 2: Go to Project Settings -> API.
-// Step 3: Replace the two values below with your Project URL and anon public key.
-// The anon public key is designed to be used in browser apps. Do NOT paste your service_role key here.
+window.SUPABASE_URL = "https://ojpoegtnksfumvepxdpj.supabase.co";
+window.SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qcG9lZ3Rua3NmdW12ZXB4ZHBqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwMzk2MDcsImV4cCI6MjA5NDYxNTYwN30.4uMgWfOjZ8kbdtILT1uRD3DFPkL2Wd8OwBPhaRpRhQU";
 
-// JapanOffer AI Auth Configuration
-
-window.JAPANOFFER_SUPABASE_URL = "https://ojpoegtnksfumvepxdpj.supabase.co";
-window.JAPANOFFER_SUPABASE_ANON_KEY = "sb_publishable_8f1e2cJN7xKZMiWAaqVRYQ_mqOP_Es5";
+var SUPABASE_URL = window.SUPABASE_URL;
+var SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY;
