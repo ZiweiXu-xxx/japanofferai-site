@@ -1285,6 +1285,29 @@
       }
     }
 
+  
+    /* Public copy mobile polish */
+    @media (max-width: 760px) {
+      .story-card.large h2,
+      .section h2,
+      .final-card h2 {
+        word-break: keep-all;
+        overflow-wrap: normal;
+      }
+
+      .story-card.large,
+      .institution-card,
+      .timeline-item {
+        text-align: left;
+      }
+
+      .story-card.large h2 {
+        font-size: clamp(32px, 10vw, 44px) !important;
+        line-height: 1.05 !important;
+        letter-spacing: -0.06em !important;
+      }
+    }
+
   </style>
 </head>
 
@@ -1548,10 +1571,10 @@
     <section class="section shell">
       <div class="story-grid">
         <article class="story-card large reveal">
-          <span data-i18n="story.kicker">Product narrative</span>
-          <h2 data-i18n="story.title">From static website to international talent infrastructure.</h2>
+          <span data-i18n="story.kicker">Application journey</span>
+          <h2 data-i18n="story.title">Understand cross-border opportunities before you apply.</h2>
           <p data-i18n="story.copy">
-            The first version showed a brand. This version behaves like a platform: users search, assess, save, post, connect and return.
+            JapanOffer AI helps you search overseas roles, compare fit and risk, and turn scattered opportunities into a clearer application path.
           </p>
           <div class="hero-actions">
             <a class="btn primary" href="jobs-search.html" data-i18n="story.search">Search jobs</a>
@@ -1578,25 +1601,25 @@
 
     <section class="section shell">
       <div class="section-head center reveal">
-        <p class="eyebrow" data-i18n="institution.kicker">Institutional feel</p>
-        <h2 data-i18n="institution.title">Built with the weight of a university site and the speed of an AI product.</h2>
+        <p class="eyebrow" data-i18n="institution.kicker">Professional clarity</p>
+        <h2 data-i18n="institution.title">A clear and practical tool for cross-border job search.</h2>
         <p data-i18n="institution.copy">
-          The new homepage uses a more editorial, institutional structure while keeping product actions visible.
+          The experience is designed around the real job-search journey: find roles, assess fit, prepare applications and connect with others.
         </p>
       </div>
 
       <div class="institution-row stagger reveal">
         <article class="institution-card">
-          <h3 data-i18n="institution.card1Title">Clear hierarchy</h3>
-          <p data-i18n="institution.card1Copy">A strong hero, clear platform sections and focused calls to action.</p>
+          <h3 data-i18n="institution.card1Title">Compare opportunities</h3>
+          <p data-i18n="institution.card1Copy">Review roles, target markets, language requirements and visa risk in one place.</p>
         </article>
         <article class="institution-card">
-          <h3 data-i18n="institution.card2Title">Motion with purpose</h3>
-          <p data-i18n="institution.card2Copy">Scroll reveal, floating interface cards, marquee signals and subtle parallax.</p>
+          <h3 data-i18n="institution.card2Title">Prepare applications</h3>
+          <p data-i18n="institution.card2Copy">Use match reports to clarify target market, application priority and cover letter direction.</p>
         </article>
         <article class="institution-card">
-          <h3 data-i18n="institution.card3Title">Network-first direction</h3>
-          <p data-i18n="institution.card3Copy">The member network is now a top-level route, not hidden behind the page.</p>
+          <h3 data-i18n="institution.card3Title">Connect with peers</h3>
+          <p data-i18n="institution.card3Copy">Members can post updates, add connections and chat with similar cross-border candidates.</p>
         </article>
       </div>
     </section>
@@ -1678,8 +1701,8 @@
           copy2: "Can share notes on graduate roles, sponsorship risk and how to explain international experience clearly."
         },
         story: {
-          kicker: "Product narrative", title: "From static website to international talent infrastructure.",
-          copy: "The first version showed a brand. This version behaves like a platform: users search, assess, save, post, connect and return.",
+          kicker: "Application journey", title: "Understand cross-border opportunities before you apply.",
+          copy: "JapanOffer AI helps you search overseas roles, compare fit and risk, and turn scattered opportunities into a clearer application path.",
           search: "Search jobs", report: "Generate report"
         },
         timeline: {
@@ -1688,11 +1711,11 @@
           three: "Step 3", threeCopy: "Enter the member network, share progress and chat with similar candidates."
         },
         institution: {
-          kicker: "Institutional feel", title: "Built with the weight of a university site and the speed of an AI product.",
-          copy: "The new homepage uses a more editorial, institutional structure while keeping product actions visible.",
-          card1Title: "Clear hierarchy", card1Copy: "A strong hero, clear platform sections and focused calls to action.",
-          card2Title: "Motion with purpose", card2Copy: "Scroll reveal, floating interface cards, marquee signals and subtle parallax.",
-          card3Title: "Network-first direction", card3Copy: "The member network is now a top-level route, not hidden behind the page."
+          kicker: "Professional clarity", title: "A clear and practical tool for cross-border job search.",
+          copy: "The experience is designed around the real job-search journey: find roles, assess fit, prepare applications and connect with others.",
+          card1Title: "Compare opportunities", card1Copy: "Review roles, target markets, language requirements and visa risk in one place.",
+          card2Title: "Prepare applications", card2Copy: "Use match reports to clarify target market, application priority and cover letter direction.",
+          card3Title: "Connect with peers", card3Copy: "Members can post updates, add connections and chat with similar cross-border candidates."
         },
         final: {
           kicker: "Beta access", title: "Build your cross-border match profile.",
@@ -1756,8 +1779,8 @@
           copy2: "可以分享毕业生岗位、签证风险和国际经历表达方式。"
         },
         story: {
-          kicker: "产品叙事", title: "从静态网站，到国际人才基础设施。",
-          copy: "第一版只是展示品牌。现在这一版像真正的平台：用户会搜索、评估、保存、发布、连接并返回。",
+          kicker: "跨境申请流程", title: "把跨境机会看清楚，再决定投哪里。",
+          copy: "JapanOffer AI 帮你集中搜索海外岗位，比较不同机会的匹配度和风险，并把申请路径整理得更清楚。",
           search: "搜索岗位", report: "生成报告"
         },
         timeline: {
@@ -1766,11 +1789,11 @@
           three: "第三步", threeCopy: "进入会员网络，发布进度，并和相似候选人聊天。"
         },
         institution: {
-          kicker: "机构级质感", title: "既有大学官网的厚重感，也有 AI 产品的速度。",
-          copy: "新版首页采用更强的编辑式和机构式结构，同时保留清晰的产品入口。",
-          card1Title: "清晰层级", card1Copy: "强首页首屏、清楚的平台分区和明确行动入口。",
-          card2Title: "有目的的动效", card2Copy: "滚动入场、浮动界面、跑马灯信号和轻微视差。",
-          card3Title: "网络优先", card3Copy: "会员网络已经成为一级入口，不再藏在页面后面。"
+          kicker: "专业可信", title: "清晰、可信、可执行的跨境求职工具。",
+          copy: "页面围绕真实求职流程设计，让用户快速进入岗位搜索、匹配报告和会员网络。",
+          card1Title: "看清机会", card1Copy: "把岗位、市场、语言和签证风险放在同一个页面里比较。",
+          card2Title: "准备申请", card2Copy: "用匹配报告整理目标市场、申请优先级和 Cover Letter 开头。",
+          card3Title: "连接同路人", card3Copy: "登录后可以发布动态、添加联系，并和相似背景的候选人私聊。"
         },
         final: {
           kicker: "测试版入口", title: "建立你的跨境匹配档案。",
@@ -1834,8 +1857,8 @@
           copy2: "卒業生向け求人、ビザリスク、国際経験の説明方法を共有できます。"
         },
         story: {
-          kicker: "プロダクトストーリー", title: "静的サイトから、国際人材インフラへ。",
-          copy: "最初のバージョンはブランドを見せるだけでした。今のバージョンは、検索、評価、保存、投稿、接続、再訪問が起きるプラットフォームです。",
+          kicker: "応募プロセス", title: "応募する前に、海外の機会をより明確に理解する。",
+          copy: "JapanOffer AI は海外求人の検索、適性とリスクの比較、応募準備を一つの流れに整理します。",
           search: "求人検索", report: "レポート生成"
         },
         timeline: {
@@ -1844,11 +1867,11 @@
           three: "Step 3", threeCopy: "メンバーネットワークで進捗を共有し、類似候補者とチャット。"
         },
         institution: {
-          kicker: "機関サイトの質感", title: "大学サイトの重厚感と、AI プロダクトのスピードを両立。",
-          copy: "新しいホームページは、編集的・機関的な構造を持ちながら、明確なプロダクト導線を保ちます。",
-          card1Title: "明確な階層", card1Copy: "強いファーストビュー、明確なセクション、行動導線。",
-          card2Title: "目的のある動き", card2Copy: "スクロール表示、浮遊 UI、マーキー、軽い視差効果。",
-          card3Title: "ネットワーク重視", card3Copy: "メンバーネットワークがトップレベルの導線になりました。"
+          kicker: "信頼できる設計", title: "クロスボーダー就職のための明確で実用的なツール。",
+          copy: "求人検索、適性確認、応募準備、メンバーとの接続まで、実際の就職活動に沿って設計されています。",
+          card1Title: "機会を比較", card1Copy: "職種、市場、言語要件、ビザリスクを一つの画面で確認できます。",
+          card2Title: "応募準備", card2Copy: "マッチングレポートで市場、優先順位、カバーレターの方向性を整理できます。",
+          card3Title: "仲間とつながる", card3Copy: "メンバーは投稿、接続、類似候補者とのチャットができます。"
         },
         final: {
           kicker: "ベータ版アクセス", title: "クロスボーダー向けマッチプロフィールを作成。",
