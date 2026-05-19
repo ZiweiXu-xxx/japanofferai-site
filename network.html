@@ -1,669 +1,1896 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>人脉网络 | JapanOffer AI</title>
-  <link rel="stylesheet" href="styles.css" />
+  <title>Member Network | JapanOffer AI</title>
+  <meta name="description" content="JapanOffer AI member network for cross-border talent profiles, posts, connections and private chat." />
+
   <style>
     :root {
-      --blue: #0a66c2;
-      --blue-dark: #003f88;
-      --ink: #071b36;
-      --muted: #607086;
-      --line: rgba(7,27,54,.10);
-      --card: rgba(255,255,255,.82);
-      --shadow: 0 24px 80px rgba(10,35,68,.10);
+      --ink:#07111f;
+      --muted:#667085;
+      --muted2:#91a3bd;
+      --blue:#1f57c8;
+      --blue2:#5b8dff;
+      --gold:#d7b66f;
+      --green:#14b8a6;
+      --red:#ef4444;
+      --line:rgba(16,24,40,.10);
+      --glass:rgba(255,255,255,.76);
+      --glass2:rgba(255,255,255,.92);
+      --dark:#07111f;
+      --shadow:0 28px 80px rgba(31,87,200,.14);
+      --shadow2:0 38px 110px rgba(7,17,31,.22);
+      --radius:30px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing:border-box; }
 
     body {
-      margin: 0;
-      color: var(--ink);
+      margin:0;
+      min-height:100vh;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+      color:var(--ink);
       background:
-        radial-gradient(circle at 12% 8%, rgba(10,102,194,.15), transparent 34%),
-        radial-gradient(circle at 90% 4%, rgba(80,167,255,.16), transparent 32%),
-        linear-gradient(135deg, #f7fbff 0%, #ffffff 48%, #edf5ff 100%);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+        radial-gradient(circle at 8% 4%,rgba(91,141,255,.18),transparent 30%),
+        radial-gradient(circle at 82% 9%,rgba(215,182,111,.16),transparent 28%),
+        radial-gradient(circle at 52% 52%,rgba(120,215,255,.09),transparent 42%),
+        linear-gradient(180deg,#f9fbff 0%,#eff5fc 54%,#edf4fb 100%);
+      overflow-x:hidden;
+    }
+
+    body::before {
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background-image:
+        linear-gradient(rgba(31,87,200,.045) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(31,87,200,.045) 1px,transparent 1px);
+      background-size:44px 44px;
+      mask-image:linear-gradient(to bottom,black,transparent 76%);
+      z-index:-3;
+    }
+
+    a { color:inherit; text-decoration:none; }
+
+    input, select, textarea, button { font:inherit; }
+
+    .aurora {
+      position:fixed;
+      inset:0;
+      overflow:hidden;
+      pointer-events:none;
+      z-index:-2;
+    }
+
+    .aurora span {
+      position:absolute;
+      width:34vw;
+      height:34vw;
+      min-width:320px;
+      min-height:320px;
+      border-radius:999px;
+      filter:blur(38px);
+      opacity:.32;
+      animation:drift 14s ease-in-out infinite alternate;
+    }
+
+    .a1 { left:-8vw; top:5vh; background:rgba(79,140,255,.45); }
+    .a2 { right:-8vw; top:12vh; background:rgba(215,182,111,.34); animation-delay:-4s; }
+    .a3 { left:42vw; bottom:4vh; background:rgba(20,184,166,.18); animation-delay:-7s; }
+
+    @keyframes drift {
+      from { transform:translate3d(0,0,0) scale(1); }
+      to { transform:translate3d(42px,-28px,0) scale(1.08); }
+    }
+
+    .shell {
+      width:min(1220px,calc(100% - 32px));
+      margin:0 auto;
     }
 
     .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      display: grid;
-      grid-template-columns: auto minmax(220px, 360px) 1fr auto;
-      align-items: center;
-      gap: 18px;
-      min-height: 76px;
-      padding: 15px 30px;
-      background: rgba(255,255,255,.86);
-      border-bottom: 1px solid var(--line);
-      backdrop-filter: blur(18px);
+      position:sticky;
+      top:0;
+      z-index:100;
+      padding:16px 0;
+      backdrop-filter:blur(20px);
+    }
+
+    .topbar-inner {
+      display:grid;
+      grid-template-columns:210px minmax(220px,1fr) auto auto auto;
+      align-items:center;
+      gap:16px;
+      border:1px solid rgba(255,255,255,.74);
+      background:rgba(255,255,255,.68);
+      box-shadow:0 18px 60px rgba(16,24,40,.08);
+      border-radius:24px;
+      padding:12px;
     }
 
     .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      color: inherit;
-      text-decoration: none;
-      min-width: 0;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
     }
 
-    .logo {
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      color: #fff;
-      font-weight: 950;
-      font-size: 23px;
-      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
-      box-shadow: 0 14px 34px rgba(10,102,194,.24);
+    .brand-mark {
+      width:46px;
+      height:46px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      color:#fff;
+      font-weight:950;
+      letter-spacing:-.06em;
+      background:linear-gradient(135deg,var(--blue),var(--blue2));
+      box-shadow:0 18px 38px rgba(31,87,200,.28);
     }
 
     .brand strong {
-      display: block;
-      font-size: 18px;
-      letter-spacing: -.035em;
+      display:block;
+      font-size:16px;
+      font-weight:950;
+      letter-spacing:-.045em;
+      white-space:nowrap;
     }
 
     .brand small {
-      display: block;
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 760;
+      display:block;
+      color:var(--muted);
+      font-size:12px;
+      font-weight:750;
+      line-height:1.15;
+      margin-top:2px;
     }
 
-    .search {
-      height: 44px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.76);
-      display: flex;
-      align-items: center;
-      padding: 0 16px;
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 760;
-      min-width: 0;
+    .top-search {
+      height:46px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.80);
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:0 16px;
+      min-width:0;
+      box-shadow:0 12px 34px rgba(16,24,40,.06);
+    }
+
+    .top-search span { color:var(--blue); font-weight:950; }
+
+    .top-search input {
+      width:100%;
+      min-width:0;
+      border:0;
+      background:transparent;
+      outline:0;
+      font-size:14px;
+      color:var(--ink);
+      font-weight:650;
     }
 
     .nav {
-      display: flex;
-      justify-content: flex-end;
-      gap: 18px;
-      align-items: center;
+      display:flex;
+      align-items:center;
+      gap:17px;
+      color:#27364a;
+      font-size:14px;
+      font-weight:850;
+      white-space:nowrap;
     }
 
-    .nav a {
-      color: #243650;
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 850;
-      white-space: nowrap;
+    .nav a:hover { color:var(--blue); }
+
+    .lang-select {
+      height:36px;
+      width:88px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.88);
+      color:#27364a;
+      outline:none;
+      padding:0 9px;
+      font-size:12px;
+      font-weight:900;
+      cursor:pointer;
     }
 
-    .nav a.active {
-      color: var(--blue);
+    .auth-links {
+      display:flex;
+      align-items:center;
+      gap:10px;
+      white-space:nowrap;
     }
 
-    .primary-link {
-      color: #fff !important;
-      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
-      padding: 11px 16px;
-      border-radius: 999px;
-      box-shadow: 0 12px 26px rgba(10,102,194,.22);
+    .auth-links a,
+    .auth-links button {
+      border:0;
+      background:transparent;
+      font-size:14px;
+      font-weight:900;
+      color:#27364a;
+      cursor:pointer;
     }
 
-    main {
-      width: min(1180px, calc(100% - 44px));
-      margin: 0 auto;
-      padding: 54px 0 90px;
+    .auth-links .primary {
+      padding:10px 15px;
+      border-radius:999px;
+      background:var(--blue);
+      color:#fff;
+      box-shadow:0 16px 38px rgba(31,87,200,.25);
     }
 
     .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(320px, 430px);
-      gap: 28px;
-      align-items: stretch;
-    }
-
-    .hero-copy,
-    .profile-panel,
-    .panel,
-    .member-card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(16px);
-    }
-
-    .hero-copy {
-      border-radius: 34px;
-      padding: 36px;
-      min-height: 370px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      padding:72px 0 30px;
+      display:grid;
+      grid-template-columns:minmax(0,1.05fr) minmax(360px,.95fr);
+      gap:50px;
+      align-items:center;
     }
 
     .eyebrow {
-      color: var(--blue);
-      text-transform: uppercase;
-      letter-spacing: .18em;
-      font-size: 12px;
-      font-weight: 950;
-      margin-bottom: 14px;
+      margin:0 0 18px;
+      color:var(--blue);
+      font-size:12px;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:.17em;
     }
 
     h1 {
-      margin: 0;
-      font-size: clamp(44px, 5.8vw, 74px);
-      line-height: .96;
-      letter-spacing: -.074em;
-      font-weight: 950;
+      margin:0;
+      font-size:clamp(50px,7vw,86px);
+      line-height:.91;
+      letter-spacing:-.09em;
     }
 
     h1 span {
-      display: block;
-      color: var(--blue);
+      display:block;
+      color:var(--blue);
+      position:relative;
     }
 
-    .hero-copy p {
-      margin: 22px 0 0;
-      max-width: 760px;
-      color: #52647a;
-      font-size: 17px;
-      line-height: 1.75;
-      font-weight: 680;
+    h1 span::after {
+      content:"";
+      position:absolute;
+      left:6px;
+      bottom:7px;
+      width:min(72%,460px);
+      height:14px;
+      border-radius:999px;
+      background:rgba(215,182,111,.30);
+      z-index:-1;
     }
 
-    .profile-panel {
-      border-radius: 34px;
-      padding: 26px;
-      min-height: 370px;
+    .lede {
+      margin:26px 0 0;
+      color:#44546a;
+      font-size:18px;
+      line-height:1.72;
+      max-width:760px;
+      font-weight:550;
     }
 
-    .profile-panel h2 {
-      margin: 0;
-      font-size: 28px;
-      letter-spacing: -.05em;
-    }
-
-    .profile-panel p {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.7;
-      font-weight: 650;
-    }
-
-    .profile-preview {
-      display: grid;
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .profile-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: center;
-      padding: 14px;
-      border-radius: 18px;
-      background: rgba(247,250,255,.92);
-      border: 1px solid rgba(7,27,54,.08);
-      color: #26374d;
-      font-size: 13px;
-      font-weight: 780;
-    }
-
-    .profile-row span {
-      color: var(--muted);
-      font-weight: 700;
-    }
-
-    .cta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 20px;
+    .hero-actions {
+      margin-top:24px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
     }
 
     .btn {
-      min-height: 44px;
-      border-radius: 999px;
-      padding: 0 16px;
-      border: 1px solid rgba(10,102,194,.18);
-      background: rgba(255,255,255,.80);
-      color: var(--blue);
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 920;
-      font-size: 14px;
-      cursor: pointer;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--ink);
+      min-height:48px;
+      padding:0 18px;
+      border-radius:999px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:950;
+      font-size:14px;
+      cursor:pointer;
+      transition:.18s;
+    }
+
+    .btn:hover {
+      transform:translateY(-2px);
+      box-shadow:0 16px 40px rgba(16,24,40,.10);
     }
 
     .btn.primary {
-      color: #fff;
-      border-color: transparent;
-      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
-      box-shadow: 0 16px 36px rgba(10,102,194,.24);
+      border-color:var(--blue);
+      background:var(--blue);
+      color:#fff;
+      box-shadow:0 18px 42px rgba(31,87,200,.24);
     }
 
-    .section-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: end;
-      gap: 18px;
-      margin: 34px 0 16px;
+    .hero-card {
+      border-radius:38px;
+      background:rgba(255,255,255,.76);
+      border:1px solid rgba(255,255,255,.80);
+      box-shadow:var(--shadow2);
+      backdrop-filter:blur(22px);
+      overflow:hidden;
+      transform:rotateX(2deg) rotateY(-4deg);
+      animation:floatCard 7s ease-in-out infinite;
     }
 
-    .section-head h2 {
-      margin: 0;
-      font-size: clamp(30px, 3.4vw, 46px);
-      line-height: 1;
-      letter-spacing: -.06em;
+    @keyframes floatCard {
+      0%,100% { transform:rotateX(2deg) rotateY(-4deg) translateY(0); }
+      50% { transform:rotateX(2deg) rotateY(-4deg) translateY(-12px); }
     }
 
-    .section-head p {
-      margin: 0;
-      max-width: 560px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.6;
-      font-weight: 680;
-      text-align: right;
+    .hero-card-head {
+      padding:18px 20px;
+      display:grid;
+      grid-template-columns:auto auto auto 1fr auto;
+      gap:8px;
+      align-items:center;
+      border-bottom:1px solid var(--line);
+      color:var(--muted);
+      font-size:13px;
+      font-weight:900;
     }
 
-    .tabs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 18px;
+    .hero-card-head i {
+      width:11px;
+      height:11px;
+      border-radius:50%;
+      background:#ff6b6b;
     }
 
-    .tab {
-      min-height: 40px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.74);
-      color: #26374d;
-      padding: 0 14px;
-      font: inherit;
-      font-size: 13px;
-      font-weight: 870;
-      cursor: pointer;
+    .hero-card-head i:nth-child(2) { background:#f4c95d; }
+    .hero-card-head i:nth-child(3) { background:#44d07b; }
+
+    .hero-card-head strong { text-align:center; color:#344054; }
+    .hero-card-head em { font-style:normal; color:var(--muted2); font-size:12px; }
+
+    .hero-preview {
+      padding:24px;
+      display:grid;
+      gap:14px;
     }
 
-    .tab.active {
-      color: #fff;
-      border-color: transparent;
-      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
-      box-shadow: 0 12px 26px rgba(10,102,194,.18);
+    .preview-post {
+      padding:18px;
+      border-radius:24px;
+      background:#fff;
+      border:1px solid var(--line);
+      box-shadow:0 16px 46px rgba(16,24,40,.07);
     }
 
-    .members-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .member-card {
-      border-radius: 28px;
-      padding: 22px;
-      min-height: 330px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .member-top {
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
+    .mini-profile {
+      display:grid;
+      grid-template-columns:46px 1fr auto;
+      gap:12px;
+      align-items:center;
+      margin-bottom:12px;
     }
 
     .avatar {
-      width: 54px;
-      height: 54px;
-      border-radius: 18px;
-      display: grid;
-      place-items: center;
-      flex: 0 0 auto;
-      color: #fff;
-      font-size: 18px;
-      font-weight: 950;
-      background: linear-gradient(135deg, #071b36, #0a66c2);
-      box-shadow: 0 12px 28px rgba(7,27,54,.16);
+      width:46px;
+      height:46px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,var(--blue),var(--blue2));
+      color:#fff;
+      font-weight:950;
+      letter-spacing:-.05em;
     }
 
-    .member-card h3 {
-      margin: 0;
-      font-size: 20px;
-      line-height: 1.15;
-      letter-spacing: -.04em;
+    .mini-profile h3 {
+      margin:0;
+      font-size:16px;
+      letter-spacing:-.04em;
     }
 
-    .member-card .subtitle {
-      margin-top: 5px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.45;
-      font-weight: 760;
+    .mini-profile p {
+      margin:3px 0 0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.4;
     }
 
-    .match-score {
-      margin-left: auto;
-      text-align: right;
-      color: var(--blue);
-      font-size: 26px;
-      font-weight: 950;
-      letter-spacing: -.05em;
+    .online {
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:var(--green);
+      box-shadow:0 0 0 5px rgba(20,184,166,.12);
     }
 
-    .member-desc {
-      margin: 16px 0 0;
-      color: #52647a;
-      font-size: 13px;
-      line-height: 1.68;
-      font-weight: 650;
+    .preview-post .post-text {
+      margin:0;
+      color:#344054;
+      line-height:1.62;
+      font-size:14px;
     }
 
-    .pills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 15px;
+    .preview-chat {
+      display:grid;
+      gap:9px;
+      margin-top:4px;
     }
 
-    .pill {
-      display: inline-flex;
-      min-height: 30px;
-      align-items: center;
-      border-radius: 999px;
-      padding: 0 10px;
-      background: rgba(10,102,194,.09);
-      color: #064b93;
-      font-size: 12px;
-      font-weight: 850;
+    .bubble {
+      max-width:82%;
+      padding:11px 13px;
+      border-radius:18px;
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .bubble.left {
+      background:#f1f5fb;
+      color:#344054;
+      border-bottom-left-radius:6px;
+    }
+
+    .bubble.right {
+      justify-self:end;
+      background:var(--blue);
+      color:#fff;
+      border-bottom-right-radius:6px;
+    }
+
+    .locked {
+      margin:26px 0 80px;
+      display:none;
+      padding:32px;
+      border-radius:34px;
+      background:rgba(255,255,255,.78);
+      border:1px solid rgba(255,255,255,.80);
+      box-shadow:var(--shadow);
+      text-align:center;
+    }
+
+    .locked.show { display:block; }
+
+    .locked h2 {
+      margin:0;
+      font-size:34px;
+      letter-spacing:-.065em;
+    }
+
+    .locked p {
+      color:var(--muted);
+      line-height:1.65;
+    }
+
+    .app {
+      padding:30px 0 90px;
+      display:grid;
+      grid-template-columns:280px minmax(0,1fr) 320px;
+      gap:18px;
+      align-items:start;
+    }
+
+    .app.hidden { display:none; }
+
+    .panel {
+      border-radius:30px;
+      background:rgba(255,255,255,.80);
+      border:1px solid rgba(255,255,255,.78);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(22px);
+      overflow:hidden;
+    }
+
+    .panel-head {
+      padding:20px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .panel-head h2 {
+      margin:0;
+      font-size:20px;
+      letter-spacing:-.055em;
+    }
+
+    .panel-head p {
+      margin:6px 0 0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .panel-body {
+      padding:18px;
+    }
+
+    .profile-card {
+      text-align:center;
+    }
+
+    .big-avatar {
+      width:80px;
+      height:80px;
+      border-radius:26px;
+      margin:0 auto 14px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,var(--blue),var(--blue2));
+      color:#fff;
+      font-size:24px;
+      font-weight:950;
+      letter-spacing:-.08em;
+      box-shadow:0 18px 44px rgba(31,87,200,.24);
+    }
+
+    .profile-card h3 {
+      margin:0;
+      font-size:20px;
+      letter-spacing:-.045em;
+    }
+
+    .profile-card p {
+      color:var(--muted);
+      line-height:1.55;
+      font-size:14px;
+    }
+
+    .profile-tags {
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:center;
+    }
+
+    .chip {
+      padding:8px 10px;
+      border-radius:999px;
+      background:#f1f5fb;
+      color:#344054;
+      font-size:12px;
+      font-weight:900;
+    }
+
+    .search-box {
+      margin:16px 0;
+    }
+
+    .search-box input,
+    .form input,
+    .form textarea,
+    .form select {
+      width:100%;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--ink);
+      outline:0;
+      border-radius:16px;
+      padding:12px 13px;
+      font-size:14px;
+      font-weight:650;
+    }
+
+    .member-list,
+    .request-list,
+    .conversation-list {
+      display:grid;
+      gap:10px;
+    }
+
+    .member {
+      padding:12px;
+      border-radius:20px;
+      background:#fff;
+      border:1px solid var(--line);
+      display:grid;
+      grid-template-columns:42px 1fr;
+      gap:10px;
+      align-items:center;
+    }
+
+    .member .avatar {
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      font-size:13px;
+    }
+
+    .member h4 {
+      margin:0;
+      font-size:14px;
+      letter-spacing:-.03em;
+    }
+
+    .member p {
+      margin:3px 0 0;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.4;
     }
 
     .member-actions {
-      display: flex;
-      gap: 9px;
-      margin-top: auto;
-      padding-top: 18px;
+      grid-column:1 / -1;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
     }
 
-    .connect-btn,
-    .view-btn {
-      flex: 1;
-      min-height: 42px;
-      border-radius: 999px;
-      border: 1px solid rgba(10,102,194,.18);
-      font: inherit;
-      font-size: 13px;
-      font-weight: 920;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+    .small-btn {
+      border:1px solid var(--line);
+      background:#f8fafc;
+      color:#344054;
+      border-radius:999px;
+      min-height:34px;
+      padding:0 11px;
+      font-size:12px;
+      font-weight:900;
+      cursor:pointer;
     }
 
-    .connect-btn {
-      color: #fff;
-      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
-      border-color: transparent;
+    .small-btn.primary {
+      border-color:var(--blue);
+      background:var(--blue);
+      color:#fff;
     }
 
-    .connect-btn.connected {
-      background: #e9f6ef;
-      color: #087443;
+    .small-btn.green {
+      border-color:var(--green);
+      background:var(--green);
+      color:#fff;
     }
 
-    .view-btn {
-      background: rgba(255,255,255,.75);
-      color: var(--blue);
+    .small-btn:disabled {
+      opacity:.55;
+      cursor:not-allowed;
     }
 
-    .panel-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-      margin-top: 18px;
+    .composer {
+      border-radius:30px;
+      background:rgba(255,255,255,.82);
+      border:1px solid rgba(255,255,255,.78);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      margin-bottom:18px;
     }
 
-    .panel {
-      border-radius: 30px;
-      padding: 24px;
+    .composer-top {
+      padding:18px;
+      display:grid;
+      grid-template-columns:46px 1fr;
+      gap:12px;
+      align-items:start;
     }
 
-    .panel h2 {
-      margin: 0 0 16px;
-      font-size: 26px;
-      letter-spacing: -.05em;
+    .composer textarea {
+      width:100%;
+      min-height:100px;
+      resize:vertical;
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:20px;
+      padding:14px;
+      outline:0;
+      line-height:1.55;
+      font-size:15px;
+      color:var(--ink);
     }
 
-    .flow {
-      display: grid;
-      gap: 12px;
+    .composer-actions {
+      padding:0 18px 18px;
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+      flex-wrap:wrap;
     }
 
-    .flow-item {
-      padding: 16px;
-      border-radius: 20px;
-      background: rgba(247,250,255,.92);
-      border: 1px solid rgba(7,27,54,.08);
+    .hint {
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
     }
 
-    .flow-item strong {
-      display: block;
-      margin-bottom: 6px;
-      color: var(--ink);
-      font-size: 14px;
+    .post-list {
+      display:grid;
+      gap:16px;
     }
 
-    .flow-item span {
-      display: block;
-      color: #52647a;
-      font-size: 13px;
-      line-height: 1.65;
-      font-weight: 650;
+    .post {
+      border-radius:30px;
+      background:rgba(255,255,255,.84);
+      border:1px solid rgba(255,255,255,.78);
+      box-shadow:0 18px 54px rgba(16,24,40,.08);
+      overflow:hidden;
     }
 
-    .status {
-      display: none;
-      margin-top: 16px;
-      padding: 13px 15px;
-      border-radius: 16px;
-      color: #047857;
-      background: rgba(16,185,129,.10);
-      font-size: 13px;
-      font-weight: 850;
+    .post-head {
+      padding:18px;
+      display:grid;
+      grid-template-columns:48px 1fr auto;
+      gap:12px;
+      align-items:center;
+      border-bottom:1px solid var(--line);
     }
 
-    .status.show {
-      display: block;
+    .post-head h3 {
+      margin:0;
+      font-size:16px;
+      letter-spacing:-.035em;
     }
 
-    @media (max-width: 980px) {
-      .topbar {
-        grid-template-columns: auto 1fr auto;
+    .post-head p {
+      margin:3px 0 0;
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .post-body {
+      padding:18px;
+      color:#27364a;
+      font-size:15px;
+      line-height:1.75;
+      white-space:pre-wrap;
+    }
+
+    .post-foot {
+      padding:0 18px 18px;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .status-pill {
+      padding:7px 9px;
+      border-radius:999px;
+      background:#f1f5fb;
+      color:#344054;
+      font-size:12px;
+      font-weight:900;
+    }
+
+    .empty {
+      padding:24px;
+      border-radius:24px;
+      background:rgba(255,255,255,.72);
+      border:1px dashed var(--line);
+      color:var(--muted);
+      text-align:center;
+      line-height:1.6;
+    }
+
+    .toast {
+      position:fixed;
+      left:50%;
+      bottom:24px;
+      transform:translateX(-50%) translateY(20px);
+      background:#07111f;
+      color:#fff;
+      padding:12px 15px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:900;
+      box-shadow:var(--shadow2);
+      opacity:0;
+      pointer-events:none;
+      transition:.22s;
+      z-index:300;
+    }
+
+    .toast.show {
+      opacity:1;
+      transform:translateX(-50%) translateY(0);
+    }
+
+    .chat-drawer {
+      position:fixed;
+      right:18px;
+      bottom:18px;
+      width:min(420px,calc(100vw - 36px));
+      max-height:78vh;
+      border-radius:30px;
+      background:rgba(255,255,255,.94);
+      border:1px solid rgba(255,255,255,.82);
+      box-shadow:var(--shadow2);
+      backdrop-filter:blur(22px);
+      overflow:hidden;
+      display:none;
+      z-index:250;
+    }
+
+    .chat-drawer.show { display:block; }
+
+    .chat-head {
+      padding:16px;
+      display:grid;
+      grid-template-columns:44px 1fr auto;
+      gap:12px;
+      align-items:center;
+      border-bottom:1px solid var(--line);
+      background:rgba(255,255,255,.70);
+    }
+
+    .chat-head h3 {
+      margin:0;
+      font-size:16px;
+      letter-spacing:-.035em;
+    }
+
+    .chat-head p {
+      margin:3px 0 0;
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .close-chat {
+      border:0;
+      background:#f1f5fb;
+      border-radius:999px;
+      width:36px;
+      height:36px;
+      cursor:pointer;
+      font-weight:950;
+    }
+
+    .messages {
+      height:360px;
+      overflow:auto;
+      padding:16px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      background:
+        radial-gradient(circle at top left, rgba(31,87,200,.10), transparent 34%),
+        #f8fbff;
+    }
+
+    .message {
+      max-width:80%;
+      padding:11px 13px;
+      border-radius:18px;
+      font-size:14px;
+      line-height:1.5;
+      box-shadow:0 10px 26px rgba(16,24,40,.06);
+      white-space:pre-wrap;
+    }
+
+    .message.mine {
+      align-self:flex-end;
+      background:var(--blue);
+      color:#fff;
+      border-bottom-right-radius:6px;
+    }
+
+    .message.theirs {
+      align-self:flex-start;
+      background:#fff;
+      color:#27364a;
+      border-bottom-left-radius:6px;
+      border:1px solid var(--line);
+    }
+
+    .chat-compose {
+      padding:14px;
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:10px;
+      border-top:1px solid var(--line);
+      background:#fff;
+    }
+
+    .chat-compose textarea {
+      min-height:44px;
+      max-height:110px;
+      resize:vertical;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:11px 13px;
+      outline:0;
+      line-height:1.45;
+    }
+
+    .chat-compose button {
+      border:0;
+      background:var(--blue);
+      color:#fff;
+      border-radius:18px;
+      padding:0 16px;
+      font-weight:950;
+      cursor:pointer;
+    }
+
+    .modal {
+      position:fixed;
+      inset:0;
+      z-index:400;
+      background:rgba(7,17,31,.42);
+      backdrop-filter:blur(10px);
+      display:none;
+      place-items:center;
+      padding:18px;
+    }
+
+    .modal.show { display:grid; }
+
+    .modal-card {
+      width:min(640px,100%);
+      border-radius:32px;
+      background:#fff;
+      box-shadow:var(--shadow2);
+      overflow:hidden;
+    }
+
+    .modal-card .panel-head {
+      background:#f8fbff;
+    }
+
+    .form {
+      padding:20px;
+      display:grid;
+      gap:13px;
+    }
+
+    .form textarea { min-height:100px; resize:vertical; }
+
+    .form-row {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:13px;
+    }
+
+    @media (max-width:1100px) {
+      .topbar-inner {
+        grid-template-columns:1fr;
+        align-items:stretch;
       }
 
-      .search {
-        display: none;
+      .nav, .auth-links { flex-wrap:wrap; }
+
+      .hero, .app {
+        grid-template-columns:1fr;
       }
 
-      .hero,
-      .members-grid,
-      .panel-grid {
-        grid-template-columns: 1fr;
-      }
+      .hero-card { transform:none; }
 
-      .member-card {
-        min-height: auto;
-      }
-
-      .section-head {
-        display: block;
-      }
-
-      .section-head p {
-        text-align: left;
-        margin-top: 8px;
-      }
+      .app aside:first-child { order:2; }
+      .app main { order:1; }
+      .app aside:last-child { order:3; }
     }
 
-    @media (max-width: 640px) {
-      .topbar {
-        padding: 13px 16px;
-      }
-
-      .brand small,
-      .nav a:not(.primary-link):nth-child(n+3) {
-        display: none;
-      }
-
-      main {
-        width: min(100% - 28px, 1180px);
-        padding: 40px 0 68px;
-      }
-
-      .hero-copy,
-      .profile-panel,
-      .panel,
-      .member-card {
-        border-radius: 26px;
-        padding: 22px;
-      }
-
-      h1 {
-        font-size: 46px;
-      }
+    @media (max-width:760px) {
+      .hero { padding-top:42px; }
+      h1 { font-size:46px; }
+      .form-row { grid-template-columns:1fr; }
+      .hero-card { animation:none; }
+      .app { padding-top:12px; }
+      .chat-drawer { right:10px; bottom:10px; width:calc(100vw - 20px); }
     }
   </style>
 </head>
+
 <body>
+  <div class="aurora" aria-hidden="true">
+    <span class="a1"></span>
+    <span class="a2"></span>
+    <span class="a3"></span>
+  </div>
+
   <header class="topbar">
-    <a class="brand" href="index.html">
-      <span class="logo">J</span>
-      <span>
-        <strong>JapanOffer AI</strong>
-        <small>Cross-border Career Network</small>
-      </span>
-    </a>
+    <div class="shell">
+      <div class="topbar-inner">
+        <a class="brand" href="index.html">
+          <span class="brand-mark">J</span>
+          <span>
+            <strong>JapanOffer AI</strong>
+            <small data-i18n="brand.subtitle">Cross-border Talent Network</small>
+          </span>
+        </a>
 
-    <div class="search">搜索人脉、公司、岗位或目标市场</div>
+        <form class="top-search" id="topSearchForm">
+          <span>⌕</span>
+          <input data-i18n-placeholder="top.search" placeholder="Search members, roles or markets..." />
+        </form>
 
-    <nav class="nav">
-      <a href="index.html">首页</a>
-      <a class="active" href="network.html">人脉</a>
-      <a href="jobs.html">职位</a>
-      <a href="match.html">AI 匹配</a>
-      <a href="companies.html">公司</a>
-      <a class="primary-link" href="signup.html">注册</a>
-    </nav>
+        <nav class="nav">
+          <a href="jobs-search.html" data-i18n="nav.jobs">Jobs</a>
+          <a href="report.html" data-i18n="nav.report">Report</a>
+          <a href="network.html" data-i18n="nav.network">Network</a>
+          <a href="companies.html" data-i18n="nav.companies">Companies</a>
+          <a href="feedback.html" data-i18n="nav.feedback">Feedback</a>
+        </nav>
+
+        <select class="lang-select" id="languageSelect" aria-label="Language">
+          <option value="en">EN</option>
+          <option value="zh">中文</option>
+          <option value="ja">日本語</option>
+        </select>
+
+        <div class="auth-links" id="authLinks">
+          <a href="login.html" data-i18n="auth.signIn">Sign in</a>
+          <a class="primary" href="signup.html" data-i18n="auth.signUp">Sign up</a>
+        </div>
+      </div>
+    </div>
   </header>
 
-  <main>
+  <main class="shell">
     <section class="hero">
-      <div class="hero-copy">
-        <div class="eyebrow">Talent Network</div>
-        <h1>不只是匹配岗位。<span>还要连接人。</span></h1>
-        <p>
-          JapanOffer AI 需要从 AI 中转站升级成跨境求职网络。用户不仅可以生成岗位匹配报告，还可以发现相似背景的人、目标公司、招聘联系人和潜在合作机会。
+      <div>
+        <p class="eyebrow" data-i18n="hero.kicker">Member network</p>
+        <h1 data-i18n-html="hero.title">Connect with<span>cross-border talent.</span></h1>
+        <p class="lede" data-i18n="hero.copy">
+          Members can build profiles, post updates, connect with other users and chat privately. This turns JapanOffer AI from a tool into a real talent network.
         </p>
-        <div class="cta-row">
-          <a class="btn primary" href="match.html">先生成 AI 匹配</a>
-          <a class="btn" href="#members">浏览推荐人脉</a>
+
+        <div class="hero-actions">
+          <a class="btn primary" href="signup.html" data-i18n="hero.join">Join the network</a>
+          <button class="btn" type="button" id="openProfileButton" data-i18n="hero.editProfile">Edit profile</button>
         </div>
       </div>
 
-      <aside class="profile-panel">
-        <h2>你的网络身份</h2>
-        <p>这里以后会连接用户登录后的真实 Profile。现在先用 MVP 方式展示网络结构。</p>
-
-        <div class="profile-preview">
-          <div class="profile-row"><span>身份</span><strong>跨境求职者</strong></div>
-          <div class="profile-row"><span>方向</span><strong>Legal / Compliance</strong></div>
-          <div class="profile-row"><span>市场</span><strong>Japan / HK / Singapore</strong></div>
-          <div class="profile-row"><span>语言</span><strong>中文 / English / 日本語</strong></div>
+      <aside class="hero-card">
+        <div class="hero-card-head">
+          <i></i><i></i><i></i>
+          <strong data-i18n="preview.title">Member Social OS</strong>
+          <em data-i18n="preview.live">Live beta</em>
         </div>
 
-        <div class="status" id="networkStatus">已记录你的连接意向。</div>
+        <div class="hero-preview">
+          <article class="preview-post">
+            <div class="mini-profile">
+              <span class="avatar">ZX</span>
+              <div>
+                <h3 data-i18n="preview.memberName">Cross-border LLB student</h3>
+                <p data-i18n="preview.memberMeta">UK · Japan · Legal / Compliance</p>
+              </div>
+              <span class="online"></span>
+            </div>
+            <p class="post-text" data-i18n="preview.post">
+              Looking for entry-level legal compliance roles in Japan or Singapore. Happy to connect with anyone preparing similar applications.
+            </p>
+          </article>
+
+          <div class="preview-chat">
+            <div class="bubble left" data-i18n="preview.chat1">Are you also targeting compliance roles?</div>
+            <div class="bubble right" data-i18n="preview.chat2">Yes. Japan and Singapore are my main markets.</div>
+            <div class="bubble left" data-i18n="preview.chat3">Let’s compare applications this week.</div>
+          </div>
+        </div>
       </aside>
     </section>
 
-    <section id="members">
-      <div class="section-head">
-        <h2>推荐人脉与候选人</h2>
-        <p>这一步先做成 MVP 网络页。后面接入真实账号后，Connect 会变成真正的好友申请和站内消息。</p>
+    <section class="locked" id="lockedState">
+      <h2 data-i18n="locked.title">Sign in to enter the member network.</h2>
+      <p data-i18n="locked.copy">Posts, member profiles and chat are only available to registered users.</p>
+      <div class="hero-actions" style="justify-content:center">
+        <a class="btn primary" href="login.html" data-i18n="auth.signIn">Sign in</a>
+        <a class="btn" href="signup.html" data-i18n="auth.signUp">Sign up</a>
       </div>
-
-      <div class="tabs">
-        <button class="tab active" data-filter="all">全部</button>
-        <button class="tab" data-filter="candidate">求职者</button>
-        <button class="tab" data-filter="employer">企业 / 招聘</button>
-        <button class="tab" data-filter="legal">法律合规</button>
-        <button class="tab" data-filter="finance">金融 / Web3</button>
-        <button class="tab" data-filter="japan">日本</button>
-        <button class="tab" data-filter="singapore">新加坡</button>
-        <button class="tab" data-filter="hongkong">香港</button>
-      </div>
-
-      <div class="members-grid" id="membersGrid"></div>
     </section>
 
-    <section class="panel-grid">
-      <div class="panel">
-        <h2>产品逻辑</h2>
-        <div class="flow">
-          <div class="flow-item">
-            <strong>1. AI 匹配</strong>
-            <span>用户先输入背景，系统判断适合的岗位、国家、公司和申请路线。</span>
-          </div>
-          <div class="flow-item">
-            <strong>2. 人脉网络</strong>
-            <span>用户看到相似背景的人、目标公司和招聘联系人，开始建立求职网络。</span>
-          </div>
-          <div class="flow-item">
-            <strong>3. 职位与公司</strong>
-            <span>岗位页和公司页不再孤立，而是围绕用户匹配结果推荐。</span>
+    <section class="app hidden" id="app">
+      <aside class="panel">
+        <div class="panel-head">
+          <div>
+            <h2 data-i18n="profile.title">My profile</h2>
+            <p data-i18n="profile.copy">This is how other members see you.</p>
           </div>
         </div>
-      </div>
+        <div class="panel-body profile-card" id="myProfileCard"></div>
 
-      <div class="panel">
-        <h2>下一阶段</h2>
-        <div class="flow">
-          <div class="flow-item">
-            <strong>真实 Profile</strong>
-            <span>登录后保存用户背景、目标国家、语言和岗位方向。</span>
-          </div>
-          <div class="flow-item">
-            <strong>好友申请</strong>
-            <span>Connect 从按钮变成真实好友申请，并记录双方关系。</span>
-          </div>
-          <div class="flow-item">
-            <strong>站内消息</strong>
-            <span>加入简单消息系统，让求职者、企业和导师可以联系。</span>
+        <div class="panel-head">
+          <div>
+            <h2 data-i18n="members.title">Members</h2>
+            <p data-i18n="members.copy">Find people by market, role or language.</p>
           </div>
         </div>
-      </div>
+        <div class="panel-body">
+          <div class="search-box">
+            <input id="memberSearch" data-i18n-placeholder="members.search" placeholder="Search members..." />
+          </div>
+          <div class="member-list" id="memberList"></div>
+        </div>
+      </aside>
+
+      <main>
+        <section class="composer">
+          <div class="composer-top">
+            <span class="avatar" id="composerAvatar">JO</span>
+            <textarea id="postBody" data-i18n-placeholder="composer.placeholder" placeholder="Share an update, application progress, target role, question or useful resource..."></textarea>
+          </div>
+          <div class="composer-actions">
+            <span class="hint" data-i18n="composer.hint">Post to the member network. Keep it professional and useful.</span>
+            <button class="btn primary" type="button" id="createPostButton" data-i18n="composer.post">Post update</button>
+          </div>
+        </section>
+
+        <section class="post-list" id="postList"></section>
+      </main>
+
+      <aside class="panel">
+        <div class="panel-head">
+          <div>
+            <h2 data-i18n="requests.title">Connection requests</h2>
+            <p data-i18n="requests.copy">Accept requests to start a stronger network.</p>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="request-list" id="requestList"></div>
+        </div>
+
+        <div class="panel-head">
+          <div>
+            <h2 data-i18n="chat.title">Chats</h2>
+            <p data-i18n="chat.copy">Open a member profile and start a private chat.</p>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="conversation-list" id="conversationList"></div>
+        </div>
+      </aside>
     </section>
   </main>
 
+  <div class="chat-drawer" id="chatDrawer">
+    <div class="chat-head">
+      <span class="avatar" id="chatAvatar">JO</span>
+      <div>
+        <h3 id="chatName">Member</h3>
+        <p id="chatMeta">Private chat</p>
+      </div>
+      <button class="close-chat" type="button" id="closeChat">×</button>
+    </div>
+    <div class="messages" id="messages"></div>
+    <div class="chat-compose">
+      <textarea id="messageInput" data-i18n-placeholder="chat.placeholder" placeholder="Write a message..."></textarea>
+      <button type="button" id="sendMessageButton" data-i18n="chat.send">Send</button>
+    </div>
+  </div>
+
+  <div class="modal" id="profileModal">
+    <div class="modal-card">
+      <div class="panel-head">
+        <div>
+          <h2 data-i18n="modal.title">Edit member profile</h2>
+          <p data-i18n="modal.copy">A clear profile helps other members understand who you are and why they should connect.</p>
+        </div>
+        <button class="close-chat" type="button" id="closeProfileModal">×</button>
+      </div>
+
+      <div class="form">
+        <div class="form-row">
+          <label>
+            <span data-i18n="modal.name">Full name</span>
+            <input id="profileName" placeholder="Your name" />
+          </label>
+          <label>
+            <span data-i18n="modal.headline">Headline</span>
+            <input id="profileHeadline" placeholder="LLB student · Legal / Compliance" />
+          </label>
+        </div>
+
+        <div class="form-row">
+          <label>
+            <span data-i18n="modal.market">Target market</span>
+            <input id="profileMarket" placeholder="Japan, Singapore, UK" />
+          </label>
+          <label>
+            <span data-i18n="modal.direction">Career direction</span>
+            <input id="profileDirection" placeholder="Legal / AML / Web3 compliance" />
+          </label>
+        </div>
+
+        <label>
+          <span data-i18n="modal.languages">Languages</span>
+          <input id="profileLanguages" placeholder="English, Japanese, Mandarin" />
+        </label>
+
+        <label>
+          <span data-i18n="modal.bio">Bio</span>
+          <textarea id="profileBio" placeholder="Briefly introduce your background, goals and what kind of people you want to connect with."></textarea>
+        </label>
+
+        <button class="btn primary" type="button" id="saveProfileButton" data-i18n="modal.save">Save profile</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Saved</div>
+
   <script src="auth-config.js"></script>
-  <script src="analytics.js"></script>
-  <script src="network.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    const LANG_KEY = "japanoffer_lang";
+
+    const I18N = {
+      en: {
+        brand: { subtitle: "Cross-border Talent Network" },
+        top: { search: "Search members, roles or markets..." },
+        nav: { jobs: "Jobs", report: "Report", network: "Network", companies: "Companies", feedback: "Feedback" },
+        auth: { signIn: "Sign in", signUp: "Sign up", signOut: "Sign out" },
+        hero: {
+          kicker: "Member network",
+          title: "Connect with<span>cross-border talent.</span>",
+          copy: "Members can build profiles, post updates, connect with other users and chat privately. This turns JapanOffer AI from a tool into a real talent network.",
+          join: "Join the network",
+          editProfile: "Edit profile"
+        },
+        preview: {
+          title: "Member Social OS", live: "Live beta", memberName: "Cross-border LLB student", memberMeta: "UK · Japan · Legal / Compliance",
+          post: "Looking for entry-level legal compliance roles in Japan or Singapore. Happy to connect with anyone preparing similar applications.",
+          chat1: "Are you also targeting compliance roles?", chat2: "Yes. Japan and Singapore are my main markets.", chat3: "Let’s compare applications this week."
+        },
+        locked: { title: "Sign in to enter the member network.", copy: "Posts, member profiles and chat are only available to registered users." },
+        profile: { title: "My profile", copy: "This is how other members see you.", incomplete: "Complete your profile", edit: "Edit profile" },
+        members: { title: "Members", copy: "Find people by market, role or language.", search: "Search members...", connect: "Connect", pending: "Pending", accept: "Accept", connected: "Connected", chat: "Chat", view: "View" },
+        requests: { title: "Connection requests", copy: "Accept requests to start a stronger network.", empty: "No pending requests yet." },
+        chat: { title: "Chats", copy: "Open a member profile and start a private chat.", placeholder: "Write a message...", send: "Send", empty: "No chats yet.", private: "Private chat" },
+        composer: { placeholder: "Share an update, application progress, target role, question or useful resource...", hint: "Post to the member network. Keep it professional and useful.", post: "Post update" },
+        feed: { empty: "No member updates yet. Be the first to post.", posted: "Posted", profileNeeded: "Please complete your profile first." },
+        modal: {
+          title: "Edit member profile", copy: "A clear profile helps other members understand who you are and why they should connect.",
+          name: "Full name", headline: "Headline", market: "Target market", direction: "Career direction", languages: "Languages", bio: "Bio", save: "Save profile"
+        },
+        toast: { saved: "Saved", posted: "Posted", sent: "Message sent", connected: "Connection request sent", accepted: "Connection accepted", error: "Something went wrong" }
+      },
+
+      zh: {
+        brand: { subtitle: "跨境人才匹配网络" },
+        top: { search: "搜索会员、岗位或目标市场..." },
+        nav: { jobs: "岗位", report: "报告", network: "网络", companies: "企业", feedback: "反馈" },
+        auth: { signIn: "登录", signUp: "注册", signOut: "退出登录" },
+        hero: {
+          kicker: "会员网络",
+          title: "连接真正的<span>跨境求职者。</span>",
+          copy: "注册会员可以建立个人档案、发布动态、互相添加联系，并进行私聊。这样 JapanOffer AI 就不只是工具，而是真正的跨境人才网络。",
+          join: "加入会员网络",
+          editProfile: "编辑档案"
+        },
+        preview: {
+          title: "会员社交系统", live: "测试版", memberName: "跨境 LLB 学生", memberMeta: "英国 · 日本 · 法律 / 合规",
+          post: "正在找日本或新加坡的入门级法务合规岗位，欢迎和准备类似申请的人互相连接。",
+          chat1: "你也是申请合规方向吗？", chat2: "对，日本和新加坡是我的主要目标市场。", chat3: "这周我们可以互相看看申请材料。"
+        },
+        locked: { title: "登录后进入会员网络。", copy: "动态、会员档案和私聊功能只对注册用户开放。" },
+        profile: { title: "我的档案", copy: "其他会员会这样看到你。", incomplete: "完善档案", edit: "编辑档案" },
+        members: { title: "会员", copy: "按照市场、岗位方向或语言寻找其他人。", search: "搜索会员...", connect: "添加联系", pending: "等待通过", accept: "接受", connected: "已连接", chat: "聊天", view: "查看" },
+        requests: { title: "联系请求", copy: "接受请求后可以形成更强的人才网络。", empty: "暂时没有待处理请求。" },
+        chat: { title: "聊天", copy: "打开会员档案，开始私聊。", placeholder: "输入消息...", send: "发送", empty: "暂时没有聊天。", private: "私聊" },
+        composer: { placeholder: "发布你的申请进度、目标岗位、问题或有用资源...", hint: "发布到会员网络。保持专业、有用。", post: "发布动态" },
+        feed: { empty: "还没有会员动态。你可以发布第一条。", posted: "发布于", profileNeeded: "请先完善你的个人档案。" },
+        modal: {
+          title: "编辑会员档案", copy: "清晰的档案能让其他会员知道你是谁，以及为什么应该与你连接。",
+          name: "姓名", headline: "一句话介绍", market: "目标市场", direction: "职业方向", languages: "语言能力", bio: "个人简介", save: "保存档案"
+        },
+        toast: { saved: "已保存", posted: "已发布", sent: "消息已发送", connected: "联系请求已发送", accepted: "已接受联系", error: "出现错误" }
+      },
+
+      ja: {
+        brand: { subtitle: "クロスボーダー人材ネットワーク" },
+        top: { search: "メンバー、求人、市場を検索..." },
+        nav: { jobs: "求人", report: "レポート", network: "ネットワーク", companies: "企業", feedback: "フィードバック" },
+        auth: { signIn: "ログイン", signUp: "登録", signOut: "ログアウト" },
+        hero: {
+          kicker: "メンバーネットワーク",
+          title: "クロスボーダー人材と<span>つながる。</span>",
+          copy: "メンバーはプロフィール作成、投稿、他ユーザーとの接続、プライベートチャットができます。JapanOffer AI を単なるツールから本格的な人材ネットワークへ発展させます。",
+          join: "ネットワークに参加",
+          editProfile: "プロフィール編集"
+        },
+        preview: {
+          title: "Member Social OS", live: "ベータ版", memberName: "クロスボーダー LLB 学生", memberMeta: "英国 · 日本 · 法務 / コンプライアンス",
+          post: "日本またはシンガポールの初級法務コンプライアンス職を探しています。同じ方向の方とつながりたいです。",
+          chat1: "あなたもコンプライアンス職を狙っていますか？", chat2: "はい。日本とシンガポールが主な市場です。", chat3: "今週、応募書類を比較しましょう。"
+        },
+        locked: { title: "ログインしてメンバーネットワークに入ります。", copy: "投稿、プロフィール、チャットは登録ユーザーのみ利用できます。" },
+        profile: { title: "自分のプロフィール", copy: "他のメンバーから見える情報です。", incomplete: "プロフィールを完成", edit: "編集" },
+        members: { title: "メンバー", copy: "市場、職種、言語で探せます。", search: "メンバー検索...", connect: "接続", pending: "保留中", accept: "承認", connected: "接続済み", chat: "チャット", view: "表示" },
+        requests: { title: "接続リクエスト", copy: "承認してネットワークを広げます。", empty: "保留中のリクエストはありません。" },
+        chat: { title: "チャット", copy: "プロフィールからプライベートチャットを開始できます。", placeholder: "メッセージを書く...", send: "送信", empty: "チャットはまだありません。", private: "プライベートチャット" },
+        composer: { placeholder: "応募状況、目標職種、質問、有用な情報を投稿...", hint: "メンバーネットワークに投稿します。専門的で有用な内容にしましょう。", post: "投稿" },
+        feed: { empty: "メンバー投稿はまだありません。最初の投稿をしてみましょう。", posted: "投稿", profileNeeded: "まずプロフィールを完成してください。" },
+        modal: {
+          title: "プロフィール編集", copy: "明確なプロフィールは、他のメンバーがあなたを理解し接続しやすくします。",
+          name: "氏名", headline: "ヘッドライン", market: "対象市場", direction: "キャリア方向", languages: "言語", bio: "自己紹介", save: "保存"
+        },
+        toast: { saved: "保存しました", posted: "投稿しました", sent: "送信しました", connected: "接続リクエストを送信しました", accepted: "接続を承認しました", error: "エラーが発生しました" }
+      }
+    };
+
+    let supabaseClient = null;
+    let currentUser = null;
+    let myProfile = null;
+    let profiles = [];
+    let posts = [];
+    let connections = [];
+    let currentChatProfile = null;
+    let chatTimer = null;
+
+    function get(obj, path) {
+      return path.split(".").reduce((acc, key) => acc && acc[key], obj);
+    }
+
+    function getLang() {
+      return localStorage.getItem(LANG_KEY) || "en";
+    }
+
+    function text(path) {
+      const pack = I18N[getLang()] || I18N.en;
+      return get(pack, path) || get(I18N.en, path) || path;
+    }
+
+    function applyLang(lang) {
+      const pack = I18N[lang] || I18N.en;
+      localStorage.setItem(LANG_KEY, lang);
+      document.documentElement.lang = lang === "zh" ? "zh-CN" : lang;
+      document.body.dataset.lang = lang;
+      document.getElementById("languageSelect").value = lang;
+
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const value = get(pack, el.dataset.i18n);
+        if (value !== undefined) el.textContent = value;
+      });
+
+      document.querySelectorAll("[data-i18n-html]").forEach(el => {
+        const value = get(pack, el.dataset.i18nHtml);
+        if (value !== undefined) el.innerHTML = value;
+      });
+
+      document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+        const value = get(pack, el.dataset.i18nPlaceholder);
+        if (value !== undefined) el.placeholder = value;
+      });
+
+      document.title = lang === "zh" ? "会员网络 | JapanOffer AI" : lang === "ja" ? "メンバーネットワーク | JapanOffer AI" : "Member Network | JapanOffer AI";
+
+      renderAll();
+    }
+
+    function initials(nameOrEmail) {
+      const value = String(nameOrEmail || "JO").trim();
+      const parts = value.split(/\s+/).filter(Boolean);
+      if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+      return value.slice(0, 2).toUpperCase();
+    }
+
+    function escapeHtml(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function formatDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      return date.toLocaleString(getLang() === "zh" ? "zh-CN" : getLang() === "ja" ? "ja-JP" : "en-GB", { month:"short", day:"numeric", hour:"2-digit", minute:"2-digit" });
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 1600);
+    }
+
+    function connectionWith(otherId) {
+      return connections.find(c =>
+        (c.requester_id === currentUser.id && c.receiver_id === otherId) ||
+        (c.requester_id === otherId && c.receiver_id === currentUser.id)
+      );
+    }
+
+    function isConnected(otherId) {
+      const conn = connectionWith(otherId);
+      return conn && conn.status === "accepted";
+    }
+
+    async function initSupabase() {
+      try {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      } catch (error) {
+        document.getElementById("lockedState").classList.add("show");
+        return;
+      }
+
+      const { data } = await supabaseClient.auth.getSession();
+      currentUser = data.session ? data.session.user : null;
+
+      if (!currentUser) {
+        document.getElementById("lockedState").classList.add("show");
+        document.getElementById("app").classList.add("hidden");
+        return;
+      }
+
+      document.getElementById("lockedState").classList.remove("show");
+      document.getElementById("app").classList.remove("hidden");
+
+      document.getElementById("authLinks").innerHTML = `
+        <button type="button" id="signOutButton">${escapeHtml(text("auth.signOut"))}</button>
+      `;
+      document.getElementById("signOutButton").addEventListener("click", async () => {
+        await supabaseClient.auth.signOut();
+        location.href = "index.html";
+      });
+
+      await ensureProfile();
+      await refreshAll();
+      startPolling();
+    }
+
+    async function ensureProfile() {
+      const { data, error } = await supabaseClient
+        .from("network_profiles")
+        .select("*")
+        .eq("id", currentUser.id)
+        .maybeSingle();
+
+      if (error) {
+        showToast(text("toast.error"));
+        return;
+      }
+
+      if (data) {
+        myProfile = data;
+        return;
+      }
+
+      const email = currentUser.email || "member@example.com";
+      const fallbackName = email.split("@")[0];
+
+      const payload = {
+        id: currentUser.id,
+        full_name: fallbackName,
+        headline: "JapanOffer AI member",
+        target_market: "Japan / Singapore / UK",
+        career_direction: "Legal / Compliance",
+        languages: "English",
+        avatar_initials: initials(fallbackName),
+        bio: ""
+      };
+
+      const { data: inserted, error: insertError } = await supabaseClient
+        .from("network_profiles")
+        .insert(payload)
+        .select()
+        .single();
+
+      if (insertError) {
+        showToast(text("toast.error"));
+        return;
+      }
+
+      myProfile = inserted;
+    }
+
+    async function refreshAll() {
+      await Promise.all([loadProfiles(), loadConnections(), loadPosts()]);
+      renderAll();
+    }
+
+    async function loadProfiles() {
+      const { data, error } = await supabaseClient
+        .from("network_profiles")
+        .select("*")
+        .order("updated_at", { ascending:false });
+
+      if (!error) {
+        profiles = data || [];
+        myProfile = profiles.find(p => p.id === currentUser.id) || myProfile;
+      }
+    }
+
+    async function loadConnections() {
+      const { data, error } = await supabaseClient
+        .from("network_connections")
+        .select("*")
+        .or(`requester_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`)
+        .order("updated_at", { ascending:false });
+
+      if (!error) connections = data || [];
+    }
+
+    async function loadPosts() {
+      const { data, error } = await supabaseClient
+        .from("network_posts")
+        .select("*")
+        .order("created_at", { ascending:false })
+        .limit(50);
+
+      if (!error) posts = data || [];
+    }
+
+    function profileById(id) {
+      return profiles.find(p => p.id === id) || null;
+    }
+
+    function renderAll() {
+      if (!currentUser) return;
+      renderMyProfile();
+      renderMembers();
+      renderPosts();
+      renderRequests();
+      renderConversations();
+    }
+
+    function renderMyProfile() {
+      const box = document.getElementById("myProfileCard");
+      if (!box || !myProfile) return;
+
+      document.getElementById("composerAvatar").textContent = myProfile.avatar_initials || initials(myProfile.full_name);
+
+      box.innerHTML = `
+        <div class="big-avatar">${escapeHtml(myProfile.avatar_initials || initials(myProfile.full_name))}</div>
+        <h3>${escapeHtml(myProfile.full_name || "Member")}</h3>
+        <p>${escapeHtml(myProfile.headline || text("profile.incomplete"))}</p>
+        <div class="profile-tags">
+          <span class="chip">${escapeHtml(myProfile.target_market || "Market")}</span>
+          <span class="chip">${escapeHtml(myProfile.career_direction || "Direction")}</span>
+          <span class="chip">${escapeHtml(myProfile.languages || "Languages")}</span>
+        </div>
+        <div style="margin-top:16px">
+          <button class="small-btn primary" type="button" onclick="openProfileModal()">${escapeHtml(text("profile.edit"))}</button>
+        </div>
+      `;
+    }
+
+    function renderMembers() {
+      const box = document.getElementById("memberList");
+      if (!box || !currentUser) return;
+
+      const query = document.getElementById("memberSearch").value.trim().toLowerCase();
+
+      let items = profiles.filter(p => p.id !== currentUser.id);
+
+      if (query) {
+        items = items.filter(p => [
+          p.full_name, p.headline, p.target_market, p.career_direction, p.languages, p.bio
+        ].join(" ").toLowerCase().includes(query));
+      }
+
+      if (!items.length) {
+        box.innerHTML = `<div class="empty">${escapeHtml(text("members.search"))}</div>`;
+        return;
+      }
+
+      box.innerHTML = items.map(p => {
+        const conn = connectionWith(p.id);
+        const receivedPending = conn && conn.status === "pending" && conn.receiver_id === currentUser.id;
+        const sentPending = conn && conn.status === "pending" && conn.requester_id === currentUser.id;
+        const connected = conn && conn.status === "accepted";
+
+        let action = `<button class="small-btn primary" type="button" onclick="connectMember('${p.id}')">${escapeHtml(text("members.connect"))}</button>`;
+        if (receivedPending) action = `<button class="small-btn green" type="button" onclick="acceptConnection('${conn.id}')">${escapeHtml(text("members.accept"))}</button>`;
+        if (sentPending) action = `<button class="small-btn" disabled>${escapeHtml(text("members.pending"))}</button>`;
+        if (connected) action = `<button class="small-btn green" disabled>${escapeHtml(text("members.connected"))}</button>`;
+
+        return `
+          <article class="member">
+            <span class="avatar">${escapeHtml(p.avatar_initials || initials(p.full_name))}</span>
+            <div>
+              <h4>${escapeHtml(p.full_name || "Member")}</h4>
+              <p>${escapeHtml(p.headline || "")}</p>
+              <p>${escapeHtml(p.target_market || "")} · ${escapeHtml(p.career_direction || "")}</p>
+            </div>
+            <div class="member-actions">
+              ${action}
+              <button class="small-btn" type="button" onclick="openChat('${p.id}')">${escapeHtml(text("members.chat"))}</button>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function renderPosts() {
+      const box = document.getElementById("postList");
+      if (!box) return;
+
+      if (!posts.length) {
+        box.innerHTML = `<div class="empty">${escapeHtml(text("feed.empty"))}</div>`;
+        return;
+      }
+
+      box.innerHTML = posts.map(post => {
+        const author = profileById(post.user_id);
+        const name = author ? author.full_name : "Member";
+        const avatar = author ? (author.avatar_initials || initials(author.full_name)) : "JO";
+        const meta = author ? [author.target_market, author.career_direction].filter(Boolean).join(" · ") : "";
+
+        return `
+          <article class="post">
+            <div class="post-head">
+              <span class="avatar">${escapeHtml(avatar)}</span>
+              <div>
+                <h3>${escapeHtml(name)}</h3>
+                <p>${escapeHtml(meta)} · ${escapeHtml(text("feed.posted"))} ${escapeHtml(formatDate(post.created_at))}</p>
+              </div>
+              ${author && author.id !== currentUser.id ? `<button class="small-btn" type="button" onclick="openChat('${author.id}')">${escapeHtml(text("members.chat"))}</button>` : ""}
+            </div>
+            <div class="post-body">${escapeHtml(post.body)}</div>
+            <div class="post-foot">
+              <span class="status-pill">${escapeHtml(author ? (author.languages || "") : "")}</span>
+              <span class="status-pill">${escapeHtml(author ? (author.headline || "") : "")}</span>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function renderRequests() {
+      const box = document.getElementById("requestList");
+      if (!box) return;
+
+      const pending = connections.filter(c => c.status === "pending" && c.receiver_id === currentUser.id);
+
+      if (!pending.length) {
+        box.innerHTML = `<div class="empty">${escapeHtml(text("requests.empty"))}</div>`;
+        return;
+      }
+
+      box.innerHTML = pending.map(c => {
+        const p = profileById(c.requester_id);
+        if (!p) return "";
+        return `
+          <article class="member">
+            <span class="avatar">${escapeHtml(p.avatar_initials || initials(p.full_name))}</span>
+            <div>
+              <h4>${escapeHtml(p.full_name || "Member")}</h4>
+              <p>${escapeHtml(p.headline || "")}</p>
+            </div>
+            <div class="member-actions">
+              <button class="small-btn green" type="button" onclick="acceptConnection('${c.id}')">${escapeHtml(text("members.accept"))}</button>
+              <button class="small-btn" type="button" onclick="openChat('${p.id}')">${escapeHtml(text("members.chat"))}</button>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function renderConversations() {
+      const box = document.getElementById("conversationList");
+      if (!box) return;
+
+      const connectedIds = connections
+        .filter(c => c.status === "accepted")
+        .map(c => c.requester_id === currentUser.id ? c.receiver_id : c.requester_id);
+
+      const uniqueIds = [...new Set(connectedIds)];
+      const items = uniqueIds.map(id => profileById(id)).filter(Boolean);
+
+      if (!items.length) {
+        box.innerHTML = `<div class="empty">${escapeHtml(text("chat.empty"))}</div>`;
+        return;
+      }
+
+      box.innerHTML = items.map(p => `
+        <article class="member">
+          <span class="avatar">${escapeHtml(p.avatar_initials || initials(p.full_name))}</span>
+          <div>
+            <h4>${escapeHtml(p.full_name || "Member")}</h4>
+            <p>${escapeHtml(p.career_direction || text("chat.private"))}</p>
+          </div>
+          <div class="member-actions">
+            <button class="small-btn primary" type="button" onclick="openChat('${p.id}')">${escapeHtml(text("members.chat"))}</button>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    async function createPost() {
+      const body = document.getElementById("postBody").value.trim();
+      if (!body) return;
+
+      if (!myProfile) {
+        showToast(text("feed.profileNeeded"));
+        return;
+      }
+
+      const { error } = await supabaseClient
+        .from("network_posts")
+        .insert({ user_id: currentUser.id, body });
+
+      if (error) {
+        showToast(text("toast.error"));
+        return;
+      }
+
+      document.getElementById("postBody").value = "";
+      showToast(text("toast.posted"));
+      await loadPosts();
+      renderPosts();
+    }
+
+    async function connectMember(profileId) {
+      if (connectionWith(profileId)) return;
+
+      const { error } = await supabaseClient
+        .from("network_connections")
+        .insert({ requester_id: currentUser.id, receiver_id: profileId, status: "pending" });
+
+      if (error) {
+        showToast(text("toast.error"));
+        return;
+      }
+
+      showToast(text("toast.connected"));
+      await loadConnections();
+      renderMembers();
+    }
+
+    async function acceptConnection(connectionId) {
+      const { error } = await supabaseClient
+        .from("network_connections")
+        .update({ status:"accepted", updated_at:new Date().toISOString() })
+        .eq("id", connectionId);
+
+      if (error) {
+        showToast(text("toast.error"));
+        return;
+      }
+
+      showToast(text("toast.accepted"));
+      await loadConnections();
+      renderMembers();
+      renderRequests();
+      renderConversations();
+    }
+
+    async function openChat(profileId) {
+      const p = profileById(profileId);
+      if (!p) return;
+
+      currentChatProfile = p;
+      document.getElementById("chatAvatar").textContent = p.avatar_initials || initials(p.full_name);
+      document.getElementById("chatName").textContent = p.full_name || "Member";
+      document.getElementById("chatMeta").textContent = [p.target_market, p.career_direction].filter(Boolean).join(" · ") || text("chat.private");
+      document.getElementById("chatDrawer").classList.add("show");
+
+      await loadMessages();
+
+      clearInterval(chatTimer);
+      chatTimer = setInterval(loadMessages, 3500);
+    }
+
+    async function loadMessages() {
+      if (!currentChatProfile) return;
+
+      const otherId = currentChatProfile.id;
+
+      const { data, error } = await supabaseClient
+        .from("network_messages")
+        .select("*")
+        .or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${otherId}),and(sender_id.eq.${otherId},receiver_id.eq.${currentUser.id})`)
+        .order("created_at", { ascending:true });
+
+      if (error) return;
+
+      const box = document.getElementById("messages");
+      box.innerHTML = (data || []).map(msg => `
+        <div class="message ${msg.sender_id === currentUser.id ? "mine" : "theirs"}">${escapeHtml(msg.body)}</div>
+      `).join("");
+
+      box.scrollTop = box.scrollHeight;
+    }
+
+    async function sendMessage() {
+      const body = document.getElementById("messageInput").value.trim();
+      if (!body || !currentChatProfile) return;
+
+      const { error } = await supabaseClient
+        .from("network_messages")
+        .insert({ sender_id: currentUser.id, receiver_id: currentChatProfile.id, body });
+
+      if (error) {
+        showToast(text("toast.error"));
+        return;
+      }
+
+      document.getElementById("messageInput").value = "";
+      showToast(text("toast.sent"));
+      await loadMessages();
+      renderConversations();
+    }
+
+    function openProfileModal() {
+      if (!currentUser) {
+        location.href = "login.html";
+        return;
+      }
+
+      document.getElementById("profileName").value = myProfile?.full_name || "";
+      document.getElementById("profileHeadline").value = myProfile?.headline || "";
+      document.getElementById("profileMarket").value = myProfile?.target_market || "";
+      document.getElementById("profileDirection").value = myProfile?.career_direction || "";
+      document.getElementById("profileLanguages").value = myProfile?.languages || "";
+      document.getElementById("profileBio").value = myProfile?.bio || "";
+      document.getElementById("profileModal").classList.add("show");
+    }
+
+    async function saveProfile() {
+      const fullName = document.getElementById("profileName").value.trim() || (currentUser.email || "Member").split("@")[0];
+      const payload = {
+        id: currentUser.id,
+        full_name: fullName,
+        headline: document.getElementById("profileHeadline").value.trim(),
+        target_market: document.getElementById("profileMarket").value.trim(),
+        career_direction: document.getElementById("profileDirection").value.trim(),
+        languages: document.getElementById("profileLanguages").value.trim(),
+        bio: document.getElementById("profileBio").value.trim(),
+        avatar_initials: initials(fullName),
+        updated_at: new Date().toISOString()
+      };
+
+      const { data, error } = await supabaseClient
+        .from("network_profiles")
+        .upsert(payload)
+        .select()
+        .single();
+
+      if (error) {
+        showToast(text("toast.error"));
+        return;
+      }
+
+      myProfile = data;
+      document.getElementById("profileModal").classList.remove("show");
+      showToast(text("toast.saved"));
+      await loadProfiles();
+      renderAll();
+    }
+
+    function startPolling() {
+      setInterval(async () => {
+        if (!currentUser) return;
+        await Promise.all([loadConnections(), loadPosts()]);
+        renderRequests();
+        renderConversations();
+      }, 8000);
+    }
+
+    document.getElementById("languageSelect").addEventListener("change", e => applyLang(e.target.value));
+
+    document.getElementById("topSearchForm").addEventListener("submit", e => {
+      e.preventDefault();
+      const query = e.target.querySelector("input").value.trim();
+      if (query) {
+        document.getElementById("memberSearch").value = query;
+        renderMembers();
+        document.getElementById("app").scrollIntoView({ behavior:"smooth" });
+      }
+    });
+
+    document.getElementById("memberSearch").addEventListener("input", renderMembers);
+    document.getElementById("createPostButton").addEventListener("click", createPost);
+    document.getElementById("openProfileButton").addEventListener("click", openProfileModal);
+    document.getElementById("closeProfileModal").addEventListener("click", () => document.getElementById("profileModal").classList.remove("show"));
+    document.getElementById("saveProfileButton").addEventListener("click", saveProfile);
+    document.getElementById("closeChat").addEventListener("click", () => {
+      document.getElementById("chatDrawer").classList.remove("show");
+      clearInterval(chatTimer);
+    });
+    document.getElementById("sendMessageButton").addEventListener("click", sendMessage);
+    document.getElementById("messageInput").addEventListener("keydown", e => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    window.connectMember = connectMember;
+    window.acceptConnection = acceptConnection;
+    window.openChat = openChat;
+    window.openProfileModal = openProfileModal;
+
+    applyLang(getLang());
+    initSupabase();
+  </script>
 </body>
 </html>
