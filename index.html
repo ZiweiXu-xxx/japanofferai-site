@@ -1349,6 +1349,51 @@
       }
     }
 
+  
+    /* Fallback hero cleanup if JS is cached */
+    @media (min-width: 761px) {
+      .hero h1 {
+        font-size: clamp(48px, 5.55vw, 72px) !important;
+        line-height: 1.08 !important;
+        letter-spacing: -0.065em !important;
+      }
+      .hero h1 span {
+        display: block !important;
+        margin-top: 10px !important;
+        line-height: 1.08 !important;
+      }
+    }
+    @media (max-width: 760px) {
+      .hero h1 {
+        font-size: clamp(38px, 10.8vw, 52px) !important;
+        line-height: 1.08 !important;
+        letter-spacing: -0.055em !important;
+      }
+      .hero h1 span {
+        display: block !important;
+        margin-top: 5px !important;
+        line-height: 1.08 !important;
+      }
+    }
+
+  
+    /* Corrected fallback: keep lower Search jobs CTA, hide upper search-form button */
+    .hero-search .search-button,
+    .hero-search button[type="submit"],
+    .hero-search a.search-button,
+    .hero-search-row > button,
+    .hero-search-row > a.search-button {
+      display: none !important;
+    }
+    .hero-search-row {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    }
+    @media (max-width: 760px) {
+      .hero-search-row {
+        grid-template-columns: 1fr !important;
+      }
+    }
+
   </style>
 </head>
 
@@ -2046,5 +2091,6 @@
   <script src="mobile-header-fix.js"></script>
   <script src="legal-positioning.js"></script>
   <script src="mobile-text-fix.js"></script>
+  <script src="hero-cleanup.js"></script>
 </body>
 </html>
