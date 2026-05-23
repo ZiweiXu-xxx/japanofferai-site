@@ -1308,6 +1308,47 @@
       }
     }
 
+  
+    /* ===== Hero cleanup: no overlapping headline, no duplicate search CTA ===== */
+    .hero h1 {
+      font-size: clamp(50px, 6.8vw, 88px) !important;
+      line-height: 0.98 !important;
+      letter-spacing: -0.075em !important;
+    }
+
+    .hero h1 span {
+      margin-top: 8px !important;
+    }
+
+    .hero-actions {
+      margin-top: 22px !important;
+      display: flex !important;
+      flex-wrap: wrap !important;
+      gap: 12px !important;
+    }
+
+    .hero-actions .btn {
+      min-width: 210px;
+      justify-content: center;
+    }
+
+    @media (max-width: 760px) {
+      .hero h1 {
+        font-size: clamp(38px, 11vw, 54px) !important;
+        line-height: 1.04 !important;
+        letter-spacing: -0.055em !important;
+      }
+
+      .hero h1 span {
+        margin-top: 4px !important;
+      }
+
+      .hero-actions .btn {
+        width: 100%;
+        min-width: 0;
+      }
+    }
+
   </style>
 </head>
 
@@ -1363,7 +1404,7 @@
       <div class="hero-grid">
         <div class="reveal">
           <p class="eyebrow" data-i18n="hero.eyebrow">Cross-border talent intelligence platform</p>
-          <h1 data-i18n-html="hero.title">Search globally.<span>Belong professionally.</span></h1>
+          <h1 data-i18n-html="hero.title">Search globally.<span>Apply smarter.</span></h1>
           <p class="lede" data-i18n="hero.lead">
             JapanOffer AI combines real job search, AI match reports, member networking and employer discovery for students and early-career professionals building international careers.
           </p>
@@ -1393,7 +1434,6 @@
           </div>
 
           <div class="hero-actions">
-            <a class="btn primary" href="jobs-search.html" data-i18n="hero.primary">Start job search</a>
             <a class="btn" href="network.html" data-i18n="hero.network">Enter member network</a>
             <a class="btn" href="report.html" data-i18n="hero.report">Generate AI report</a>
           </div>
@@ -1662,7 +1702,7 @@
         tags: { ukLegal: "UK legal graduate", japanLegal: "Japan legal", sgCompliance: "Singapore compliance", hkAml: "Hong Kong AML" },
         hero: {
           eyebrow: "Cross-border talent intelligence platform",
-          title: "Search globally.<span>Belong professionally.</span>",
+          title: "Search globally.<span>Apply smarter.</span>",
           lead: "JapanOffer AI combines real job search, AI match reports, member networking and employer discovery for students and early-career professionals building international careers.",
           sublead: "It is not just a landing page. It is a cross-border career operating system.",
           primary: "Start job search",
