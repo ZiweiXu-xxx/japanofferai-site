@@ -1,0 +1,1055 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fit Check | JapanOffer AI</title>
+  <meta name="description" content="Check whether a cross-border job direction is realistic based on background, visa risk, qualification barriers and language fit." />
+
+  <style>
+    :root {
+      --ink:#07111f;
+      --muted:#5c6b82;
+      --blue:#1f57c8;
+      --blue2:#5d8dff;
+      --gold:#d8b56d;
+      --green:#14b8a6;
+      --red:#ef4444;
+      --line:rgba(16,24,40,.10);
+      --card:rgba(255,255,255,.80);
+      --shadow:0 26px 80px rgba(31,87,200,.14);
+      --shadow-dark:0 42px 120px rgba(7,17,31,.24);
+    }
+
+    * { box-sizing:border-box; }
+
+    body {
+      margin:0;
+      min-height:100vh;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 8% 4%,rgba(93,141,255,.18),transparent 30%),
+        radial-gradient(circle at 82% 10%,rgba(216,181,109,.16),transparent 30%),
+        linear-gradient(180deg,#fbfdff 0%,#eff5fc 54%,#edf4fb 100%);
+      overflow-x:hidden;
+    }
+
+    body::before {
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:-2;
+      background-image:
+        linear-gradient(rgba(31,87,200,.045) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(31,87,200,.045) 1px,transparent 1px);
+      background-size:46px 46px;
+      mask-image:linear-gradient(to bottom,black,transparent 78%);
+      pointer-events:none;
+    }
+
+    a { color:inherit; text-decoration:none; }
+    input, select, textarea, button { font:inherit; }
+
+    .shell {
+      width:min(1240px,calc(100% - 32px));
+      margin:0 auto;
+    }
+
+    .topbar {
+      position:sticky;
+      top:0;
+      z-index:100;
+      padding:16px 0;
+      backdrop-filter:blur(22px);
+    }
+
+    .topbar-inner {
+      display:grid;
+      grid-template-columns:216px minmax(220px,1fr) auto auto auto;
+      gap:15px;
+      align-items:center;
+      border:1px solid rgba(255,255,255,.78);
+      background:rgba(255,255,255,.70);
+      box-shadow:0 20px 70px rgba(16,24,40,.08);
+      border-radius:26px;
+      padding:12px;
+    }
+
+    .brand {
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+
+    .brand-mark {
+      width:47px;
+      height:47px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      color:#fff;
+      font-weight:950;
+      letter-spacing:-.06em;
+      background:linear-gradient(135deg,var(--blue),var(--blue2));
+      box-shadow:0 18px 40px rgba(31,87,200,.28);
+    }
+
+    .brand strong {
+      display:block;
+      font-size:16px;
+      font-weight:950;
+      letter-spacing:-.045em;
+      white-space:nowrap;
+    }
+
+    .brand small {
+      display:block;
+      color:var(--muted);
+      font-size:12px;
+      font-weight:760;
+      line-height:1.15;
+      margin-top:2px;
+    }
+
+    .top-search {
+      height:47px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.82);
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:0 16px;
+      min-width:0;
+      box-shadow:0 12px 36px rgba(16,24,40,.06);
+    }
+
+    .top-search span { color:var(--blue); font-weight:950; }
+
+    .top-search input {
+      width:100%;
+      min-width:0;
+      border:0;
+      outline:0;
+      background:transparent;
+      color:var(--ink);
+      font-weight:650;
+      font-size:14px;
+    }
+
+    .nav {
+      display:flex;
+      align-items:center;
+      gap:17px;
+      color:#27364a;
+      font-size:14px;
+      font-weight:880;
+      white-space:nowrap;
+    }
+
+    .nav a:hover { color:var(--blue); }
+
+    .lang-select {
+      height:36px;
+      width:88px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.92);
+      color:#27364a;
+      padding:0 9px;
+      outline:none;
+      font-size:12px;
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    .auth-links {
+      display:flex;
+      align-items:center;
+      gap:10px;
+      white-space:nowrap;
+    }
+
+    .auth-links a {
+      font-size:14px;
+      font-weight:900;
+      color:#27364a;
+    }
+
+    .auth-links a:last-child {
+      padding:10px 15px;
+      border-radius:999px;
+      background:var(--blue);
+      color:#fff;
+      box-shadow:0 16px 38px rgba(31,87,200,.25);
+    }
+
+    .hero {
+      padding:78px 0 34px;
+      display:grid;
+      grid-template-columns:minmax(0,1.02fr) minmax(400px,.98fr);
+      gap:54px;
+      align-items:center;
+    }
+
+    .eyebrow {
+      margin:0 0 18px;
+      color:var(--blue);
+      font-size:12px;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:.18em;
+    }
+
+    h1 {
+      margin:0;
+      font-size:clamp(50px,7vw,90px);
+      line-height:.9;
+      letter-spacing:-.09em;
+    }
+
+    h1 span {
+      display:block;
+      color:var(--blue);
+      position:relative;
+    }
+
+    h1 span::after {
+      content:"";
+      position:absolute;
+      left:8px;
+      bottom:8px;
+      width:min(78%,500px);
+      height:15px;
+      border-radius:999px;
+      background:rgba(216,181,109,.32);
+      z-index:-1;
+    }
+
+    .lede {
+      margin:26px 0 0;
+      color:#43536a;
+      font-size:18px;
+      line-height:1.74;
+      max-width:780px;
+      font-weight:560;
+    }
+
+    .hero-card {
+      border-radius:38px;
+      background:rgba(255,255,255,.78);
+      border:1px solid rgba(255,255,255,.80);
+      box-shadow:var(--shadow-dark);
+      backdrop-filter:blur(22px);
+      padding:26px;
+    }
+
+    .hero-score {
+      width:180px;
+      height:180px;
+      margin:0 auto 20px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:conic-gradient(var(--blue) 0deg 292deg,rgba(31,87,200,.12) 292deg 360deg);
+      position:relative;
+      box-shadow:0 22px 60px rgba(31,87,200,.16);
+    }
+
+    .hero-score::before {
+      content:"";
+      position:absolute;
+      inset:13px;
+      border-radius:50%;
+      background:#fff;
+    }
+
+    .hero-score strong {
+      position:relative;
+      color:var(--blue);
+      font-size:44px;
+      letter-spacing:-.06em;
+    }
+
+    .mini-grid {
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+    }
+
+    .mini-grid div {
+      padding:14px;
+      border-radius:18px;
+      background:#fff;
+      border:1px solid var(--line);
+    }
+
+    .mini-grid span {
+      display:block;
+      color:var(--muted);
+      font-size:12px;
+      font-weight:900;
+      margin-bottom:5px;
+    }
+
+    .mini-grid strong { font-size:14px; }
+
+    .workspace {
+      padding:42px 0 82px;
+      display:grid;
+      grid-template-columns:minmax(360px,.92fr) minmax(0,1.08fr);
+      gap:18px;
+      align-items:start;
+    }
+
+    .panel {
+      border-radius:32px;
+      background:rgba(255,255,255,.82);
+      border:1px solid rgba(255,255,255,.78);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(22px);
+      overflow:hidden;
+    }
+
+    .panel-head {
+      padding:22px 24px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
+      align-items:flex-start;
+    }
+
+    .panel-head h2 {
+      margin:0;
+      font-size:24px;
+      letter-spacing:-.055em;
+    }
+
+    .panel-head p {
+      margin:7px 0 0;
+      color:var(--muted);
+      line-height:1.55;
+      font-size:14px;
+    }
+
+    .badge {
+      padding:8px 10px;
+      border-radius:999px;
+      background:rgba(31,87,200,.09);
+      color:var(--blue);
+      font-size:12px;
+      font-weight:950;
+      white-space:nowrap;
+    }
+
+    .form-body {
+      padding:22px;
+      display:grid;
+      gap:14px;
+    }
+
+    .form-grid {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+
+    .field {
+      display:grid;
+      gap:7px;
+    }
+
+    .field.full { grid-column:1 / -1; }
+
+    label {
+      font-size:13px;
+      font-weight:900;
+      color:#344054;
+    }
+
+    input, select, textarea {
+      width:100%;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:#fff;
+      color:var(--ink);
+      outline:0;
+      padding:13px 14px;
+      font-size:15px;
+      font-weight:650;
+    }
+
+    select { height:50px; cursor:pointer; }
+
+    textarea {
+      min-height:105px;
+      resize:vertical;
+      line-height:1.55;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color:rgba(31,87,200,.48);
+      box-shadow:0 0 0 4px rgba(31,87,200,.10);
+    }
+
+    .generate {
+      border:0;
+      border-radius:18px;
+      min-height:54px;
+      background:linear-gradient(135deg,var(--blue),var(--blue2));
+      color:#fff;
+      font-weight:950;
+      cursor:pointer;
+      box-shadow:0 20px 46px rgba(31,87,200,.26);
+    }
+
+    .output {
+      background:
+        radial-gradient(circle at 12% 0%,rgba(79,140,255,.20),transparent 34%),
+        linear-gradient(180deg,#0b1220,#07111f);
+      color:#fff;
+      min-height:620px;
+    }
+
+    .output .panel-head {
+      border-bottom-color:rgba(255,255,255,.10);
+    }
+
+    .output .panel-head h2 { color:#fff; }
+    .output .panel-head p { color:#aab6c8; }
+
+    .result-body { padding:22px; }
+
+    .empty {
+      min-height:470px;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      color:#aab6c8;
+      padding:28px;
+    }
+
+    .empty strong {
+      display:block;
+      color:#fff;
+      font-size:28px;
+      letter-spacing:-.055em;
+      margin-bottom:10px;
+    }
+
+    .result-grid {
+      display:grid;
+      gap:16px;
+    }
+
+    .top-result {
+      display:grid;
+      grid-template-columns:170px 1fr;
+      gap:16px;
+      align-items:stretch;
+    }
+
+    .score-card,
+    .summary-card,
+    .insight-card {
+      border-radius:24px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      padding:18px;
+    }
+
+    .score-ring {
+      width:135px;
+      height:135px;
+      border-radius:50%;
+      margin:0 auto 14px;
+      display:grid;
+      place-items:center;
+      background:conic-gradient(#93c5fd 0deg var(--score-deg, 288deg),rgba(255,255,255,.12) var(--score-deg, 288deg) 360deg);
+      position:relative;
+    }
+
+    .score-ring::before {
+      content:"";
+      position:absolute;
+      inset:12px;
+      border-radius:50%;
+      background:#0b1220;
+    }
+
+    .score-ring strong {
+      position:relative;
+      font-size:34px;
+      color:#93c5fd;
+      letter-spacing:-.055em;
+    }
+
+    .score-card p {
+      text-align:center;
+      color:#cbd5e1;
+      margin:0;
+      font-size:13px;
+      font-weight:900;
+    }
+
+    .summary-card h3,
+    .insight-card h3 {
+      margin:0 0 10px;
+      color:#fff;
+      font-size:19px;
+      letter-spacing:-.04em;
+    }
+
+    .summary-card p,
+    .insight-card p,
+    .insight-card li {
+      color:#cbd5e1;
+      line-height:1.65;
+      font-size:14px;
+    }
+
+    .chips {
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
+    .chip {
+      padding:8px 10px;
+      border-radius:999px;
+      background:rgba(147,197,253,.12);
+      border:1px solid rgba(147,197,253,.24);
+      color:#dbeafe;
+      font-size:12px;
+      font-weight:900;
+    }
+
+    .insights {
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:16px;
+    }
+
+    .insight-card ul {
+      margin:10px 0 0;
+      padding-left:18px;
+    }
+
+    .disclaimer {
+      margin-top:16px;
+      padding:14px;
+      border-radius:18px;
+      background:rgba(216,181,109,.12);
+      border:1px solid rgba(216,181,109,.30);
+      color:#fef3c7;
+      font-size:12px;
+      line-height:1.6;
+    }
+
+    .copy-btn {
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.10);
+      color:#fff;
+      border-radius:999px;
+      padding:9px 12px;
+      font-size:13px;
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    @media (max-width:1080px) {
+      .topbar-inner,
+      .hero,
+      .workspace {
+        grid-template-columns:1fr;
+      }
+
+      .nav,
+      .auth-links {
+        flex-wrap:wrap;
+      }
+    }
+
+    @media (max-width:760px) {
+      .shell { width:min(100% - 22px,520px); }
+      .hero { padding-top:36px; gap:24px; }
+      h1 { font-size:clamp(38px,11vw,52px); line-height:1.02; letter-spacing:-.055em; }
+      .lede { font-size:16px; }
+      .form-grid,
+      .top-result,
+      .insights,
+      .mini-grid {
+        grid-template-columns:1fr;
+      }
+      .workspace { padding-top:22px; }
+      .hero-card { border-radius:28px; padding:20px; }
+      .panel { border-radius:26px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="shell">
+      <div class="topbar-inner">
+        <a class="brand" href="index.html">
+          <span class="brand-mark">J</span>
+          <span>
+            <strong>JapanOffer AI</strong>
+            <small data-i18n="brand.subtitle">Cross-border Talent Network</small>
+          </span>
+        </a>
+
+        <form class="top-search" id="topSearchForm">
+          <span>⌕</span>
+          <input data-i18n-placeholder="top.search" placeholder="Search jobs, markets or roles..." />
+        </form>
+
+        <nav class="nav">
+          <a href="jobs-search.html" data-i18n="nav.jobs">Jobs</a>
+          <a href="report.html" data-i18n="nav.report">Report</a>
+          <a href="legal-fit.html" data-i18n="nav.fit">Fit Check</a>
+          <a href="network.html" data-i18n="nav.network">Network</a>
+          <a href="companies.html" data-i18n="nav.companies">Companies</a>
+        </nav>
+
+        <select class="lang-select" id="languageSelect" aria-label="Language">
+          <option value="en">EN</option>
+          <option value="zh">中文</option>
+          <option value="ja">日本語</option>
+        </select>
+
+        <div class="auth-links">
+          <a href="login.html" data-i18n="auth.signIn">Sign in</a>
+          <a href="signup.html" data-i18n="auth.signUp">Sign up</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <div>
+        <p class="eyebrow" data-i18n="hero.kicker">Realistic application checker</p>
+        <h1 data-i18n-html="hero.title">Check if a role is<span>really worth applying for.</span></h1>
+        <p class="lede" data-i18n="hero.copy">
+          Answer a few simple questions. JapanOffer AI will estimate whether your target role is realistic based on background fit, visa/work-right risk, qualification barriers and language match.
+        </p>
+      </div>
+
+      <aside class="hero-card">
+        <div class="hero-score"><strong>82%</strong></div>
+        <div class="mini-grid">
+          <div><span data-i18n="preview.can">Can apply</span><strong data-i18n="preview.maybe">Likely</strong></div>
+          <div><span data-i18n="preview.risk">Risk</span><strong data-i18n="preview.medium">Medium</strong></div>
+          <div><span data-i18n="preview.priority">Priority</span><strong data-i18n="preview.high">High</strong></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="workspace">
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2 data-i18n="form.title">Build your check</h2>
+            <p data-i18n="form.copy">The goal is not to give legal advice. It is to help you avoid wasting applications on roles that are clearly unrealistic.</p>
+          </div>
+          <span class="badge" data-i18n="form.badge">Beta</span>
+        </div>
+
+        <div class="form-body">
+          <div class="form-grid">
+            <div class="field">
+              <label for="education" data-i18n="form.education">Education</label>
+              <select id="education">
+                <option value="law">LLB / law background</option>
+                <option value="business">Business / management</option>
+                <option value="finance">Finance / accounting</option>
+                <option value="tech">Tech / data</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="market" data-i18n="form.market">Target market</label>
+              <select id="market">
+                <option value="Japan">Japan</option>
+                <option value="Singapore">Singapore</option>
+                <option value="Hong Kong">Hong Kong</option>
+                <option value="United Kingdom">United Kingdom</option>
+                <option value="Canada">Canada</option>
+                <option value="Australia">Australia</option>
+                <option value="Remote">Remote</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="direction" data-i18n="form.direction">Role direction</label>
+              <select id="direction">
+                <option value="compliance">Compliance / regulatory</option>
+                <option value="aml">AML / KYC / risk</option>
+                <option value="legal">Legal assistant / legal operations</option>
+                <option value="lawyer">Lawyer / trainee solicitor route</option>
+                <option value="web3">Web3 / crypto compliance</option>
+                <option value="business">Business / operations</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="visa" data-i18n="form.visa">Work authorisation</label>
+              <select id="visa">
+                <option value="need">Need sponsorship</option>
+                <option value="student">Student visa</option>
+                <option value="graduate">Graduate route / post-study route</option>
+                <option value="noneed">No sponsorship needed</option>
+                <option value="unknown">Not sure</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="language" data-i18n="form.language">Languages</label>
+              <select id="language">
+                <option value="multi">English + Japanese/Chinese</option>
+                <option value="english">English only</option>
+                <option value="japanese">Japanese strong</option>
+                <option value="chinese">Chinese + English</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="experience" data-i18n="form.experience">Experience level</label>
+              <select id="experience">
+                <option value="entry">Entry-level / graduate</option>
+                <option value="intern">Internship</option>
+                <option value="junior">Junior</option>
+                <option value="mid">Mid-level</option>
+              </select>
+            </div>
+
+            <div class="field full">
+              <label for="notes" data-i18n="form.notes">Anything else?</label>
+              <textarea id="notes" data-i18n-placeholder="form.notesPh" placeholder="Example: I am a UK LLB student with Japanese background, targeting Japan compliance or Singapore AML roles."></textarea>
+            </div>
+          </div>
+
+          <button class="generate" type="button" id="generateButton" data-i18n="form.button">Run fit check</button>
+        </div>
+      </section>
+
+      <section class="panel output">
+        <div class="panel-head">
+          <div>
+            <h2 data-i18n="result.title">Realistic application result</h2>
+            <p data-i18n="result.copy">Your result will appear here.</p>
+          </div>
+          <button class="copy-btn" id="copyButton" type="button" data-i18n="result.copyBtn">Copy</button>
+        </div>
+
+        <div class="result-body" id="resultBody">
+          <div class="empty">
+            <div>
+              <strong data-i18n="empty.title">Ready when you are.</strong>
+              <p data-i18n="empty.copy">Run the check to see your application priority, risks and next steps.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const LANG_KEY = "japanoffer_lang";
+    let lastText = "";
+
+    const I18N = {
+      en: {
+        brand:{ subtitle:"Cross-border Talent Network" },
+        top:{ search:"Search jobs, markets or roles..." },
+        nav:{ jobs:"Jobs", report:"Report", fit:"Fit Check", network:"Network", companies:"Companies" },
+        auth:{ signIn:"Sign in", signUp:"Sign up" },
+        hero:{ kicker:"Realistic application checker", title:"Check if a role is<span>really worth applying for.</span>", copy:"Answer a few simple questions. JapanOffer AI will estimate whether your target role is realistic based on background fit, visa/work-right risk, qualification barriers and language match." },
+        preview:{ can:"Can apply", maybe:"Likely", risk:"Risk", medium:"Medium", priority:"Priority", high:"High" },
+        form:{ title:"Build your check", copy:"The goal is not to give legal advice. It is to help you avoid wasting applications on roles that are clearly unrealistic.", badge:"Beta", education:"Education", market:"Target market", direction:"Role direction", visa:"Work authorisation", language:"Languages", experience:"Experience level", notes:"Anything else?", notesPh:"Example: I am a UK LLB student with Japanese background, targeting Japan compliance or Singapore AML roles.", button:"Run fit check" },
+        result:{ title:"Realistic application result", copy:"Your result will appear here.", copyBtn:"Copy", score:"Realistic apply score", summary:"Summary", barrier:"Qualification barrier", visa:"Visa/work-right risk", strategy:"Application strategy", next:"Next steps", disclaimer:"This is career planning information, not formal legal advice. Always check official visa rules, employer requirements and professional qualification rules." },
+        empty:{ title:"Ready when you are.", copy:"Run the check to see your application priority, risks and next steps." },
+        labels:{ low:"Low", medium:"Medium", high:"High", veryHigh:"Very high", priorityHigh:"High priority", priorityMed:"Medium priority", difficult:"Difficult", realistic:"Realistic", possible:"Possible with caution" },
+        copied:"Copied"
+      },
+      zh: {
+        brand:{ subtitle:"跨境人才匹配网络" },
+        top:{ search:"搜索岗位、市场或方向..." },
+        nav:{ jobs:"岗位", report:"报告", fit:"适配检查", network:"网络", companies:"企业" },
+        auth:{ signIn:"登录", signUp:"注册" },
+        hero:{ kicker:"真实可申请性检查器", title:"先判断这个岗位<span>到底值不值得投。</span>", copy:"回答几个简单问题。JapanOffer AI 会根据背景匹配、签证/工作许可风险、资格门槛和语言要求，估算这个方向对你是否现实。" },
+        preview:{ can:"能否申请", maybe:"较有机会", risk:"风险", medium:"中等", priority:"优先级", high:"高" },
+        form:{ title:"建立你的检查", copy:"这个功能不是提供正式法律意见，而是帮你减少明显不现实的申请，避免低概率海投。", badge:"测试版", education:"教育背景", market:"目标市场", direction:"岗位方向", visa:"签证/工作许可", language:"语言能力", experience:"经验级别", notes:"补充说明", notesPh:"例如：我是英国 LLB 学生，有日本背景，目标是日本合规或新加坡 AML。", button:"开始适配检查" },
+        result:{ title:"真实可申请性结果", copy:"你的结果会显示在这里。", copyBtn:"复制", score:"真实申请分数", summary:"总结", barrier:"资格门槛", visa:"签证/工作许可风险", strategy:"申请策略", next:"下一步", disclaimer:"这是职业规划信息，不构成正式法律意见。请始终核对官方签证规则、雇主要求和职业资格规则。" },
+        empty:{ title:"准备好了就可以开始。", copy:"运行检查后，你会看到申请优先级、风险和下一步建议。" },
+        labels:{ low:"低", medium:"中等", high:"高", veryHigh:"很高", priorityHigh:"高优先级", priorityMed:"中等优先级", difficult:"较难", realistic:"现实可投", possible:"可以谨慎尝试" },
+        copied:"已复制"
+      },
+      ja: {
+        brand:{ subtitle:"クロスボーダー人材ネットワーク" },
+        top:{ search:"求人、市場、方向性を検索..." },
+        nav:{ jobs:"求人", report:"レポート", fit:"適性チェック", network:"ネットワーク", companies:"企業" },
+        auth:{ signIn:"ログイン", signUp:"登録" },
+        hero:{ kicker:"現実的な応募チェック", title:"その求人が<span>本当に応募価値があるか確認。</span>", copy:"いくつかの質問に答えるだけで、背景、ビザ・就労リスク、資格要件、言語要件から現実的な応募可能性を推定します。" },
+        preview:{ can:"応募可能性", maybe:"高め", risk:"リスク", medium:"中程度", priority:"優先度", high:"高" },
+        form:{ title:"チェックを作成", copy:"正式な法律助言ではなく、明らかに現実性の低い応募を避けるためのキャリア判断支援です。", badge:"ベータ版", education:"学歴", market:"対象市場", direction:"職種方向", visa:"就労資格", language:"言語", experience:"経験レベル", notes:"補足", notesPh:"例：英国 LLB 学生で、日本のコンプライアンスまたはシンガポール AML を志望しています。", button:"適性チェック" },
+        result:{ title:"現実的な応募結果", copy:"結果がここに表示されます。", copyBtn:"コピー", score:"現実的な応募スコア", summary:"サマリー", barrier:"資格要件", visa:"ビザ・就労リスク", strategy:"応募戦略", next:"次のステップ", disclaimer:"これはキャリア計画情報であり、正式な法律助言ではありません。必ず公式のビザ規則、企業要件、専門資格ルールを確認してください。" },
+        empty:{ title:"準備ができたら開始できます。", copy:"チェックを実行すると、応募優先度、リスク、次のステップが表示されます。" },
+        labels:{ low:"低い", medium:"中程度", high:"高い", veryHigh:"非常に高い", priorityHigh:"高優先度", priorityMed:"中優先度", difficult:"難しい", realistic:"現実的", possible:"注意して応募可能" },
+        copied:"コピーしました"
+      }
+    };
+
+    function lang() {
+      const value = localStorage.getItem(LANG_KEY) || "en";
+      if (value.startsWith("zh")) return "zh";
+      if (value.startsWith("ja")) return "ja";
+      return "en";
+    }
+
+    function get(obj, path) {
+      return path.split(".").reduce((acc, key) => acc && acc[key], obj);
+    }
+
+    function t(path) {
+      return get(I18N[lang()], path) || get(I18N.en, path) || path;
+    }
+
+    function applyLang(value) {
+      localStorage.setItem(LANG_KEY, value);
+      document.documentElement.lang = value === "zh" ? "zh-CN" : value;
+      document.getElementById("languageSelect").value = value;
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const v = get(I18N[value], el.dataset.i18n);
+        if (v !== undefined) el.textContent = v;
+      });
+      document.querySelectorAll("[data-i18n-html]").forEach(el => {
+        const v = get(I18N[value], el.dataset.i18nHtml);
+        if (v !== undefined) el.innerHTML = v;
+      });
+      document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+        const v = get(I18N[value], el.dataset.i18nPlaceholder);
+        if (v !== undefined) el.placeholder = v;
+      });
+      document.title = value === "zh" ? "适配检查 | JapanOffer AI" : value === "ja" ? "適性チェック | JapanOffer AI" : "Fit Check | JapanOffer AI";
+    }
+
+    function read() {
+      return {
+        education: document.getElementById("education").value,
+        market: document.getElementById("market").value,
+        direction: document.getElementById("direction").value,
+        visa: document.getElementById("visa").value,
+        language: document.getElementById("language").value,
+        experience: document.getElementById("experience").value,
+        notes: document.getElementById("notes").value.trim()
+      };
+    }
+
+    function score(profile) {
+      let s = 62;
+      if (profile.education === "law" && ["compliance","aml","legal","web3"].includes(profile.direction)) s += 12;
+      if (profile.education === "finance" && ["aml","compliance"].includes(profile.direction)) s += 8;
+      if (profile.direction === "lawyer") s -= 18;
+      if (profile.direction === "legal") s += 2;
+      if (profile.visa === "noneed") s += 14;
+      if (profile.visa === "graduate") s += 6;
+      if (profile.visa === "need") s -= 10;
+      if (profile.visa === "unknown") s -= 4;
+      if (profile.language === "multi") s += 10;
+      if (profile.language === "japanese" && profile.market === "Japan") s += 12;
+      if (profile.language === "chinese" && ["Singapore","Hong Kong"].includes(profile.market)) s += 6;
+      if (profile.language === "english" && ["United Kingdom","Canada","Australia","Remote"].includes(profile.market)) s += 4;
+      if (profile.experience === "mid") s += 6;
+      if (profile.experience === "intern") s -= 2;
+      return Math.max(35, Math.min(94, s));
+    }
+
+    function qualification(profile) {
+      if (profile.direction === "lawyer") return t("labels.veryHigh");
+      if (profile.direction === "legal") return t("labels.high");
+      if (["compliance","aml","web3"].includes(profile.direction)) return t("labels.medium");
+      return t("labels.low");
+    }
+
+    function visaRisk(profile) {
+      if (profile.visa === "noneed") return t("labels.low");
+      if (profile.visa === "graduate") return t("labels.medium");
+      if (profile.visa === "need") return t("labels.high");
+      return t("labels.medium");
+    }
+
+    function priorityLabel(s) {
+      if (s >= 78) return t("labels.priorityHigh");
+      if (s >= 58) return t("labels.priorityMed");
+      return t("labels.difficult");
+    }
+
+    function summary(profile, s) {
+      const L = lang();
+      if (L === "zh") {
+        if (s >= 78) return "这个方向对你目前背景比较现实，值得优先尝试。重点是把语言能力、教育背景和岗位方向连接起来，不要只泛泛地说自己想找海外工作。";
+        if (s >= 58) return "这个方向可以尝试，但需要注意签证、资格门槛或经验要求。建议先投低资格门槛的岗位，例如合规、AML、运营或法律助理类岗位。";
+        return "这个方向目前难度偏高，不建议作为唯一主线。你可以先选择资格门槛更低、更重视语言和跨境背景的岗位作为过渡。";
+      }
+      if (L === "ja") {
+        if (s >= 78) return "この方向性は現在の背景に対して比較的現実的です。語学力、学歴、職種方向を明確につなげて応募することが重要です。";
+        if (s >= 58) return "応募は可能ですが、ビザ、資格要件、経験要件に注意が必要です。まずは資格ハードルが低い職種を優先してください。";
+        return "現時点では難度が高めです。資格要件が低く、語学力やクロスボーダー背景が活きる職種を先に検討してください。";
+      }
+      if (s >= 78) return "This direction looks realistic for your current background and is worth prioritising. The key is to connect your education, languages and role direction clearly in applications.";
+      if (s >= 58) return "This direction is possible, but you should be careful about visa, qualification or experience requirements. Start with lower-barrier roles such as compliance, AML, operations or legal assistant roles.";
+      return "This direction looks difficult as a main route for now. Consider lower-barrier roles where language ability and cross-border background matter more.";
+    }
+
+    function strategy(profile) {
+      const L = lang();
+      if (L === "zh") {
+        return [
+          "优先选择不强制要求本地执照的岗位。",
+          "把申请重点放在语言能力、合规意识、跨境背景和学习能力上。",
+          "申请前检查岗位描述是否明确要求本地工作权或专业资格。"
+        ];
+      }
+      if (L === "ja") {
+        return [
+          "現地資格を必須としない求人を優先してください。",
+          "語学力、コンプライアンス意識、国際背景、学習力を強調してください。",
+          "応募前に、就労資格や専門資格が必須か確認してください。"
+        ];
+      }
+      return [
+        "Prioritise roles that do not clearly require a local professional licence.",
+        "Emphasise language ability, compliance awareness, cross-border background and learning capacity.",
+        "Before applying, check whether the job description requires local work rights or a specific qualification."
+      ];
+    }
+
+    function nextSteps(profile) {
+      const L = lang();
+      if (L === "zh") {
+        return [
+          "搜索 15 到 20 个相同方向岗位，比较资格要求。",
+          "把高风险岗位和低风险岗位分开保存。",
+          "用 Fit Check 结果改写你的 CV Summary 和 Cover Letter 开头。"
+        ];
+      }
+      if (L === "ja") {
+        return [
+          "同じ方向の求人を 15 から 20 件検索し、資格要件を比較してください。",
+          "高リスク求人と低リスク求人を分けて保存してください。",
+          "Fit Check の結果をもとに CV Summary とカバーレター冒頭を調整してください。"
+        ];
+      }
+      return [
+        "Search 15 to 20 roles in the same direction and compare qualification requirements.",
+        "Separate high-risk roles from lower-risk roles before applying.",
+        "Use this result to rewrite your CV summary and cover letter opening."
+      ];
+    }
+
+    function escapeHtml(value) {
+      return String(value || "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+    }
+
+    function generate() {
+      const profile = read();
+      const s = score(profile);
+      const deg = Math.round(s / 100 * 360);
+      const strategies = strategy(profile);
+      const steps = nextSteps(profile);
+
+      const html = `
+        <div class="result-grid">
+          <div class="top-result">
+            <div class="score-card">
+              <div class="score-ring" style="--score-deg:${deg}deg"><strong>${s}%</strong></div>
+              <p>${escapeHtml(t("result.score"))}</p>
+            </div>
+            <div class="summary-card">
+              <h3>${escapeHtml(t("result.summary"))}</h3>
+              <p>${escapeHtml(summary(profile, s))}</p>
+              <div class="chips">
+                <span class="chip">${escapeHtml(profile.market)}</span>
+                <span class="chip">${escapeHtml(priorityLabel(s))}</span>
+                <span class="chip">${escapeHtml(t("result.barrier"))}: ${escapeHtml(qualification(profile))}</span>
+                <span class="chip">${escapeHtml(t("result.visa"))}: ${escapeHtml(visaRisk(profile))}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="insights">
+            <article class="insight-card">
+              <h3>${escapeHtml(t("result.barrier"))}</h3>
+              <p>${escapeHtml(qualification(profile))}</p>
+              <p>${escapeHtml(profile.direction === "lawyer" ? (lang()==="zh" ? "律师/实习律师路径通常资格门槛较高，需要特别核对本地执业路径。" : lang()==="ja" ? "弁護士・トレーニー系ルートは資格要件が高い場合があります。" : "Lawyer or trainee-solicitor routes often have higher qualification barriers.") : (lang()==="zh" ? "这个方向更适合先从合规、AML、运营或法律支持类岗位切入。" : lang()==="ja" ? "この方向は、コンプライアンス、AML、運営、法務サポート職から入る方が現実的です。" : "This direction is more realistic through compliance, AML, operations or legal support roles."))}</p>
+            </article>
+
+            <article class="insight-card">
+              <h3>${escapeHtml(t("result.visa"))}</h3>
+              <p>${escapeHtml(visaRisk(profile))}</p>
+              <p>${escapeHtml(lang()==="zh" ? "如果需要签证担保，优先找明确接受国际候选人或大公司体系内的岗位。" : lang()==="ja" ? "ビザスポンサーが必要な場合、国際候補者を受け入れる企業や大企業の求人を優先してください。" : "If sponsorship is needed, prioritise roles that clearly welcome international candidates or larger employers with structured hiring routes.")}</p>
+            </article>
+
+            <article class="insight-card">
+              <h3>${escapeHtml(t("result.strategy"))}</h3>
+              <ul>${strategies.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
+            </article>
+
+            <article class="insight-card">
+              <h3>${escapeHtml(t("result.next"))}</h3>
+              <ul>${steps.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
+            </article>
+          </div>
+
+          <div class="disclaimer">${escapeHtml(t("result.disclaimer"))}</div>
+        </div>
+      `;
+
+      document.getElementById("resultBody").innerHTML = html;
+      lastText = [
+        `${t("result.score")}: ${s}%`,
+        `${t("result.summary")}: ${summary(profile, s)}`,
+        `${t("result.barrier")}: ${qualification(profile)}`,
+        `${t("result.visa")}: ${visaRisk(profile)}`,
+        `${t("result.strategy")}: ${strategies.join(" ")}`,
+        `${t("result.next")}: ${steps.join(" ")}`,
+        t("result.disclaimer")
+      ].join("\\n\\n");
+
+      document.querySelector(".output").scrollIntoView({ behavior:"smooth", block:"start" });
+    }
+
+    document.getElementById("languageSelect").addEventListener("change", event => applyLang(event.target.value));
+    document.getElementById("generateButton").addEventListener("click", generate);
+    document.getElementById("copyButton").addEventListener("click", async () => {
+      if (!lastText) generate();
+      try {
+        await navigator.clipboard.writeText(lastText);
+        document.getElementById("copyButton").textContent = t("copied");
+        setTimeout(() => document.getElementById("copyButton").textContent = t("result.copyBtn"), 1200);
+      } catch (e) {
+        alert(lastText);
+      }
+    });
+    document.getElementById("topSearchForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const q = event.target.querySelector("input").value.trim() || "legal compliance";
+      location.href = "jobs-search.html?q=" + encodeURIComponent(q);
+    });
+
+    applyLang(localStorage.getItem(LANG_KEY) || "en");
+  </script>
+
+  <script src="mobile-header-fix.js"></script>
+  <script src="mobile-text-fix.js"></script>
+</body>
+</html>
