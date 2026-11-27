@@ -3,6 +3,7 @@
   const savedJobsList = document.getElementById("savedJobsList");
   const draftList = document.getElementById("draftList");
   const searchInput = document.getElementById("searchInput");
+  const statusFilter = document.getElementById("statusFilter");
 
   const profileAuth = document.getElementById("profileAuth");
   const profileCareer = document.getElementById("profileCareer");
@@ -20,6 +21,7 @@
   const marketLabel = document.getElementById("marketLabel");
   const statusLabel = document.getElementById("statusLabel");
   const applicationStatus = document.getElementById("applicationStatus");
+  const deadlineInput = document.getElementById("deadlineInput");
   const notesInput = document.getElementById("notesInput");
   const coverLetterOutput = document.getElementById("coverLetterOutput");
 
@@ -90,6 +92,132 @@
     return map[value] || value || "已保存";
   }
 
+  // --- Job hunt workspace: status + deadline --------------------------------
+  // Canonical workspace state lives on the saved_jobs row (status, deadline)
+  // and is mirrored to application_drafts (status; deadline once the
+  // migration below has run). The `status` column on application_drafts
+  // already exists, so status changes keep working even before the
+  // migration; `deadline` / `saved_jobs.status` are added by
+  // supabase/migrations/20261127_job_workspace.sql (file only — the user
+  // runs it in the Supabase SQL Editor). Until then, persistWorkspace
+  // degrades gracefully: status still lands in application_drafts, the
+  // deadline stays in memory, and the UI says the database update is needed.
+  const WORKSPACE_STATUSES = ["saved", "drafting", "ready", "applied", "interview", "offer", "rejected"];
+
+  function normalizeStatus(value) {
+    return WORKSPACE_STATUSES.indexOf(value) >= 0 ? value : "saved";
+  }
+
+  function isValidDeadline(value) {
+    if (!value) return true;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+    const d = new Date(value + "T00:00:00");
+    return !isNaN(d.getTime()) && d.toISOString().slice(0, 10) === value;
+  }
+
+  // PostgREST returns PGRST204 when a column does not exist; the underlying
+  // Postgres error is 42703 ("column ... does not exist").
+  function isMissingColumnError(error) {
+    if (!error) return false;
+    const code = String(error.code || "");
+    const msg = String(error.message || "");
+    return code === "42703" || code === "PGRST204" || /column .* does not exist/i.test(msg);
+  }
+
+  // Draft status wins when present (it is where the editor writes); fall
+  // back to the saved_jobs row, then to "saved".
+  function effectiveStatus(job, draft) {
+    return normalizeStatus((draft && draft.status) || (job && job.status) || "saved");
+  }
+
+  function effectiveDeadline(job, draft) {
+    return (draft && draft.deadline) || (job && job.deadline) || "";
+  }
+
+  function isOverdue(deadline, status) {
+    if (!deadline || !isValidDeadline(deadline)) return false;
+    if (status === "offer" || status === "rejected") return false;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return new Date(deadline + "T00:00:00") < today;
+  }
+
+  function formatDeadline(value) {
+    if (!value) return "未设置";
+    try {
+      return new Date(value + "T00:00:00").toLocaleDateString();
+    } catch {
+      return String(value);
+    }
+  }
+
+  // Persist a status and/or deadline change to Supabase. `patch` may carry
+  // `status` and/or `deadline` ("" clears the deadline). `editor` carries
+  // the notes / cover letter to preserve in the draft row. Pure w.r.t. the
+  // page: takes the client and ids as arguments so it can be mock-tested.
+  // Returns { savedJobsOk, draftOk, columnsMissing, draft, error }.
+  async function persistWorkspace(client, userId, job, patch, editor) {
+    const out = { savedJobsOk: false, draftOk: false, columnsMissing: false, draft: null, error: null };
+    const now = new Date().toISOString();
+    const status = patch.status !== undefined ? normalizeStatus(patch.status) : undefined;
+    const deadline = patch.deadline !== undefined ? (patch.deadline || null) : undefined;
+
+    const savedPatch = {
+      user_id: userId,
+      job_id: job.job_id,
+      job_title: job.job_title,
+      company_name: job.company_name,
+      market: job.market,
+      updated_at: now
+    };
+    if (status !== undefined) savedPatch.status = status;
+    if (deadline !== undefined) savedPatch.deadline = deadline;
+
+    const savedRes = await client.from("saved_jobs").upsert(savedPatch, { onConflict: "user_id,job_id" });
+    if (savedRes.error) {
+      if (isMissingColumnError(savedRes.error)) {
+        out.columnsMissing = true;
+      } else {
+        out.error = savedRes.error;
+        return out;
+      }
+    } else {
+      out.savedJobsOk = true;
+    }
+
+    const draftPatch = {
+      user_id: userId,
+      job_id: job.job_id,
+      saved_job_id: job.id,
+      job_title: job.job_title,
+      company_name: job.company_name,
+      market: job.market,
+      updated_at: now
+    };
+    if (status !== undefined) draftPatch.status = status;
+    // application_drafts.deadline comes from the same migration; skip it
+    // while the columns are missing so the status write still lands.
+    if (deadline !== undefined && !out.columnsMissing) draftPatch.deadline = deadline;
+    if (editor) {
+      draftPatch.notes = editor.notes || "";
+      draftPatch.cover_letter = editor.coverLetter || "";
+    }
+
+    let draftRes = await client.from("application_drafts").upsert(draftPatch, { onConflict: "user_id,job_id" }).select("*").single();
+    if (draftRes.error && isMissingColumnError(draftRes.error) && draftPatch.deadline !== undefined) {
+      delete draftPatch.deadline;
+      out.columnsMissing = true;
+      draftRes = await client.from("application_drafts").upsert(draftPatch, { onConflict: "user_id,job_id" }).select("*").single();
+    }
+    if (draftRes.error) {
+      out.error = draftRes.error;
+      return out;
+    }
+    out.draftOk = true;
+    out.draft = draftRes.data || null;
+    return out;
+  }
+
   function profileLine() {
     return [
       currentProfile?.headline,
@@ -106,6 +234,7 @@
 
   function renderSavedJobs() {
     const q = normalize(searchInput.value);
+    const statusWanted = statusFilter ? statusFilter.value : "all";
     let list = savedJobs;
 
     if (q) {
@@ -117,10 +246,14 @@
       ].join(" ")).includes(q));
     }
 
+    if (statusWanted !== "all") {
+      list = list.filter((job) => effectiveStatus(job, loadSelectedJobDraft(job.job_id)) === statusWanted);
+    }
+
     if (!list.length) {
       savedJobsList.innerHTML = `
         <div class="empty">
-          还没有保存岗位。请先去「职位」页面保存一个岗位，再回到这里生成申请材料。
+          ${savedJobs.length ? "没有符合该状态的已保存岗位。" : "还没有保存岗位。请先去「职位」页面保存一个岗位，再回到这里生成申请材料。"}
         </div>
       `;
       return;
@@ -129,11 +262,15 @@
     savedJobsList.innerHTML = list.map((job) => {
       const active = selectedJob?.job_id === job.job_id ? "active" : "";
       const draft = loadSelectedJobDraft(job.job_id);
+      const status = effectiveStatus(job, draft);
+      const deadline = effectiveDeadline(job, draft);
+      const overdue = isOverdue(deadline, status);
       return `
         <button class="job-item ${active}" data-id="${escapeHtml(job.job_id)}" type="button">
           <strong>${escapeHtml(job.job_title || "Untitled role")}</strong>
           <span>${escapeHtml(job.company_name || "Unknown company")} · ${escapeHtml(job.market || "")} · ${escapeHtml(job.match_score || "--")} match</span>
-          <span class="status-pill">${escapeHtml(statusZh(draft?.status || job.status || "saved"))}</span>
+          <span class="status-pill">${escapeHtml(statusZh(status))}</span>
+          <span class="deadline-line${overdue ? " overdue" : ""}">截止日期：${escapeHtml(formatDeadline(deadline))}${overdue ? "（已过期）" : ""}</span>
         </button>
       `;
     }).join("");
@@ -149,12 +286,17 @@
       return;
     }
 
-    draftList.innerHTML = drafts.map((draft) => `
+    draftList.innerHTML = drafts.map((draft) => {
+      const deadline = draft.deadline || "";
+      const overdue = isOverdue(deadline, draft.status);
+      return `
       <div class="draft-item">
         <strong>${escapeHtml(draft.job_title || draft.job_id)}</strong>
         <span>${escapeHtml(draft.company_name || "")} · ${escapeHtml(statusZh(draft.status))} · ${escapeHtml(formatDate(draft.updated_at))}</span>
+        ${deadline ? `<span class="deadline-line${overdue ? " overdue" : ""}">截止日期：${escapeHtml(formatDeadline(deadline))}${overdue ? "（已过期）" : ""}</span>` : ""}
       </div>
-    `).join("");
+    `;
+    }).join("");
   }
 
   function selectJob(jobId) {
@@ -167,6 +309,7 @@
       matchScore.textContent = "--";
       marketLabel.textContent = "--";
       statusLabel.textContent = "--";
+      if (deadlineInput) deadlineInput.value = "";
       notesInput.value = "";
       coverLetterOutput.value = "";
       renderSavedJobs();
@@ -177,12 +320,61 @@
     selectedSubtitle.textContent = `${selectedJob.company_name || "Unknown company"} · ${selectedJob.market || ""} · ${selectedJob.category || ""}`;
     matchScore.textContent = selectedJob.match_score || "--";
     marketLabel.textContent = selectedJob.market || "--";
-    applicationStatus.value = draft?.status || selectedJob.status || "saved";
+    applicationStatus.value = effectiveStatus(selectedJob, draft);
     statusLabel.textContent = statusZh(applicationStatus.value);
+    if (deadlineInput) deadlineInput.value = effectiveDeadline(selectedJob, draft);
     notesInput.value = draft?.notes || selectedJob.notes || "";
     coverLetterOutput.value = draft?.cover_letter || "";
 
     renderSavedJobs();
+  }
+
+  // Persist a status / deadline change for the selected job immediately
+  // (not only when "save draft" is pressed) and keep the in-memory rows
+  // and lists in sync. Returns the persistWorkspace result (or null).
+  async function persistSelectedWorkspace(patch) {
+    if (!selectedJob) return null;
+
+    if (!supabaseClient || !currentUser) {
+      showStatus(editorStatus, "请先登录，再保存申请状态。", "error");
+      return null;
+    }
+
+    const draft = loadSelectedJobDraft(selectedJob.job_id);
+    const editor = {
+      notes: notesInput.value.trim() || (draft && draft.notes) || "",
+      coverLetter: coverLetterOutput.value.trim() || (draft && draft.cover_letter) || ""
+    };
+
+    const res = await persistWorkspace(supabaseClient, currentUser.id, selectedJob, patch, editor);
+
+    if (res.error) {
+      showStatus(editorStatus, `保存失败：${res.error.message}`, "error");
+      return res;
+    }
+
+    if (patch.status !== undefined) selectedJob.status = normalizeStatus(patch.status);
+    if (patch.deadline !== undefined) selectedJob.deadline = patch.deadline || "";
+
+    if (res.draft) {
+      const idx = drafts.findIndex((d) => d.job_id === selectedJob.job_id);
+      if (idx >= 0) drafts[idx] = res.draft;
+      else drafts.unshift(res.draft);
+    } else if (draft) {
+      if (patch.status !== undefined) draft.status = normalizeStatus(patch.status);
+      if (patch.deadline !== undefined && !res.columnsMissing) draft.deadline = patch.deadline || "";
+    }
+
+    statusLabel.textContent = statusZh(effectiveStatus(selectedJob, loadSelectedJobDraft(selectedJob.job_id)));
+    renderSavedJobs();
+    renderDrafts();
+
+    if (res.columnsMissing) {
+      showStatus(editorStatus, "状态已保存到申请草稿。截止日期需要先运行数据库更新（supabase/migrations/20261127_job_workspace.sql）才能同步到岗位记录。", "info");
+    } else {
+      showStatus(editorStatus, "申请状态已保存。", "success");
+    }
+    return res;
   }
 
   function generateAdvice() {
@@ -303,16 +495,32 @@
       company_name: selectedJob.company_name,
       market: selectedJob.market,
       status: applicationStatus.value,
+      deadline: deadlineInput && deadlineInput.value ? deadlineInput.value : null,
       notes: notesInput.value.trim(),
       cover_letter: coverLetterOutput.value.trim(),
       updated_at: new Date().toISOString()
     };
 
-    const { data, error } = await supabaseClient
+    // application_drafts.deadline is added by the job-workspace migration;
+    // retry without it so saving a draft still works before the migration.
+    let result = await supabaseClient
       .from("application_drafts")
       .upsert(payload, { onConflict: "user_id,job_id" })
       .select("*")
       .single();
+
+    let migrationNote = "";
+    if (result.error && isMissingColumnError(result.error)) {
+      delete payload.deadline;
+      migrationNote = "（截止日期需要先运行数据库更新 supabase/migrations/20261127_job_workspace.sql 才能同步。）";
+      result = await supabaseClient
+        .from("application_drafts")
+        .upsert(payload, { onConflict: "user_id,job_id" })
+        .select("*")
+        .single();
+    }
+
+    const { data, error } = result;
 
     if (error) {
       showStatus(editorStatus, `保存失败：${error.message}`, "error");
@@ -323,10 +531,12 @@
     if (existingIndex >= 0) drafts[existingIndex] = data;
     else drafts.unshift(data);
 
+    selectedJob.status = normalizeStatus(data.status);
+    if (data.deadline) selectedJob.deadline = data.deadline;
     statusLabel.textContent = statusZh(data.status);
     renderDrafts();
     renderSavedJobs();
-    showStatus(editorStatus, "申请草稿已保存。", "success");
+    showStatus(editorStatus, `申请草稿已保存。${migrationNote}`, "success");
     logEvent("application_draft_saved", selectedJob.job_id);
   }
 
@@ -349,8 +559,8 @@
       profileCareer.textContent = "未登录";
       profileMarket.textContent = "未登录";
       profileCv.textContent = "未登录";
-      showStatus(profileStatus, "请先登录，再使用申请中心。", "error");
-      savedJobsList.innerHTML = `<div class="empty">请先登录，然后去职位页保存岗位。</div>`;
+      showStatus(profileStatus, "请先登录，再使用申请中心。登录后，这里会显示你保存的岗位和申请进度。", "info");
+      savedJobsList.innerHTML = `<div class="empty">请先<a href="login.html?redirect=applications.html">登录</a>，然后去职位页保存岗位，再回到这里管理申请。</div>`;
       return;
     }
 
@@ -427,9 +637,29 @@
   }
 
   searchInput.addEventListener("input", renderSavedJobs);
+
+  if (statusFilter) {
+    statusFilter.addEventListener("change", renderSavedJobs);
+  }
+
+  // Status and deadline changes persist to Supabase immediately — the
+  // user does not have to press "save draft" for tracking to stick.
   applicationStatus.addEventListener("change", () => {
     statusLabel.textContent = statusZh(applicationStatus.value);
+    persistSelectedWorkspace({ status: applicationStatus.value });
   });
+
+  if (deadlineInput) {
+    deadlineInput.addEventListener("change", () => {
+      if (!isValidDeadline(deadlineInput.value)) {
+        showStatus(editorStatus, "截止日期格式不对，请选择一个有效日期。", "error");
+        const draft = selectedJob ? loadSelectedJobDraft(selectedJob.job_id) : null;
+        deadlineInput.value = selectedJob ? effectiveDeadline(selectedJob, draft) : "";
+        return;
+      }
+      persistSelectedWorkspace({ deadline: deadlineInput.value });
+    });
+  }
 
   generateButton.addEventListener("click", generateAdvice);
   saveDraftButton.addEventListener("click", saveDraft);
@@ -454,4 +684,15 @@
   });
 
   loadData();
+
+  // Test hook (also handy for debugging): pure workspace helpers, no DOM.
+  window.JOAppWorkspace = {
+    normalizeStatus,
+    isValidDeadline,
+    isMissingColumnError,
+    effectiveStatus,
+    effectiveDeadline,
+    isOverdue,
+    persistWorkspace
+  };
 })();

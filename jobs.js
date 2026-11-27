@@ -18,8 +18,14 @@
       "job.verified": "Public job",
       "job.saved": "Saved",
       "job.save": "Save job",
+      "job.unsave": "Unsave",
+      "job.unsaveHint": "Saved — click to remove from your saved jobs",
       "job.apply": "Apply",
       "saved.empty": "No saved jobs yet.",
+      "saved.openHub": "Open in application hub",
+      "saved.remove": "Remove",
+      "saved.removed": "Removed from your saved jobs.",
+      "saved.removeFail": "Could not remove the saved job: {error}",
       "profile.missing": "Not configured",
       "profile.noConfig": "Supabase is not configured. You can still browse jobs, but you cannot save them.",
       "profile.notSignedIn": "Not signed in",
@@ -55,8 +61,14 @@
       "job.verified": "公开岗位",
       "job.saved": "已保存",
       "job.save": "保存岗位",
+      "job.unsave": "取消保存",
+      "job.unsaveHint": "已保存 — 点击取消保存",
       "job.apply": "进入申请",
       "saved.empty": "还没有保存岗位。",
+      "saved.openHub": "在申请中心打开",
+      "saved.remove": "移除",
+      "saved.removed": "已从保存列表移除。",
+      "saved.removeFail": "取消保存失败：{error}",
       "profile.missing": "配置缺失",
       "profile.noConfig": "没有读取到 Supabase 配置。职位库仍可浏览，但不能保存岗位。",
       "profile.notSignedIn": "未登录",
@@ -92,8 +104,14 @@
       "job.verified": "公開求人",
       "job.saved": "保存済み",
       "job.save": "求人を保存",
+      "job.unsave": "保存を解除",
+      "job.unsaveHint": "保存済み — クリックで解除",
       "job.apply": "応募する",
       "saved.empty": "まだ保存した求人はありません。",
+      "saved.openHub": "応募ハブで開く",
+      "saved.remove": "削除",
+      "saved.removed": "保存リストから削除しました。",
+      "saved.removeFail": "保存の解除に失敗しました：{error}",
       "profile.missing": "未設定",
       "profile.noConfig": "Supabase が設定されていません。求人の閲覧はできますが、保存はできません。",
       "profile.notSignedIn": "未ログイン",
@@ -576,8 +594,8 @@
           </div>
 
           <div class="job-actions">
-            <button class="btn ${saved ? "green" : ""}" data-action="save" data-id="${escapeHtml(job.id)}">
-              ${saved ? t("job.saved") : t("job.save")}
+            <button class="btn ${saved ? "green" : ""}" data-action="save" data-id="${escapeHtml(job.id)}" aria-pressed="${saved}" ${saved ? `title="${escapeHtml(t("job.unsaveHint"))}"` : ""}>
+              ${saved ? "✓ " + t("job.saved") : t("job.save")}
             </button>
             <button class="btn primary" data-action="apply" data-id="${escapeHtml(job.id)}">${t("job.apply")}</button>
           </div>
@@ -590,7 +608,7 @@
 
   function bindJobButtons() {
     Array.from(document.querySelectorAll("[data-action='save']")).forEach((button) => {
-      button.addEventListener("click", () => saveJob(button.dataset.id));
+      button.addEventListener("click", () => toggleSaveJob(button.dataset.id));
     });
 
     Array.from(document.querySelectorAll("[data-action='apply']")).forEach((button) => {
@@ -610,8 +628,16 @@
       <div class="saved-item">
         <strong>${escapeHtml(job.title)}</strong>
         <span>${escapeHtml(job.company)} · ${escapeHtml(job.market)} · ${calculateScore(job)} match</span>
+        <div class="saved-item-actions">
+          <a class="saved-link" href="applications.html?job=${encodeURIComponent(job.id)}">${escapeHtml(t("saved.openHub"))}</a>
+          <button class="saved-remove-btn" type="button" data-action="unsave" data-id="${escapeHtml(job.id)}">${escapeHtml(t("saved.remove"))}</button>
+        </div>
       </div>
     `).join("");
+
+    Array.from(savedList.querySelectorAll("[data-action='unsave']")).forEach((button) => {
+      button.addEventListener("click", () => unsaveJob(button.dataset.id));
+    });
   }
 
   async function loadUserAndProfile() {
@@ -729,6 +755,42 @@
     logEvent("job_saved", job.id);
   }
 
+  // Save button toggles: a second click removes the job again, so the
+  // saved state on each card always reflects Supabase.
+  async function toggleSaveJob(jobId) {
+    if (savedJobIds.has(jobId)) {
+      await unsaveJob(jobId);
+      return;
+    }
+    await saveJob(jobId);
+  }
+
+  async function unsaveJob(jobId) {
+    const job = jobs.find((item) => item.id === jobId);
+
+    if (!supabaseClient || !currentUser) {
+      showStatus(saveStatus, t("saved.needLogin"), "error");
+      return;
+    }
+
+    const { error } = await supabaseClient
+      .from("saved_jobs")
+      .delete()
+      .eq("user_id", currentUser.id)
+      .eq("job_id", jobId);
+
+    if (error) {
+      showStatus(saveStatus, t("saved.removeFail", { error: error.message }), "error");
+      return;
+    }
+
+    savedJobIds.delete(jobId);
+    showStatus(saveStatus, t("saved.removed"), "success");
+    renderJobs();
+    renderSavedJobs();
+    if (job) logEvent("job_unsaved", job.id);
+  }
+
   async function generateApplicationAdvice(jobId) {
     const job = jobs.find((item) => item.id === jobId);
     if (!job) return;
@@ -806,7 +868,7 @@
   // follow the new language.
   window.addEventListener("japanoffer:languagechange", function () {
     if (typeof renderJobs === "function") renderJobs();
-    if (typeof renderSaved === "function") renderSaved();
+    if (typeof renderSavedJobs === "function") renderSavedJobs();
     if (typeof loadUserAndProfile === "function") loadUserAndProfile();
   });
 

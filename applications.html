@@ -533,6 +533,46 @@
       font-weight: 650;
     }
 
+    .deadline-line {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .deadline-line.overdue {
+      color: var(--red);
+      font-weight: 850;
+    }
+
+    .filter-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .filter-row label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 780;
+    }
+
+    .filter-row .select {
+      width: auto;
+      min-width: 150px;
+      padding: 9px 12px;
+      border-radius: 14px;
+      font-size: 13px;
+    }
+
+    .empty a {
+      color: var(--blue);
+      font-weight: 850;
+    }
+
     .empty {
       padding: 24px;
       border-radius: 24px;
@@ -687,7 +727,7 @@
       <div class="step-card">
         <span>04</span>
         <strong>追踪状态</strong>
-        <p>保存草稿并记录 saved、draft、applied、interview。</p>
+        <p>保存草稿，记录 saved、applied、interview、offer、rejected 状态与申请截止日期。</p>
       </div>
     </section>
 
@@ -696,6 +736,19 @@
         <section class="job-list-card">
           <h2>已保存岗位</h2>
           <p>先选择一个岗位，右侧会自动生成申请材料。</p>
+          <div class="filter-row">
+            <label for="statusFilter">按状态筛选</label>
+            <select class="select" id="statusFilter">
+              <option value="all">全部状态</option>
+              <option value="saved">已保存</option>
+              <option value="drafting">准备材料中</option>
+              <option value="ready">可以投递</option>
+              <option value="applied">已投递</option>
+              <option value="interview">面试中</option>
+              <option value="offer">拿到 Offer</option>
+              <option value="rejected">未通过</option>
+            </select>
+          </div>
           <div class="saved-jobs" id="savedJobsList">
             <div class="empty">正在读取已保存岗位...</div>
           </div>
@@ -743,6 +796,11 @@
                 <option value="rejected">未通过</option>
                 <option value="offer">拿到 Offer</option>
               </select>
+            </label>
+
+            <label class="field">
+              <span>申请截止日期</span>
+              <input class="input" type="date" id="deadlineInput" />
             </label>
 
             <label class="field">
