@@ -1,5 +1,137 @@
 // JapanOffer AI - Step 30 Jobs + Saved Jobs + AI Recommendation MVP
 (function () {
+
+  // UI strings follow the shared language (window.JOLang). Job descriptions
+  // stay in their authored language; only chrome and status text translate.
+  const JO_STR = {
+    en: {
+      "reason.market": "Market match: your target market includes {market}.",
+      "reason.direction": "Direction match: a legal / compliance background transfers directly to this role.",
+      "reason.language": "Language match: your languages cover part of the role requirements.",
+      "reason.interest": "Interest match: your Web3 / crypto interest lines up with this role.",
+      "reason.entry": "Entry-friendly: a good early-career entry point.",
+      "reason.good": "A good overall match — worth researching first.",
+      "reason.explore": "Worth exploring, but you would need more specific experience.",
+      "jobs.empty": "No jobs match these filters. Try widening the market, direction or language filter.",
+      "job.sourceLink": "View public source / Apply link",
+      "job.source": "Source: ",
+      "job.verified": "Public job",
+      "job.saved": "Saved",
+      "job.save": "Save job",
+      "job.apply": "Apply",
+      "saved.empty": "No saved jobs yet.",
+      "profile.missing": "Not configured",
+      "profile.noConfig": "Supabase is not configured. You can still browse jobs, but you cannot save them.",
+      "profile.notSignedIn": "Not signed in",
+      "profile.browseOnly": "You can browse jobs without signing in, but saving jobs and personalised ranking need an account.",
+      "profile.signedIn": "Signed in",
+      "profile.loadFail": "Could not load your profile: {error}",
+      "profile.empty": "Not set",
+      "profile.uploaded": "Uploaded",
+      "profile.notUploaded": "Not uploaded",
+      "profile.loaded": "Your Profile / CV has been read and jobs re-ranked by your background.",
+      "profile.noProfile": "You are signed in but have no profile yet. Upload your CV from My profile.",
+      "saved.loadFail": "Could not load saved jobs: {error}",
+      "saved.needLogin": "Sign in first, then save jobs.",
+      "saved.fail": "Save failed: {error}",
+      "saved.done": "Job saved to your account.",
+      "apply.needLogin": "Sign in first, then open the application hub.",
+      "apply.saving": "Saving the job, then opening the application hub...",
+      "apply.fail": "Could not save the job: {error}",
+      "profile.reread": "Your Profile / CV has been re-read and the ranking refreshed.",
+      "profile.none": "No profile found yet."
+    },
+    zh: {
+      "reason.market": "目标市场匹配：你的目标市场包含 {market}。",
+      "reason.direction": "方向匹配：法律 / 合规背景可以直接转化为岗位优势。",
+      "reason.language": "语言匹配：你的语言能力覆盖岗位要求的一部分。",
+      "reason.interest": "兴趣匹配：你的 Web3 / crypto 兴趣与岗位方向相关。",
+      "reason.entry": "入门友好：该方向更适合作为早期职业切入点。",
+      "reason.good": "整体匹配较好，可以优先研究岗位要求。",
+      "reason.explore": "可以作为探索方向，但需要补充更具体经历。",
+      "jobs.empty": "没有找到符合筛选条件的岗位。可以放宽市场、方向或语言筛选。",
+      "job.sourceLink": "查看公开来源 / 申请链接",
+      "job.source": "来源：",
+      "job.verified": "公开岗位",
+      "job.saved": "已保存",
+      "job.save": "保存岗位",
+      "job.apply": "进入申请",
+      "saved.empty": "还没有保存岗位。",
+      "profile.missing": "配置缺失",
+      "profile.noConfig": "没有读取到 Supabase 配置。职位库仍可浏览，但不能保存岗位。",
+      "profile.notSignedIn": "未登录",
+      "profile.browseOnly": "未登录状态下可以浏览职位，但保存岗位和个性化排序需要先登录。",
+      "profile.signedIn": "已登录",
+      "profile.loadFail": "读取个人主页失败：{error}",
+      "profile.empty": "未填写",
+      "profile.uploaded": "已上传",
+      "profile.notUploaded": "未上传",
+      "profile.loaded": "已读取你的 Profile / CV 记录，岗位已经按你的背景重新排序。",
+      "profile.noProfile": "你已登录，但还没有保存个人主页。建议先去我的主页上传 CV。",
+      "saved.loadFail": "读取已保存岗位失败：{error}",
+      "saved.needLogin": "请先登录，再保存岗位。",
+      "saved.fail": "保存失败：{error}",
+      "saved.done": "岗位已保存到你的账号。",
+      "apply.needLogin": "请先登录，再进入申请中心。",
+      "apply.saving": "正在保存岗位，并跳转到申请中心...",
+      "apply.fail": "保存岗位失败：{error}",
+      "profile.reread": "已重新读取你的 Profile / CV，并刷新岗位排序。",
+      "profile.none": "还没有读取到个人主页资料。"
+    },
+    ja: {
+      "reason.market": "市場マッチ：対象市場に {market} が含まれています。",
+      "reason.direction": "方向性マッチ：法務 / コンプライアンスの背景が直接活かせます。",
+      "reason.language": "言語マッチ：あなたの語学力が求人の一部をカバーしています。",
+      "reason.interest": "興味マッチ：Web3 / crypto への関心と方向性が合っています。",
+      "reason.entry": "未経験歓迎：キャリアの入口として適しています。",
+      "reason.good": "全体的に良いマッチです。まず求人要件を調べましょう。",
+      "reason.explore": "探索する価値はありますが、より具体的な経験が必要です。",
+      "jobs.empty": "条件に合う求人がありません。市場、職種、言語の条件を緩めてみてください。",
+      "job.sourceLink": "公開情報 / 応募リンクを見る",
+      "job.source": "出典：",
+      "job.verified": "公開求人",
+      "job.saved": "保存済み",
+      "job.save": "求人を保存",
+      "job.apply": "応募する",
+      "saved.empty": "まだ保存した求人はありません。",
+      "profile.missing": "未設定",
+      "profile.noConfig": "Supabase が設定されていません。求人の閲覧はできますが、保存はできません。",
+      "profile.notSignedIn": "未ログイン",
+      "profile.browseOnly": "ログインなしでも求人を閲覧できますが、保存とパーソナライズにはログインが必要です。",
+      "profile.signedIn": "ログイン済み",
+      "profile.loadFail": "プロフィールを読み込めませんでした：{error}",
+      "profile.empty": "未設定",
+      "profile.uploaded": "アップロード済み",
+      "profile.notUploaded": "未アップロード",
+      "profile.loaded": "Profile / CV を読み取り、背景に合わせて求人を並べ替えました。",
+      "profile.noProfile": "ログイン済みですが、プロフィールがまだありません。マイページから CV をアップロードしてください。",
+      "saved.loadFail": "保存した求人を読み込めませんでした：{error}",
+      "saved.needLogin": "まずログインしてから求人を保存してください。",
+      "saved.fail": "保存できませんでした：{error}",
+      "saved.done": "求人をアカウントに保存しました。",
+      "apply.needLogin": "まずログインしてから応募ハブを開いてください。",
+      "apply.saving": "求人を保存して応募ハブへ移動しています…",
+      "apply.fail": "求人を保存できませんでした：{error}",
+      "profile.reread": "Profile / CV を再読込し、並べ替えを更新しました。",
+      "profile.none": "プロフィールがまだ見つかりません。"
+    }
+  };
+
+  function joLang() {
+    if (window.JOLang) return window.JOLang.get();
+    return localStorage.getItem("japanoffer_lang") || "en";
+  }
+
+  function t(key, vars) {
+    var lang = joLang();
+    var str = (JO_STR[lang] && JO_STR[lang][key]) || JO_STR.en[key] || key;
+    if (vars) {
+      Object.keys(vars).forEach(function (k) {
+        str = str.replace("{" + k + "}", vars[k]);
+      });
+    }
+    return str;
+  }
   const jobsGrid = document.getElementById("jobsGrid");
   const savedList = document.getElementById("savedList");
   const searchInput = document.getElementById("searchInput");
@@ -261,30 +393,30 @@
     const text = profileText();
 
     if (currentProfile?.target_market && normalize(job.market).includes(normalize(currentProfile.target_market))) {
-      reasons.push(`目标市场匹配：你的目标市场包含 ${job.market}。`);
+      reasons.push(t("reason.market", { market: job.market }));
     }
 
     if (currentProfile?.career_direction && (
       normalize(currentProfile.career_direction).includes("合规") ||
       normalize(currentProfile.career_direction).includes("法律")
     ) && (job.category.includes("Legal") || job.skills.includes("Compliance"))) {
-      reasons.push("方向匹配：法律 / 合规背景可以直接转化为岗位优势。");
+      reasons.push(t("reason.direction"));
     }
 
     if (job.languages.some((lang) => normalize(currentProfile?.languages).includes(normalize(lang)))) {
-      reasons.push("语言匹配：你的语言能力覆盖岗位要求的一部分。");
+      reasons.push(t("reason.language"));
     }
 
     if (text.includes("web3") && job.category.includes("Web3")) {
-      reasons.push("兴趣匹配：你的 Web3 / crypto 兴趣与岗位方向相关。");
+      reasons.push(t("reason.interest"));
     }
 
     if (job.entryScore >= 75) {
-      reasons.push("入门友好：该方向更适合作为早期职业切入点。");
+      reasons.push(t("reason.entry"));
     }
 
     if (!reasons.length) {
-      reasons.push(score >= 70 ? "整体匹配较好，可以优先研究岗位要求。" : "可以作为探索方向，但需要补充更具体经历。");
+      reasons.push(score >= 70 ? t("reason.good") : t("reason.explore"));
     }
 
     return reasons.slice(0, 3);
@@ -405,7 +537,7 @@
     const list = filteredJobs();
 
     if (!list.length) {
-      jobsGrid.innerHTML = `<div class="empty">没有找到符合筛选条件的岗位。可以放宽市场、方向或语言筛选。</div>`;
+      jobsGrid.innerHTML = `<div class="empty">${t("jobs.empty")}</div>`;
       return;
     }
 
@@ -428,15 +560,15 @@
           </div>
 
           <p class="job-desc">${escapeHtml(job.description)}</p>
-          ${job.sourceUrl ? `<p class="job-desc"><a href="${escapeHtml(job.sourceUrl)}" target="_blank" rel="noopener">查看公开来源 / 申请链接</a></p>` : ""}
+          ${job.sourceUrl ? `<p class="job-desc"><a href="${escapeHtml(job.sourceUrl)}" target="_blank" rel="noopener">${t("job.sourceLink")}</a></p>` : ""}
 
           <div class="pills">
             <span class="pill">${escapeHtml(job.market)}</span>
             <span class="pill">${escapeHtml(job.category)}</span>
             <span class="pill">${escapeHtml(job.visa)}</span>
             ${job.languages.map((lang) => `<span class="pill">${escapeHtml(lang)}</span>`).join("")}
-            ${job.sourceName ? `<span class="pill">来源：${escapeHtml(job.sourceName)}</span>` : ""}
-            ${job.isVerified ? `<span class="pill">公开岗位</span>` : ""}
+            ${job.sourceName ? `<span class="pill">${t("job.source")}${escapeHtml(job.sourceName)}</span>` : ""}
+            ${job.isVerified ? `<span class="pill">${t("job.verified")}</span>` : ""}
           </div>
 
           <div class="job-reasons">
@@ -445,9 +577,9 @@
 
           <div class="job-actions">
             <button class="btn ${saved ? "green" : ""}" data-action="save" data-id="${escapeHtml(job.id)}">
-              ${saved ? "已保存" : "保存岗位"}
+              ${saved ? t("job.saved") : t("job.save")}
             </button>
-            <button class="btn primary" data-action="apply" data-id="${escapeHtml(job.id)}">进入申请</button>
+            <button class="btn primary" data-action="apply" data-id="${escapeHtml(job.id)}">${t("job.apply")}</button>
           </div>
         </article>
       `;
@@ -470,7 +602,7 @@
     const saved = jobs.filter((job) => savedJobIds.has(job.id));
 
     if (!saved.length) {
-      savedList.innerHTML = `<div class="empty">还没有保存岗位。</div>`;
+      savedList.innerHTML = `<div class="empty">${t("saved.empty")}</div>`;
       return;
     }
 
@@ -486,8 +618,8 @@
     const config = getConfig();
 
     if (!config) {
-      profileAuth.textContent = "配置缺失";
-      showStatus(profileStatus, "没有读取到 Supabase 配置。职位库仍可浏览，但不能保存岗位。", "error");
+      profileAuth.textContent = t("profile.missing");
+      showStatus(profileStatus, t("profile.noConfig"), "error");
       renderJobs();
       return;
     }
@@ -501,18 +633,18 @@
     if (error || !data?.user) {
       currentUser = null;
       currentProfile = null;
-      profileAuth.textContent = "未登录";
-      profileCareer.textContent = "未登录";
-      profileMarket.textContent = "未登录";
-      profileLanguages.textContent = "未登录";
-      profileCv.textContent = "未登录";
-      showStatus(profileStatus, "未登录状态下可以浏览职位，但保存岗位和个性化排序需要先登录。", "info");
+      profileAuth.textContent = t("profile.notSignedIn");
+      profileCareer.textContent = t("profile.notSignedIn");
+      profileMarket.textContent = t("profile.notSignedIn");
+      profileLanguages.textContent = t("profile.notSignedIn");
+      profileCv.textContent = t("profile.notSignedIn");
+      showStatus(profileStatus, t("profile.browseOnly"), "info");
       renderJobs();
       return;
     }
 
     currentUser = data.user;
-    profileAuth.textContent = "已登录";
+    profileAuth.textContent = t("profile.signedIn");
 
     const { data: profile, error: profileError } = await supabaseClient
       .from("user_profiles")
@@ -521,20 +653,20 @@
       .maybeSingle();
 
     if (profileError) {
-      showStatus(profileStatus, `读取个人主页失败：${profileError.message}`, "error");
+      showStatus(profileStatus, t("profile.loadFail", { error: profileError.message }), "error");
     } else {
       currentProfile = profile || null;
     }
 
-    profileCareer.textContent = currentProfile?.career_direction || "未填写";
-    profileMarket.textContent = currentProfile?.target_market || "未填写";
-    profileLanguages.textContent = currentProfile?.languages || "未填写";
-    profileCv.textContent = currentProfile?.cv_file_name ? "已上传" : "未上传";
+    profileCareer.textContent = currentProfile?.career_direction || t("profile.empty");
+    profileMarket.textContent = currentProfile?.target_market || t("profile.empty");
+    profileLanguages.textContent = currentProfile?.languages || t("profile.empty");
+    profileCv.textContent = currentProfile?.cv_file_name ? t("profile.uploaded") : t("profile.notUploaded");
 
     if (currentProfile) {
-      showStatus(profileStatus, "已读取你的 Profile / CV 记录，岗位已经按你的背景重新排序。", "success");
+      showStatus(profileStatus, t("profile.loaded"), "success");
     } else {
-      showStatus(profileStatus, "你已登录，但还没有保存个人主页。建议先去我的主页上传 CV。", "info");
+      showStatus(profileStatus, t("profile.noProfile"), "info");
     }
 
     await loadSavedJobs();
@@ -553,7 +685,7 @@
       .eq("user_id", currentUser.id);
 
     if (error) {
-      showStatus(saveStatus, `读取已保存岗位失败：${error.message}`, "error");
+      showStatus(saveStatus, t("saved.loadFail", { error: error.message }), "error");
       return;
     }
 
@@ -565,7 +697,7 @@
     if (!job) return;
 
     if (!supabaseClient || !currentUser) {
-      showStatus(saveStatus, "请先登录，再保存岗位。", "error");
+      showStatus(saveStatus, t("saved.needLogin"), "error");
       return;
     }
 
@@ -586,12 +718,12 @@
       .upsert(payload, { onConflict: "user_id,job_id" });
 
     if (error) {
-      showStatus(saveStatus, `保存失败：${error.message}`, "error");
+      showStatus(saveStatus, t("saved.fail", { error: error.message }), "error");
       return;
     }
 
     savedJobIds.add(job.id);
-    showStatus(saveStatus, "岗位已保存到你的账号。", "success");
+    showStatus(saveStatus, t("saved.done"), "success");
     renderJobs();
     renderSavedJobs();
     logEvent("job_saved", job.id);
@@ -602,11 +734,11 @@
     if (!job) return;
 
     if (!supabaseClient || !currentUser) {
-      showStatus(applyStatus, "请先登录，再进入申请中心。", "error");
+      showStatus(applyStatus, t("apply.needLogin"), "error");
       return;
     }
 
-    showStatus(applyStatus, "正在保存岗位，并跳转到申请中心...", "info");
+    showStatus(applyStatus, t("apply.saving"), "info");
 
     const payload = {
       user_id: currentUser.id,
@@ -625,7 +757,7 @@
       .upsert(payload, { onConflict: "user_id,job_id" });
 
     if (error) {
-      showStatus(applyStatus, `保存岗位失败：${error.message}`, "error");
+      showStatus(applyStatus, t("apply.fail", { error: error.message }), "error");
       return;
     }
 
@@ -666,7 +798,16 @@
 
   rankWithProfileButton.addEventListener("click", async () => {
     await loadUserAndProfile();
-    showStatus(profileStatus, currentProfile ? "已重新读取你的 Profile / CV，并刷新岗位排序。" : "还没有读取到个人主页资料。", currentProfile ? "success" : "info");
+    showStatus(profileStatus, currentProfile ? t("profile.reread") : t("profile.none"), currentProfile ? "success" : "info");
+  });
+
+
+  // Re-render when the language changes so rendered buttons and reasons
+  // follow the new language.
+  window.addEventListener("japanoffer:languagechange", function () {
+    if (typeof renderJobs === "function") renderJobs();
+    if (typeof renderSaved === "function") renderSaved();
+    if (typeof loadUserAndProfile === "function") loadUserAndProfile();
   });
 
   loadUserAndProfile();
