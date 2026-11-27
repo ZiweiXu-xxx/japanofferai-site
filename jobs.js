@@ -12,7 +12,15 @@
       "reason.entry": "Entry-friendly: a good early-career entry point.",
       "reason.good": "A good overall match — worth researching first.",
       "reason.explore": "Worth exploring, but you would need more specific experience.",
-      "jobs.empty": "No jobs match these filters. Try widening the market, direction or language filter.",
+      "jobs.empty": "No jobs match these filters. Try widening the market, direction, language, remote or visa filter.",
+      "filter.remote": "Remote",
+      "filter.allRemote": "All roles",
+      "filter.remoteOnly": "Remote-friendly only",
+      "filter.onSiteOnly": "On-site only",
+      "filter.visaRisk": "Visa risk",
+      "filter.allVisa": "Any visa risk",
+      "filter.visaFriendly": "Lower visa risk (score 70+)",
+      "filter.visaHigher": "Higher visa risk (score under 60)",
       "job.sourceLink": "View public source / Apply link",
       "job.source": "Source: ",
       "job.verified": "Public job",
@@ -55,7 +63,15 @@
       "reason.entry": "入门友好：该方向更适合作为早期职业切入点。",
       "reason.good": "整体匹配较好，可以优先研究岗位要求。",
       "reason.explore": "可以作为探索方向，但需要补充更具体经历。",
-      "jobs.empty": "没有找到符合筛选条件的岗位。可以放宽市场、方向或语言筛选。",
+      "jobs.empty": "没有找到符合筛选条件的岗位。可以放宽市场、方向、语言、远程或签证筛选。",
+      "filter.remote": "远程",
+      "filter.allRemote": "全部",
+      "filter.remoteOnly": "仅支持远程",
+      "filter.onSiteOnly": "仅线下办公",
+      "filter.visaRisk": "签证风险",
+      "filter.allVisa": "不限签证风险",
+      "filter.visaFriendly": "签证风险较低（70 分以上）",
+      "filter.visaHigher": "签证风险较高（60 分以下）",
       "job.sourceLink": "查看公开来源 / 申请链接",
       "job.source": "来源：",
       "job.verified": "公开岗位",
@@ -98,7 +114,15 @@
       "reason.entry": "未経験歓迎：キャリアの入口として適しています。",
       "reason.good": "全体的に良いマッチです。まず求人要件を調べましょう。",
       "reason.explore": "探索する価値はありますが、より具体的な経験が必要です。",
-      "jobs.empty": "条件に合う求人がありません。市場、職種、言語の条件を緩めてみてください。",
+      "jobs.empty": "条件に合う求人がありません。市場、職種、言語、リモート、ビザの条件を緩めてみてください。",
+      "filter.remote": "リモート",
+      "filter.allRemote": "すべて",
+      "filter.remoteOnly": "リモート可のみ",
+      "filter.onSiteOnly": "出社のみ",
+      "filter.visaRisk": "ビザリスク",
+      "filter.allVisa": "すべて",
+      "filter.visaFriendly": "ビザリスク低め（70点以上）",
+      "filter.visaHigher": "ビザリスク高め（60点未満）",
       "job.sourceLink": "公開情報 / 応募リンクを見る",
       "job.source": "出典：",
       "job.verified": "公開求人",
@@ -157,6 +181,8 @@
   const categoryFilter = document.getElementById("categoryFilter");
   const languageFilter = document.getElementById("languageFilter");
   const sortFilter = document.getElementById("sortFilter");
+  const remoteFilter = document.getElementById("remoteFilter");
+  const visaFilter = document.getElementById("visaFilter");
   const rankWithProfileButton = document.getElementById("rankWithProfileButton");
   const saveStatus = document.getElementById("saveStatus");
   const applyStatus = document.getElementById("applyStatus");
@@ -190,6 +216,8 @@
       languages: ["English", "Japanese"],
       skills: ["Legal research", "Compliance", "KYC", "Policy review"],
       description: "适合有法律背景、英语能力，并希望进入日本金融科技、支付或平台型公司的合规岗位。",
+      description_en: "For candidates with a legal background and English ability who want a compliance role at a Japanese fintech, payments or platform company.",
+      description_ja: "法務のバックグラウンドと英語力があり、日本のフィンテック、決済、プラットフォーム企業でコンプライアンス職に就きたい方に適しています。",
       baseScore: 64
     },
     {
@@ -207,6 +235,8 @@
       languages: ["English", "Japanese"],
       skills: ["KYC", "AML", "Crypto", "Risk review"],
       description: "适合想把法律背景、Crypto 兴趣和合规运营结合起来的候选人。",
+      description_en: "For candidates who want to combine a legal background, crypto interest and compliance operations.",
+      description_ja: "法務のバックグラウンド、暗号資産への関心、コンプライアンス業務を組み合わせたい方に適しています。",
       baseScore: 66
     },
     {
@@ -224,6 +254,8 @@
       languages: ["English", "Mandarin"],
       skills: ["AML", "KYC", "Due diligence", "Risk"],
       description: "适合中文和英文能力较强、想进入香港金融合规或虚拟资产合规方向的人。",
+      description_en: "For candidates with strong Chinese and English who want to move into Hong Kong financial compliance or virtual-asset compliance.",
+      description_ja: "中国語と英語に強く、香港の金融コンプライアンスや仮想資産コンプライアンスに進みたい方に適しています。",
       baseScore: 68
     },
     {
@@ -241,6 +273,8 @@
       languages: ["English", "Mandarin"],
       skills: ["Crypto", "Risk", "Compliance", "Research"],
       description: "适合对虚拟资产、交易所、合规和风控有强兴趣的候选人。",
+      description_en: "For candidates strongly interested in virtual assets, exchanges, compliance and risk management.",
+      description_ja: "仮想資産、取引所、コンプライアンス、リスク管理に強い関心がある方に適しています。",
       baseScore: 67
     },
     {
@@ -258,6 +292,8 @@
       languages: ["English", "Mandarin"],
       skills: ["Business development", "Market research", "Client communication"],
       description: "适合语言能力强、想进入国际业务、客户拓展或企业合作方向的人。",
+      description_en: "For candidates with strong language skills who want to move into international business, client development or corporate partnerships.",
+      description_ja: "語学力に優れ、国際ビジネス、顧客開拓、企業提携の分野に進みたい方に適しています。",
       baseScore: 61
     },
     {
@@ -275,6 +311,8 @@
       languages: ["English", "Mandarin"],
       skills: ["Risk operations", "Data review", "Compliance", "Payments"],
       description: "适合希望从运营、风险审核、支付合规切入新加坡 FinTech 的候选人。",
+      description_en: "For candidates who want to enter Singapore fintech through operations, risk review or payments compliance.",
+      description_ja: "オペレーション、リスク審査、決済コンプライアンスからシンガポールのフィンテックに入りたい方に適しています。",
       baseScore: 63
     },
     {
@@ -292,6 +330,8 @@
       languages: ["English"],
       skills: ["Legal admin", "Client support", "Research", "Documentation"],
       description: "适合法律学生积累英国本地 legal operations、文档管理和客户支持经验。",
+      description_en: "For law students building UK experience in legal operations, document management and client support.",
+      description_ja: "英国でリーガルオペレーション、文書管理、クライアントサポートの経験を積みたい法学部生に適しています。",
       baseScore: 58
     },
     {
@@ -309,6 +349,8 @@
       languages: ["English", "Japanese", "Mandarin"],
       skills: ["Recruiting", "Talent matching", "Market research", "Client communication"],
       description: "适合对跨境招聘、人才匹配、HR Tech 和国际业务有兴趣的人。",
+      description_en: "For candidates interested in cross-border recruitment, talent matching, HR tech and international business.",
+      description_ja: "クロスボーダー採用、人材マッチング、HRテック、国際ビジネスに興味がある方に適しています。",
       baseScore: 62
     }
   ];
@@ -344,6 +386,47 @@
 
   function normalize(value) {
     return String(value || "").toLowerCase();
+  }
+
+  // --- Pillar 3 filters: remote + visa risk, from real job fields only ---
+  // Remote: a job counts as remote-friendly when its city, title or
+  // description mentions remote working (e.g. "Tokyo / Remote hybrid",
+  // Remotive rows whose city is "Remote"). There is no dedicated remote
+  // boolean in platform_items, so this is keyword-based on real data.
+  // Visa: there is NO sponsorship flag anywhere in the data (neither
+  // platform_items nor /api/search-real-jobs returns one), so the filter
+  // uses the real visaScore instead: >= 70 is lower risk, under 60 is
+  // higher risk. It is a risk band, not a sponsorship promise.
+  // Salary: deliberately NOT added — no salary field exists in
+  // platform_items, the importer or the demo jobs, so a salary filter
+  // would be fake. (Adzuna returns salary_min/max, but jobs.html never
+  // calls /api/search-real-jobs; a salary filter belongs on the search
+  // pages, not here.)
+  function jobDescription(job) {
+    var lang = joLang();
+    if (lang === "ja" && job.description_ja) return job.description_ja;
+    if (lang === "zh") return job.description || "";
+    if (job.description_en) return job.description_en;
+    return job.description || "";
+  }
+
+  function isRemoteJob(job) {
+    var text = normalize([
+      job.city,
+      job.title,
+      job.description,
+      job.description_en,
+      job.description_ja
+    ].join(" "));
+    return text.includes("remote") || text.includes("远程") || text.includes("リモート");
+  }
+
+  function visaBand(job) {
+    var score = Number(job.visaScore);
+    if (!Number.isFinite(score)) return "medium";
+    if (score >= 70) return "friendly";
+    if (score < 60) return "higher";
+    return "medium";
   }
 
   function profileText() {
@@ -462,6 +545,8 @@
       languages: Array.isArray(row.languages) ? row.languages : [],
       skills: Array.isArray(row.skills) ? row.skills : [],
       description: row.description || "",
+      description_en: row.description_en || "",
+      description_ja: row.description_ja || "",
       sourceName: row.source_name || "",
       sourceUrl: row.source_url || row.apply_url || "",
       externalId: row.external_id || "",
@@ -511,6 +596,8 @@
     const market = marketFilter.value;
     const category = categoryFilter.value;
     const language = languageFilter.value;
+    const remote = remoteFilter ? remoteFilter.value : "all";
+    const visa = visaFilter ? visaFilter.value : "all";
 
     let list = jobs.map((job) => ({
       ...job,
@@ -525,13 +612,18 @@
         job.city,
         job.category,
         job.skills.join(" "),
-        job.description
+        job.description,
+        job.description_en,
+        job.description_ja
       ].join(" "));
 
       if (q && !text.includes(q)) return false;
       if (market !== "all" && job.market !== market) return false;
       if (category !== "all" && job.category !== category) return false;
       if (language !== "all" && !job.languages.includes(language)) return false;
+      if (remote === "remote" && !isRemoteJob(job)) return false;
+      if (remote === "onsite" && isRemoteJob(job)) return false;
+      if (visa !== "all" && visaBand(job) !== visa) return false;
       return true;
     });
 
@@ -577,7 +669,7 @@
             </div>
           </div>
 
-          <p class="job-desc">${escapeHtml(job.description)}</p>
+          <p class="job-desc">${escapeHtml(jobDescription(job))}</p>
           ${job.sourceUrl ? `<p class="job-desc"><a href="${escapeHtml(job.sourceUrl)}" target="_blank" rel="noopener">${t("job.sourceLink")}</a></p>` : ""}
 
           <div class="pills">
@@ -853,7 +945,7 @@
     }
   }
 
-  [searchInput, marketFilter, categoryFilter, languageFilter, sortFilter].forEach((el) => {
+  [searchInput, marketFilter, categoryFilter, languageFilter, sortFilter, remoteFilter, visaFilter].filter(Boolean).forEach((el) => {
     el.addEventListener("input", renderJobs);
     el.addEventListener("change", renderJobs);
   });
@@ -871,6 +963,10 @@
     if (typeof renderSavedJobs === "function") renderSavedJobs();
     if (typeof loadUserAndProfile === "function") loadUserAndProfile();
   });
+
+  // Test hook (also handy for debugging): pure filter helpers, no DOM
+  // beyond the filter inputs that filteredJobs already reads.
+  window.JOJobsFilters = { isRemoteJob, visaBand, jobDescription, filteredJobs, renderJobs };
 
   loadUserAndProfile();
 })();

@@ -20,6 +20,7 @@
   <link rel="alternate" hreflang="ja" href="https://www.japanofferai.com/applications?lang=ja" />
   <title>申请中心 | JapanOffer AI</title>
   <link rel="stylesheet" href="styles.css" />
+  <script src="site-lang.js"></script>
   <style>
     :root {
       --blue: #0a66c2;
@@ -668,16 +669,16 @@
 
     <label class="search">
       <span>⌕</span>
-      <input id="searchInput" placeholder="搜索已保存岗位或公司" />
+      <input id="searchInput" data-i18n-placeholder="search.placeholder" placeholder="搜索已保存岗位或公司" />
     </label>
 
     <nav class="nav">
-      <a href="index.html">首页</a>
-      <a href="network.html">人脉</a>
-      <a href="jobs.html">职位</a>
-      <a class="active" href="applications.html">申请</a>
-      <a href="match.html">匹配</a>
-      <a class="primary-link" href="profile.html">我的主页</a>
+      <a href="index.html" data-i18n="nav.home">首页</a>
+      <a href="network.html" data-i18n="nav.network">人脉</a>
+      <a href="jobs.html" data-i18n="nav.jobs">职位</a>
+      <a class="active" href="applications.html" data-i18n="nav.applications">申请</a>
+      <a href="match.html" data-i18n="nav.match">匹配</a>
+      <a class="primary-link" href="profile.html" data-i18n="nav.profile">我的主页</a>
     </nav>
   </header>
 
@@ -685,148 +686,148 @@
     <section class="hero">
       <div class="hero-card">
         <div class="eyebrow">Application workspace</div>
-        <h1>从保存岗位，<span>到真正开始申请。</span></h1>
-        <p>
+        <h1 data-i18n-html="hero.title">从保存岗位，<span>到真正开始申请。</span></h1>
+        <p data-i18n="hero.copy">
           这里把用户保存的岗位变成申请工作台：选择岗位，生成申请理由、Cover Letter 初稿、CV 修改方向，并记录申请状态。
         </p>
         <div class="btn-row">
-          <a class="btn primary" href="jobs.html">回到职位推荐</a>
-          <a class="btn" href="profile.html">更新 CV / Profile</a>
+          <a class="btn primary" href="jobs.html" data-i18n="hero.back">回到职位推荐</a>
+          <a class="btn" href="profile.html" data-i18n="hero.update">更新 CV / Profile</a>
         </div>
       </div>
 
       <aside class="profile-card">
-        <h2>你的申请资料</h2>
-        <p>系统会基于你的 Profile、CV 文件记录和已保存岗位生成申请材料。</p>
+        <h2 data-i18n="profile.title">你的申请资料</h2>
+        <p data-i18n="profile.copy">系统会基于你的 Profile、CV 文件记录和已保存岗位生成申请材料。</p>
         <div class="profile-grid">
-          <div class="profile-row"><span>登录状态</span><strong id="profileAuth">检查中</strong></div>
-          <div class="profile-row"><span>方向</span><strong id="profileCareer">未读取</strong></div>
-          <div class="profile-row"><span>目标市场</span><strong id="profileMarket">未读取</strong></div>
-          <div class="profile-row"><span>CV</span><strong id="profileCv">未读取</strong></div>
+          <div class="profile-row"><span data-i18n="profile.auth">登录状态</span><strong id="profileAuth">检查中</strong></div>
+          <div class="profile-row"><span data-i18n="profile.career">方向</span><strong id="profileCareer">未读取</strong></div>
+          <div class="profile-row"><span data-i18n="profile.market">目标市场</span><strong id="profileMarket">未读取</strong></div>
+          <div class="profile-row"><span data-i18n="profile.cv">CV</span><strong id="profileCv">未读取</strong></div>
         </div>
-        <div class="status info show" id="profileStatus">正在读取你的申请资料...</div>
+        <div class="status info show" id="profileStatus" data-i18n="profile.checking">正在读取你的申请资料...</div>
       </aside>
     </section>
 
     <section class="workflow">
       <div class="step-card">
         <span>01</span>
-        <strong>保存岗位</strong>
-        <p>先在职位页保存你感兴趣的岗位。</p>
+        <strong data-i18n="step1.title">保存岗位</strong>
+        <p data-i18n="step1.copy">先在职位页保存你感兴趣的岗位。</p>
       </div>
       <div class="step-card">
         <span>02</span>
-        <strong>选择目标</strong>
-        <p>在申请中心选择一个岗位作为当前申请。</p>
+        <strong data-i18n="step2.title">选择目标</strong>
+        <p data-i18n="step2.copy">在申请中心选择一个岗位作为当前申请。</p>
       </div>
       <div class="step-card">
         <span>03</span>
-        <strong>生成材料</strong>
-        <p>自动生成申请理由、Cover Letter 和 CV 修改方向。</p>
+        <strong data-i18n="step3.title">生成材料</strong>
+        <p data-i18n="step3.copy">自动生成申请理由、Cover Letter 和 CV 修改方向。</p>
       </div>
       <div class="step-card">
         <span>04</span>
-        <strong>追踪状态</strong>
-        <p>保存草稿，记录 saved、applied、interview、offer、rejected 状态与申请截止日期。</p>
+        <strong data-i18n="step4.title">追踪状态</strong>
+        <p data-i18n="step4.copy">保存草稿，记录 saved、applied、interview、offer、rejected 状态与申请截止日期。</p>
       </div>
     </section>
 
     <section class="layout">
       <div class="left-col">
         <section class="job-list-card">
-          <h2>已保存岗位</h2>
-          <p>先选择一个岗位，右侧会自动生成申请材料。</p>
+          <h2 data-i18n="saved.title">已保存岗位</h2>
+          <p data-i18n="saved.copy">先选择一个岗位，右侧会自动生成申请材料。</p>
           <div class="filter-row">
-            <label for="statusFilter">按状态筛选</label>
+            <label for="statusFilter" data-i18n="filter.statusLabel">按状态筛选</label>
             <select class="select" id="statusFilter">
-              <option value="all">全部状态</option>
-              <option value="saved">已保存</option>
-              <option value="drafting">准备材料中</option>
-              <option value="ready">可以投递</option>
-              <option value="applied">已投递</option>
-              <option value="interview">面试中</option>
-              <option value="offer">拿到 Offer</option>
-              <option value="rejected">未通过</option>
+              <option value="all" data-i18n="filter.allStatuses">全部状态</option>
+              <option value="saved" data-i18n="status.saved">已保存</option>
+              <option value="drafting" data-i18n="status.drafting">准备材料中</option>
+              <option value="ready" data-i18n="status.ready">可以投递</option>
+              <option value="applied" data-i18n="status.applied">已投递</option>
+              <option value="interview" data-i18n="status.interview">面试中</option>
+              <option value="offer" data-i18n="status.offer">拿到 Offer</option>
+              <option value="rejected" data-i18n="status.rejected">未通过</option>
             </select>
           </div>
           <div class="saved-jobs" id="savedJobsList">
-            <div class="empty">正在读取已保存岗位...</div>
+            <div class="empty" data-i18n="saved.loading">正在读取已保存岗位...</div>
           </div>
           <div class="status" id="savedStatus"></div>
         </section>
 
         <section class="draft-card">
-          <h2>申请进度</h2>
-          <p>这里显示已生成或已保存的申请草稿。</p>
+          <h2 data-i18n="drafts.title">申请进度</h2>
+          <p data-i18n="drafts.copy">这里显示已生成或已保存的申请草稿。</p>
           <div class="draft-list" id="draftList">
-            <div class="empty">还没有申请草稿。</div>
+            <div class="empty" data-i18n="drafts.empty">还没有申请草稿。</div>
           </div>
         </section>
       </div>
 
       <div class="right-col">
         <section class="panel">
-          <h2 id="selectedTitle">选择一个岗位</h2>
-          <p id="selectedSubtitle">从左侧选择已保存岗位后，这里会显示申请分析。</p>
+          <h2 id="selectedTitle" data-i18n="editor.selectTitle">选择一个岗位</h2>
+          <p id="selectedSubtitle" data-i18n="editor.selectSubtitle">从左侧选择已保存岗位后，这里会显示申请分析。</p>
 
           <div class="insight-grid">
             <div class="insight">
-              <span>匹配分</span>
+              <span data-i18n="insight.score">匹配分</span>
               <strong id="matchScore">--</strong>
             </div>
             <div class="insight">
-              <span>市场</span>
+              <span data-i18n="insight.market">市场</span>
               <strong id="marketLabel">--</strong>
             </div>
             <div class="insight">
-              <span>状态</span>
+              <span data-i18n="insight.status">状态</span>
               <strong id="statusLabel">--</strong>
             </div>
           </div>
 
           <div class="field-grid">
             <label class="field">
-              <span>申请状态</span>
+              <span data-i18n="field.status">申请状态</span>
               <select class="select" id="applicationStatus">
-                <option value="saved">已保存</option>
-                <option value="drafting">准备材料中</option>
-                <option value="ready">可以投递</option>
-                <option value="applied">已投递</option>
-                <option value="interview">面试中</option>
-                <option value="rejected">未通过</option>
-                <option value="offer">拿到 Offer</option>
+                <option value="saved" data-i18n="status.saved">已保存</option>
+                <option value="drafting" data-i18n="status.drafting">准备材料中</option>
+                <option value="ready" data-i18n="status.ready">可以投递</option>
+                <option value="applied" data-i18n="status.applied">已投递</option>
+                <option value="interview" data-i18n="status.interview">面试中</option>
+                <option value="rejected" data-i18n="status.rejected">未通过</option>
+                <option value="offer" data-i18n="status.offer">拿到 Offer</option>
               </select>
             </label>
 
             <label class="field">
-              <span>申请截止日期</span>
+              <span data-i18n="field.deadline">申请截止日期</span>
               <input class="input" type="date" id="deadlineInput" />
             </label>
 
             <label class="field">
-              <span>个人备注</span>
-              <textarea class="textarea" id="notesInput" placeholder="例如：先研究公司业务，修改 CV，把合规项目经历写得更清楚。"></textarea>
+              <span data-i18n="field.notes">个人备注</span>
+              <textarea class="textarea" id="notesInput" data-i18n-placeholder="notes.placeholder" placeholder="例如：先研究公司业务，修改 CV，把合规项目经历写得更清楚。"></textarea>
             </label>
 
             <div class="btn-row">
-              <button class="btn primary" id="generateButton" type="button">生成申请材料</button>
-              <button class="btn green" id="saveDraftButton" type="button">保存申请草稿</button>
+              <button class="btn primary" id="generateButton" type="button" data-i18n="btn.generate">生成申请材料</button>
+              <button class="btn green" id="saveDraftButton" type="button" data-i18n="btn.saveDraft">保存申请草稿</button>
             </div>
             <div class="status" id="editorStatus"></div>
           </div>
         </section>
 
         <section class="editor-card">
-          <h2>Cover Letter / 申请理由</h2>
-          <p>这里先做 MVP 版本。之后可以接 OpenAI API，把内容升级成更完整的英文申请信。</p>
+          <h2 data-i18n="cover.title">Cover Letter / 申请理由</h2>
+          <p data-i18n="cover.copy">这里先做 MVP 版本。之后可以接 OpenAI API，把内容升级成更完整的英文申请信。</p>
           <div class="field-grid">
             <label class="field">
-              <span>生成内容</span>
-              <textarea class="textarea large" id="coverLetterOutput" placeholder="点击“生成申请材料”后，这里会出现申请理由、Cover Letter 初稿和 CV 修改方向。"></textarea>
+              <span data-i18n="field.output">生成内容</span>
+              <textarea class="textarea large" id="coverLetterOutput" data-i18n-placeholder="cover.placeholder" placeholder="点击“生成申请材料”后，这里会出现申请理由、Cover Letter 初稿和 CV 修改方向。"></textarea>
             </label>
             <div class="btn-row">
-              <button class="btn" id="copyButton" type="button">复制内容</button>
-              <button class="btn" id="clearButton" type="button">清空</button>
+              <button class="btn" id="copyButton" type="button" data-i18n="btn.copy">复制内容</button>
+              <button class="btn" id="clearButton" type="button" data-i18n="btn.clear">清空</button>
             </div>
             <div class="status" id="copyStatus"></div>
           </div>
@@ -837,6 +838,7 @@
 
   <script src="auth-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="applications-lang.js"></script>
   <script src="applications.js"></script>
 </body>
 </html>

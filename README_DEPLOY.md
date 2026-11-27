@@ -26,7 +26,34 @@ Check the Vercel Environment Variables before deploying:
   manual job import endpoint.
 - `CRON_SECRET` — long random string; Vercel Cron sends it as
   `Authorization: Bearer <CRON_SECRET>` to `/api/cron-import-jobs`
-  (daily 02:00 UTC). Never commit secrets to the repo.
+  (daily 02:00 UTC). Never commit secrets to the repo. Without it the
+  daily job import returns 401 and no jobs are imported automatically;
+  the endpoint also needs `ADMIN_PASSWORD` (above) and, for the
+  30-day stale-job deactivation, `SUPABASE_URL` +
+  `SUPABASE_SERVICE_ROLE_KEY` (above). See "Daily job import (cron)"
+  below for the setup steps.
+
+### Daily job import (cron)
+
+The job library refreshes itself once a day at 02:00 UTC
+(`vercel.json` → `"crons"`, the maximum frequency on the Vercel Hobby
+plan). `/api/cron-import-jobs` checks the `CRON_SECRET`, reuses the
+existing `/api/import-public-jobs` importer, then deactivates
+`platform_items` rows not seen for 30 days.
+
+1. Generate a long random string (at least 32 characters, e.g. with a
+   password manager or `openssl rand -hex 32`). **Never paste the value
+   into chat, code or a PR.**
+2. Vercel Dashboard → project `japanofferai-site` → **Settings** →
+   **Environment Variables** → add `CRON_SECRET` with that value
+   (all environments: Production, Preview, Development).
+3. **Redeploy** (Deployments → latest Production deployment →
+   Redeploy), so the new variable reaches the live functions.
+4. Confirm the first run in Vercel Dashboard → **Cron Jobs** (or the
+   function logs for `/api/cron-import-jobs`) after 02:00 UTC: a
+   successful run returns `{ "ok": true, "imported": … }`. If it
+   returns 401, the `CRON_SECRET` value in Vercel does not match the
+   one Vercel Cron sends — re-check the variable, not the code.
 
 ### Stripe billing (test mode first)
 

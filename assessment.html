@@ -22,6 +22,7 @@
   <meta name="description" content="Start a beta assessment for JapanOffer AI." />
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="assets/css/design-system.css?v=2" />
+  <script src="site-lang.js"></script>
 </head>
 <body>
   <header class="topbar">
@@ -29,91 +30,91 @@
       <span class="brand-mark">J</span>
       <span class="brand-copy">
         <strong>JapanOffer AI</strong>
-        <small>Cross-border Talent Network</small>
+        <small data-i18n="brand.subtitle">Cross-border Talent Network</small>
       </span>
     </a>
 
     <div class="top-search" aria-label="Global platform search">
       <span>⌕</span>
-      <input value="Search roles, talent or companies" aria-label="Search roles, talent or companies" />
+      <input data-i18n-value="search.value" value="Search roles, talent or companies" aria-label="Search roles, talent or companies" />
     </div>
 
     <nav class="nav" aria-label="Main navigation">
-      <a href="index.html#network">Network</a>
-      <a href="jobs.html">Jobs</a>
-      <a href="talent.html">Talent</a>
-      <a href="companies.html">Companies</a>
-      <a href="employers.html">Employers</a>
+      <a href="index.html#network" data-i18n="nav.network">Network</a>
+      <a href="jobs.html" data-i18n="nav.jobs">Jobs</a>
+      <a href="talent.html" data-i18n="nav.talent">Talent</a>
+      <a href="companies.html" data-i18n="nav.companies">Companies</a>
+      <a href="employers.html" data-i18n="nav.employers">Employers</a>
     </nav>
 
-    <div class="auth-links"><a class="signin-link" href="login.html">Sign in</a><a class="nav-cta" href="signup.html">Sign up</a></div>
+    <div class="auth-links"><a class="signin-link" href="login.html" data-i18n="auth.signIn">Sign in</a><a class="nav-cta" href="signup.html" data-i18n="auth.signUp">Sign up</a></div>
   </header>
   <main>
     <section class="page-hero">
-      <p class="eyebrow">Assessment</p>
-      <h1>Start with a beta match assessment.</h1>
+      <p class="eyebrow" data-i18n="hero.eyebrow">Assessment</p>
+      <h1 data-i18n="hero.title">Start with a beta match assessment.</h1>
       <p>
-        This restores the English Auto Report entry and keeps the Chinese questionnaire. The full automated report can be connected later, but the user journey is now separated clearly.
+        <span data-i18n="hero.copy">This restores the English Auto Report entry and keeps the Chinese questionnaire. The full automated report can be connected later, but the user journey is now separated clearly.</span>
       </p>
     </section>
 
     <section class="page-grid">
       <article class="page-card featured">
-        <span class="kicker">Chinese beta</span>
+        <span class="kicker" data-i18n="card1.kicker">Chinese beta</span>
         <h2>中文问卷：人工内测分析</h2>
-        <p>适合中文用户。提交问卷后，可作为早期内测用户进行跨境岗位优先级判断。</p>
+        <p data-i18n="card1.copy">适合中文用户。提交问卷后，可作为早期内测用户进行跨境岗位优先级判断。</p>
         <a class="btn primary" href="https://www.wjx.cn/vm/PRY0MgS.aspx" target="_blank" rel="noopener">开始中文问卷</a>
       </article>
 
       <article class="page-card">
-        <span class="kicker">English route</span>
-        <h2>English Auto Report</h2>
-        <p>For users who want an English flow. This page can later connect to your automated report API or form workflow.</p>
-        <a class="btn secondary" href="#english-form">Start English form</a>
+        <span class="kicker" data-i18n="card2.kicker">English route</span>
+        <h2 data-i18n="card2.title">English Auto Report</h2>
+        <p data-i18n="card2.copy">For users who want an English flow. This page can later connect to your automated report API or form workflow.</p>
+        <a class="btn secondary" href="#english-form" data-i18n="card2.cta">Start English form</a>
       </article>
 
       <article class="page-card">
-        <span class="kicker">Employer</span>
-        <h2>Employer waitlist</h2>
-        <p>For companies or recruiters who want to join the future talent matching side of the platform.</p>
-        <a class="btn secondary" href="employers.html">Join employer waitlist</a>
+        <span class="kicker" data-i18n="card3.kicker">Employer</span>
+        <h2 data-i18n="card3.title">Employer waitlist</h2>
+        <p data-i18n="card3.copy">For companies or recruiters who want to join the future talent matching side of the platform.</p>
+        <a class="btn secondary" href="employers.html" data-i18n="card3.cta">Join employer waitlist</a>
       </article>
     </section>
 
     <section class="wide-panel" id="english-form">
-      <p class="eyebrow">English Auto Report</p>
-      <h2>Basic matching form</h2>
+      <p class="eyebrow" data-i18n="form.eyebrow">English Auto Report</p>
+      <h2 data-i18n="form.title">Basic matching form</h2>
       <form class="mock-form">
-        <label>Education background
-          <input placeholder="Example: LLB student, business graduate, computer science student" />
+        <label><span data-i18n="form.education">Education background</span>
+          <input data-i18n-placeholder="form.educationPh" placeholder="Example: LLB student, business graduate, computer science student" />
         </label>
-        <label>Languages
-          <input placeholder="Example: English, Japanese N1, Mandarin" />
+        <label><span data-i18n="form.languages">Languages</span>
+          <input data-i18n-placeholder="form.languagesPh" placeholder="Example: English, Japanese N1, Mandarin" />
         </label>
-        <label>Target market
+        <label><span data-i18n="form.market">Target market</span>
           <select>
-            <option>Japan</option>
-            <option>Singapore</option>
-            <option>Hong Kong</option>
-            <option>United Kingdom</option>
+            <option data-i18n="form.marketJapan">Japan</option>
+            <option data-i18n="form.marketSingapore">Singapore</option>
+            <option data-i18n="form.marketHongKong">Hong Kong</option>
+            <option data-i18n="form.marketUK">United Kingdom</option>
           </select>
         </label>
-        <label>Career direction
-          <input placeholder="Example: legal compliance, business development, technology" />
+        <label><span data-i18n="form.career">Career direction</span>
+          <input data-i18n-placeholder="form.careerPh" placeholder="Example: legal compliance, business development, technology" />
         </label>
         <div class="route-row">
           <div>
-            <h3>Preview output</h3>
-            <p>Legal / compliance route · Japan and Singapore first · Visa risk needs checking</p>
+            <h3 data-i18n="form.preview">Preview output</h3>
+            <p data-i18n="form.previewCopy">Legal / compliance route · Japan and Singapore first · Visa risk needs checking</p>
           </div>
-          <strong>Demo</strong>
+          <strong data-i18n="form.demo">Demo</strong>
         </div>
       </form>
     </section>
   </main>
   <footer class="footer">
     <strong>JapanOffer AI</strong>
-    <span>Cross-border talent matching network.</span>
+    <span data-i18n="footer.copy">Cross-border talent matching network.</span>
   </footer>
   <script src="effects.js"></script>
   <script src="auth-config.js"></script>
@@ -121,5 +122,166 @@
   <script src="auth.js"></script>
   <script src="analytics.js"></script>
   <script src="platform-actions.js"></script>
+
+  <script>
+  // assessment page language. Follows the shared language (window.JOLang).
+  (function () {
+    var dict = {
+      en: {
+        "brand.subtitle": "Cross-border Talent Network",
+        "search.value": "Search roles, talent or companies",
+        "nav.network": "Network",
+        "nav.jobs": "Jobs",
+        "nav.talent": "Talent",
+        "nav.companies": "Companies",
+        "nav.employers": "Employers",
+        "auth.signIn": "Sign in",
+        "auth.signUp": "Sign up",
+        "hero.eyebrow": "Assessment",
+        "hero.title": "Start with a beta match assessment.",
+        "hero.copy": "This restores the English Auto Report entry and keeps the Chinese questionnaire. The full automated report can be connected later, but the user journey is now separated clearly.",
+        "card1.kicker": "Chinese beta",
+        "card1.copy": "For Chinese-speaking users. After submitting the questionnaire, you can join as an early beta user for cross-border job prioritisation.",
+        "card2.kicker": "English route",
+        "card2.title": "English Auto Report",
+        "card2.copy": "For users who want an English flow. This page can later connect to your automated report API or form workflow.",
+        "card2.cta": "Start English form",
+        "card3.kicker": "Employer",
+        "card3.title": "Employer waitlist",
+        "card3.copy": "For companies or recruiters who want to join the future talent matching side of the platform.",
+        "card3.cta": "Join employer waitlist",
+        "form.eyebrow": "English Auto Report",
+        "form.title": "Basic matching form",
+        "form.education": "Education background",
+        "form.educationPh": "Example: LLB student, business graduate, computer science student",
+        "form.languages": "Languages",
+        "form.languagesPh": "Example: English, Japanese N1, Mandarin",
+        "form.market": "Target market",
+        "form.marketJapan": "Japan",
+        "form.marketSingapore": "Singapore",
+        "form.marketHongKong": "Hong Kong",
+        "form.marketUK": "United Kingdom",
+        "form.career": "Career direction",
+        "form.careerPh": "Example: legal compliance, business development, technology",
+        "form.preview": "Preview output",
+        "form.previewCopy": "Legal / compliance route · Japan and Singapore first · Visa risk needs checking",
+        "form.demo": "Demo",
+        "footer.copy": "Cross-border talent matching network."
+      },
+      zh: {
+        "brand.subtitle": "跨境人才匹配网络",
+        "search.value": "搜索岗位、人才或企业",
+        "nav.network": "人脉",
+        "nav.jobs": "职位",
+        "nav.talent": "人才",
+        "nav.companies": "企业",
+        "nav.employers": "雇主",
+        "auth.signIn": "登录",
+        "auth.signUp": "注册",
+        "hero.eyebrow": "测评",
+        "hero.title": "从一份内测匹配测评开始。",
+        "hero.copy": "这里恢复了英文自动报告入口，同时保留中文问卷。完整的自动化报告之后可以接上，但用户路径现在已经分清楚了。",
+        "card1.kicker": "中文内测",
+        "card1.copy": "适合中文用户。提交问卷后，可作为早期内测用户进行跨境岗位优先级判断。",
+        "card2.kicker": "英文入口",
+        "card2.title": "英文自动报告",
+        "card2.copy": "适合想要英文流程的用户。这个页面之后可以接到自动化报告 API 或表单流程。",
+        "card2.cta": "开始英文表单",
+        "card3.kicker": "雇主",
+        "card3.title": "雇主等待名单",
+        "card3.copy": "适合想加入平台未来人才匹配一侧的企业或招聘方。",
+        "card3.cta": "加入雇主等待名单",
+        "form.eyebrow": "英文自动报告",
+        "form.title": "基础匹配表单",
+        "form.education": "学历背景",
+        "form.educationPh": "例如：法律本科在读、商科毕业生、计算机专业学生",
+        "form.languages": "语言",
+        "form.languagesPh": "例如：英语、日语 N1、中文",
+        "form.market": "目标市场",
+        "form.marketJapan": "日本",
+        "form.marketSingapore": "新加坡",
+        "form.marketHongKong": "香港",
+        "form.marketUK": "英国",
+        "form.career": "职业方向",
+        "form.careerPh": "例如：法律合规、商务拓展、技术",
+        "form.preview": "预览输出",
+        "form.previewCopy": "法律/合规方向 · 日本和新加坡优先 · 签证风险需要确认",
+        "form.demo": "演示",
+        "footer.copy": "跨境人才匹配网络。"
+      },
+      ja: {
+        "brand.subtitle": "クロスボーダー人材ネットワーク",
+        "search.value": "求人、人材、企業を検索",
+        "nav.network": "ネットワーク",
+        "nav.jobs": "求人",
+        "nav.talent": "人材",
+        "nav.companies": "企業",
+        "nav.employers": "採用企業",
+        "auth.signIn": "ログイン",
+        "auth.signUp": "登録",
+        "hero.eyebrow": "アセスメント",
+        "hero.title": "ベータ版のマッチングアセスメントから始めましょう。",
+        "hero.copy": "英語の自動レポート入口を復旧し、中国語アンケートも残しています。完全な自動レポートは後で接続できますが、ユーザージャーニーは明確に分かれています。",
+        "card1.kicker": "中国語ベータ",
+        "card1.copy": "中国語ユーザー向け。アンケート送信後、クロスボーダー求人の優先順位付けの初期ベータユーザーとして参加できます。",
+        "card2.kicker": "英語ルート",
+        "card2.title": "英語自動レポート",
+        "card2.copy": "英語フローを使いたい方向け。このページは後で自動レポート API やフォームの仕組みに接続できます。",
+        "card2.cta": "英語フォームを始める",
+        "card3.kicker": "採用企業",
+        "card3.title": "採用企業ウェイティングリスト",
+        "card3.copy": "プラットフォームの将来の人材マッチング側に参加したい企業や採用担当者向け。",
+        "card3.cta": "採用企業ウェイティングリストに参加",
+        "form.eyebrow": "英語自動レポート",
+        "form.title": "基本マッチングフォーム",
+        "form.education": "学歴",
+        "form.educationPh": "例：法学部生、ビジネス系卒業生、コンピュータサイエンス専攻",
+        "form.languages": "言語",
+        "form.languagesPh": "例：英語、日本語 N1、中国語",
+        "form.market": "対象市場",
+        "form.marketJapan": "日本",
+        "form.marketSingapore": "シンガポール",
+        "form.marketHongKong": "香港",
+        "form.marketUK": "英国",
+        "form.career": "キャリアの方向性",
+        "form.careerPh": "例：法務コンプライアンス、事業開発、テクノロジー",
+        "form.preview": "プレビュー",
+        "form.previewCopy": "法務・コンプライアンスルート · 日本とシンガポール優先 · ビザリスク要確認",
+        "form.demo": "デモ",
+        "footer.copy": "クロスボーダー人材マッチングネットワーク。"
+      }
+    };
+    function lang() {
+      if (window.JOLang) return window.JOLang.get();
+      return localStorage.getItem("japanoffer_lang") || "en";
+    }
+    function apply() {
+      var t = dict[lang()] || dict.en;
+      document.documentElement.lang = lang() === "zh" ? "zh-CN" : lang();
+      document.querySelectorAll("[data-i18n]").forEach(function (el) {
+        var v = t[el.dataset.i18n];
+        if (v !== undefined) el.textContent = v;
+      });
+      document.querySelectorAll("[data-i18n-html]").forEach(function (el) {
+        var v = t[el.dataset.i18nHtml];
+        if (v !== undefined) el.innerHTML = v;
+      });
+      document.querySelectorAll("[data-i18n-placeholder]").forEach(function (el) {
+        var v = t[el.dataset.i18nPlaceholder];
+        if (v !== undefined) el.setAttribute("placeholder", v);
+      });
+      document.querySelectorAll("[data-i18n-value]").forEach(function (el) {
+        var v = t[el.dataset.i18nValue];
+        if (v !== undefined) el.value = v;
+      });
+    }
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", apply);
+    else apply();
+    window.addEventListener("japanoffer:languagechange", apply);
+    window.addEventListener("storage", apply);
+    setTimeout(apply, 300);
+    setTimeout(apply, 1000);
+  })();
+  </script>
 </body>
 </html>
