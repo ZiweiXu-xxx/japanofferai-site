@@ -21,6 +21,8 @@
   <title>Companies | JapanOffer AI</title>
   <meta name="description" content="Explore company-side matching for cross-border hiring." />
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="assets/css/design-system.css?v=2" />
+  <script src="site-lang.js"></script>
 </head>
 <body>
   <header class="topbar">
@@ -28,57 +30,57 @@
       <span class="brand-mark">J</span>
       <span class="brand-copy">
         <strong>JapanOffer AI</strong>
-        <small>Cross-border Talent Network</small>
+        <small data-i18n="brand.subtitle">Cross-border Talent Network</small>
       </span>
     </a>
 
     <div class="top-search" aria-label="Global platform search">
       <span>⌕</span>
-      <input value="Search roles, talent or companies" aria-label="Search roles, talent or companies" />
+      <input data-i18n-value="search.value" value="Search roles, talent or companies" aria-label="Search roles, talent or companies" />
     </div>
 
     <nav class="nav" aria-label="Main navigation">
-      <a href="index.html#network">Network</a>
-      <a href="jobs.html">Jobs</a>
-      <a href="talent.html">Talent</a>
-      <a href="companies.html">Companies</a>
-      <a href="employers.html">Employers</a>
+      <a href="index.html#network" data-i18n="nav.network">Network</a>
+      <a href="jobs.html" data-i18n="nav.jobs">Jobs</a>
+      <a href="talent.html" data-i18n="nav.talent">Talent</a>
+      <a href="companies.html" data-i18n="nav.companies">Companies</a>
+      <a href="employers.html" data-i18n="nav.employers">Employers</a>
     </nav>
 
-    <div class="auth-links"><a class="signin-link" href="login.html">Sign in</a><a class="nav-cta" href="signup.html">Sign up</a></div>
+    <div class="auth-links"><a class="signin-link" href="login.html" data-i18n="auth.signIn">Sign in</a><a class="nav-cta" href="signup.html" data-i18n="auth.signUp">Sign up</a></div>
   </header>
   <main>
     <section class="page-hero">
-      <p class="eyebrow">Companies</p>
-      <h1>A future company layer for cross-border hiring.</h1>
-      <p>
+      <p class="eyebrow" data-i18n="hero.eyebrow">Companies</p>
+      <h1 data-i18n="hero.title">A future company layer for cross-border hiring.</h1>
+      <p data-i18n="hero.copy">
         Companies do not only need more applications. They need fewer weak applications and faster access to candidates who already fit the role, language and visa requirements.
       </p>
     </section>
 
     <section class="page-grid">
       <article class="page-card featured">
-        <span class="kicker">Hiring pain</span>
-        <h2>Too many weak applications</h2>
-        <p>Cross-border roles often receive candidates who are not realistic because language, visa or background conditions were unclear.</p>
+        <span class="kicker" data-i18n="card1.kicker">Hiring pain</span>
+        <h2 data-i18n="card1.title">Too many weak applications</h2>
+        <p data-i18n="card1.copy">Cross-border roles often receive candidates who are not realistic because language, visa or background conditions were unclear.</p>
       </article>
 
       <article class="page-card">
-        <span class="kicker">Matching</span>
-        <h2>Better candidate shortlist</h2>
-        <p>JapanOffer AI can pre-rank candidates by background fit, language fit, visa risk and career direction.</p>
+        <span class="kicker" data-i18n="card2.kicker">Matching</span>
+        <h2 data-i18n="card2.title">Better candidate shortlist</h2>
+        <p data-i18n="card2.copy">JapanOffer AI can pre-rank candidates by background fit, language fit, visa risk and career direction.</p>
       </article>
 
       <article class="page-card">
-        <span class="kicker">Network</span>
-        <h2>Employer-side talent pool</h2>
-        <p>As the user base grows, companies can discover cross-border candidates before relying on manual screening.</p>
+        <span class="kicker" data-i18n="card3.kicker">Network</span>
+        <h2 data-i18n="card3.title">Employer-side talent pool</h2>
+        <p data-i18n="card3.copy">As the user base grows, companies can discover cross-border candidates before relying on manual screening.</p>
       </article>
     </section>
   </main>
   <footer class="footer">
     <strong>JapanOffer AI</strong>
-    <span>Cross-border talent matching network.</span>
+    <span data-i18n="footer.copy">Cross-border talent matching network.</span>
   </footer>
   <script src="effects.js"></script>
   <script src="auth-config.js"></script>
@@ -86,5 +88,86 @@
   <script src="auth.js"></script>
   <script src="analytics.js"></script>
   <script src="platform-actions.js"></script>
+  <script>
+  // Companies page language. Follows the shared language (window.JOLang).
+  (function () {
+    var dict = {
+      en: {
+        "brand.subtitle": "Cross-border Talent Network",
+        "search.value": "Search roles, talent or companies",
+        "nav.network": "Network", "nav.jobs": "Jobs", "nav.talent": "Talent",
+        "nav.companies": "Companies", "nav.employers": "Employers",
+        "auth.signIn": "Sign in", "auth.signUp": "Sign up",
+        "hero.eyebrow": "Companies",
+        "hero.title": "A future company layer for cross-border hiring.",
+        "hero.copy": "Companies do not only need more applications. They need fewer weak applications and faster access to candidates who already fit the role, language and visa requirements.",
+        "card1.kicker": "Hiring pain", "card1.title": "Too many weak applications",
+        "card1.copy": "Cross-border roles often receive candidates who are not realistic because language, visa or background conditions were unclear.",
+        "card2.kicker": "Matching", "card2.title": "Better candidate shortlist",
+        "card2.copy": "JapanOffer AI can pre-rank candidates by background fit, language fit, visa risk and career direction.",
+        "card3.kicker": "Network", "card3.title": "Employer-side talent pool",
+        "card3.copy": "As the user base grows, companies can discover cross-border candidates before relying on manual screening.",
+        "footer.copy": "Cross-border talent matching network."
+      },
+      zh: {
+        "brand.subtitle": "跨境人才匹配网络",
+        "search.value": "搜索岗位、人才或企业",
+        "nav.network": "人脉", "nav.jobs": "职位", "nav.talent": "人才",
+        "nav.companies": "企业", "nav.employers": "雇主",
+        "auth.signIn": "登录", "auth.signUp": "注册",
+        "hero.eyebrow": "企业",
+        "hero.title": "面向跨境招聘的未来企业层。",
+        "hero.copy": "企业需要的不是更多申请，而是更少无效申请，以及更快触达那些已经符合岗位、语言和签证要求的候选人。",
+        "card1.kicker": "招聘痛点", "card1.title": "无效申请太多",
+        "card1.copy": "跨境岗位经常收到并不现实的候选人，原因是语言、签证或背景条件一开始就不清楚。",
+        "card2.kicker": "匹配", "card2.title": "更精准的候选人名单",
+        "card2.copy": "JapanOffer AI 可以按背景匹配、语言匹配、签证风险和职业方向，提前给候选人排序。",
+        "card3.kicker": "人脉", "card3.title": "雇主侧人才库",
+        "card3.copy": "随着用户增长，企业可以在人工筛选之前，先发现跨境候选人。",
+        "footer.copy": "跨境人才匹配网络。"
+      },
+      ja: {
+        "brand.subtitle": "クロスボーダー人材ネットワーク",
+        "search.value": "求人、人材、企業を検索",
+        "nav.network": "ネットワーク", "nav.jobs": "求人", "nav.talent": "人材",
+        "nav.companies": "企業", "nav.employers": "採用企業",
+        "auth.signIn": "ログイン", "auth.signUp": "登録",
+        "hero.eyebrow": "企業",
+        "hero.title": "クロスボーダー採用の未来の企業レイヤー。",
+        "hero.copy": "企業に必要なのは応募数の多さではなく、無駄な応募の少なさと、職種・言語・ビザ要件に合う候補者への素早いアクセスです。",
+        "card1.kicker": "採用の課題", "card1.title": "質の低い応募が多すぎる",
+        "card1.copy": "クロスボーダー求人には、言語・ビザ・背景条件が不明確なため、現実的でない候補者が集まりがちです。",
+        "card2.kicker": "マッチング", "card2.title": "より良い候補者リスト",
+        "card2.copy": "JapanOffer AI は、背景、語学力、ビザリスク、キャリア方向性から候補者を事前にランク付けできます。",
+        "card3.kicker": "ネットワーク", "card3.title": "企業向けタレントプール",
+        "card3.copy": "ユーザーが増えるにつれ、企業は手作業のスクリーニングに頼る前に、クロスボーダー人材を発見できます。",
+        "footer.copy": "クロスボーダー人材マッチングネットワーク。"
+      }
+    };
+    function lang() {
+      if (window.JOLang) return window.JOLang.get();
+      return localStorage.getItem("japanoffer_lang") || "en";
+    }
+    function apply() {
+      var t = dict[lang()] || dict.en;
+      document.documentElement.lang = lang() === "zh" ? "zh-CN" : lang();
+      document.querySelectorAll("[data-i18n]").forEach(function (el) {
+        var v = t[el.dataset.i18n];
+        if (v !== undefined) el.textContent = v;
+      });
+      document.querySelectorAll("[data-i18n-value]").forEach(function (el) {
+        var v = t[el.dataset.i18nValue];
+        if (v !== undefined) el.value = v;
+      });
+    }
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", apply);
+    else apply();
+    window.addEventListener("japanoffer:languagechange", apply);
+    window.addEventListener("storage", apply);
+    setTimeout(apply, 300);
+    setTimeout(apply, 1000);
+  })();
+  </script>
+
 </body>
 </html>

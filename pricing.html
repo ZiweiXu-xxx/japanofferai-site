@@ -27,6 +27,7 @@
     .price-card ul { margin: 0.75rem 0 1.25rem; padding-left: 1.1rem; }
     .price-card ul li { margin: 0.35rem 0; }
   </style>
+  <link rel="stylesheet" href="assets/css/design-system.css?v=2" />
 </head>
 <body class="auth-body">
   <header class="topbar">
@@ -42,7 +43,7 @@
       <input value="Search roles, talent or companies" />
     </div>
     <nav class="nav">
-      <a href="report.html">AI Report</a>
+      <a href="report.html">Match Report</a>
       <a href="jobs.html">Jobs</a>
       <a href="talent.html">Talent</a>
       <a href="companies.html">Companies</a>
@@ -59,7 +60,7 @@
       <p class="eyebrow">Pricing</p>
       <h1>Start free. Pay only for more reports.</h1>
       <p>
-        Job search is always free, and your first AI report is free too.
+        Job search is always free, and your first match report is free too.
         Need more reports? Buy them one at a time, in a pack, or go Premium
         for a monthly allowance. Secure checkout by Stripe.
       </p>
@@ -74,7 +75,7 @@
         <p class="price-amount">£0</p>
         <ul>
           <li>Unlimited job search</li>
-          <li>First AI report free</li>
+          <li>First match report free</li>
           <li>Basic job-search features</li>
         </ul>
         <a class="btn secondary" href="signup.html">Create a free account</a>
@@ -82,7 +83,7 @@
 
       <article class="page-card price-card">
         <span class="kicker">Single report</span>
-        <h2>Single AI Report</h2>
+        <h2>Single Match Report</h2>
         <p class="price-amount" data-price="single">…</p>
         <ul>
           <li><span data-product-credits="single">1 report</span></li>
@@ -93,6 +94,7 @@
       </article>
 
       <article class="page-card price-card">
+        <span class="ds-badge ds-badge-teal ds-price-badge">Best value</span>
         <span class="kicker">Report pack</span>
         <h2>5-Report Pack</h2>
         <p class="price-amount" data-price="pack">…</p>
@@ -105,6 +107,7 @@
       </article>
 
       <article class="page-card featured price-card">
+        <span class="ds-badge ds-badge-gold ds-price-badge">Most popular</span>
         <span class="kicker">Premium</span>
         <h2>Premium Monthly</h2>
         <p class="price-amount"><span data-price="premium">…</span> <span class="price-period">/ month</span></p>
@@ -118,11 +121,13 @@
       </article>
     </section>
 
+    <p class="trust-note" style="text-align:center;margin:4px 0 28px">Secure checkout by Stripe · JapanOffer AI never sees or stores your card details · Cancel Premium any time</p>
+
     <section class="wide-panel">
       <p class="eyebrow">How billing works</p>
       <h2>Your reports, your balance.</h2>
       <p>
-        Your first AI report is free. After that, each AI report uses one
+        Your first match report is free. After that, each match report uses one
         credit: single reports and packs add credits to your balance, and
         Premium gives you 20 reports every billing month. Your remaining
         balance is shown on the report pages and on your
@@ -137,5 +142,35 @@
   <script src="auth.js"></script>
   <script src="billing.js"></script>
   <script src="analytics.js"></script>
+  <footer class="ds-footer">
+    <div class="ds-footer-grid">
+      <div class="ds-footer-brand">
+        <strong>JapanOffer AI</strong>
+        <p>Cross-border talent intelligence network.</p>
+      </div>
+      <div>
+        <h3>Product</h3>
+        <ul>
+          <li><a href="jobs-search.html">Search jobs</a></li>
+          <li><a href="report.html">Match report</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="network.html">Member network</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Account</h3>
+        <ul>
+          <li><a href="signup.html">Create free account</a></li>
+          <li><a href="login.html">Sign in</a></li>
+          <li><a href="account.html">Your account</a></li>
+          <li><a href="feedback.html">Feedback</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="ds-footer-bottom">
+      <span>© 2026 JapanOffer AI</span>
+      <span>Secure checkout by Stripe. JapanOffer AI never sees or stores your card details.</span>
+    </div>
+  </footer>
 </body>
 </html>

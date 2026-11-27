@@ -12,17 +12,17 @@
 
 export const CURRENCY = "GBP";
 
-// Free AI reports granted to every newly registered user.
+// Free match reports granted to every newly registered user.
 export const FREE_REPORTS = 1;
 
-// AI reports included in a Premium subscription, per billing month.
+// Match reports included in a Premium subscription, per billing month.
 export const PREMIUM_CREDITS_PER_MONTH = 20;
 
 export const PRODUCTS = {
   single: {
     key: "single",
-    name: "Single AI Report",
-    tagline: "One AI analysis report, no subscription.",
+    name: "Single Match Report",
+    tagline: "One structured match report, no subscription.",
     // Credits granted when the Checkout Session completes.
     credits: 1,
     priceGbp: 4.99,
@@ -32,7 +32,7 @@ export const PRODUCTS = {
   pack: {
     key: "pack",
     name: "5-Report Pack",
-    tagline: "Five AI analysis reports, use any time.",
+    tagline: "Five structured match reports, use any time.",
     credits: 5,
     priceGbp: 14.99,
     mode: "payment",
@@ -41,7 +41,7 @@ export const PRODUCTS = {
   premium: {
     key: "premium",
     name: "Premium Monthly",
-    tagline: "Monthly AI reports plus premium job-search features.",
+    tagline: "Monthly match reports plus premium job-search features.",
     creditsPerMonth: 20,
     priceGbp: 19.99,
     mode: "subscription",

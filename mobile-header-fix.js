@@ -25,9 +25,13 @@
         z-index: 50 !important;
         padding: 0 !important;
         margin: 0 !important;
-        background: rgba(248, 251, 255, 0.82) !important;
-        backdrop-filter: blur(14px) !important;
-        -webkit-backdrop-filter: blur(14px) !important;
+        /* Solid white: the old translucent + blur let hero text show
+           through the header while scrolling. This style element is
+           appended to <head> at runtime, so it wins over the design
+           system on equal importance — it must agree with it. */
+        background: #fff !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
       }
 
       .topbar .shell,
@@ -50,7 +54,7 @@
         border-left: 0 !important;
         border-right: 0 !important;
         border-bottom: 1px solid rgba(16, 24, 40, 0.08) !important;
-        background: rgba(255, 255, 255, 0.78) !important;
+        background: #fff !important;
         box-shadow: 0 8px 24px rgba(16, 24, 40, 0.055) !important;
         display: grid !important;
         grid-template-columns: minmax(0, 1fr) auto !important;
