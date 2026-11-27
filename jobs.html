@@ -642,8 +642,7 @@
         display: none;
       }
 
-      .brand small,
-      .nav a:nth-child(n+4) {
+      .brand small {
         display: none;
       }
 
@@ -682,6 +681,7 @@
     }
   </style>
   <link rel="stylesheet" href="assets/css/design-system.css" />
+  <script src="site-lang.js"></script>
 </head>
 <body>
   <header class="topbar">
@@ -695,17 +695,17 @@
 
     <label class="search">
       <span>⌕</span>
-      <input id="searchInput" placeholder="搜索岗位、公司、国家或技能" />
+      <input id="searchInput" data-i18n-placeholder="search.placeholder" placeholder="搜索岗位、公司、国家或技能" />
     </label>
 
     <nav class="nav">
-      <a href="index.html">首页</a>
-      <a href="network.html">人脉</a>
-      <a class="active" href="jobs.html">职位</a>
-      <a href="applications.html">申请</a>
-      <a href="match.html">匹配</a>
-      <a href="companies.html">公司</a>
-      <a class="primary-link" href="profile.html">我的主页</a>
+      <a href="index.html" data-i18n="nav.home">首页</a>
+      <a href="network.html" data-i18n="nav.network">人脉</a>
+      <a class="active" href="jobs.html" data-i18n="nav.jobs">职位</a>
+      <a href="applications.html" data-i18n="nav.applications">申请</a>
+      <a href="match.html" data-i18n="nav.match">匹配</a>
+      <a href="companies.html" data-i18n="nav.companies">公司</a>
+      <a class="primary-link" href="profile.html" data-i18n="nav.profile">我的主页</a>
     </nav>
   </header>
 
@@ -713,38 +713,38 @@
     <section class="hero">
       <div class="hero-card">
         <div class="eyebrow">AI-ranked job library</div>
-        <h1>不只是看岗位。<span>而是知道先投哪一个。</span></h1>
-        <p>
+        <h1 data-i18n-html="hero.title">不只是看岗位。<span>而是知道先投哪一个。</span></h1>
+        <p data-i18n="hero.copy">
           JapanOffer AI 会读取你的个人主页和 CV 记录，把职位库里的岗位按适配度重新排序。用户可以保存岗位，并生成申请理由、Cover Letter 方向和 CV 修改建议。
         </p>
         <div class="hero-actions">
-          <button class="btn primary" id="rankWithProfileButton" type="button">用我的 Profile / CV 重新排序</button>
-          <a class="btn" href="profile.html">上传或更新 CV</a>
+          <button class="btn primary" id="rankWithProfileButton" type="button" data-i18n="hero.rank">用我的 Profile / CV 重新排序</button>
+          <a class="btn" href="profile.html" data-i18n="hero.upload">上传或更新 CV</a>
         </div>
-        <div class="disclaimer">
+        <div class="disclaimer" data-i18n="hero.note">
           当前职位库是 MVP curated role targets，用来验证匹配逻辑和用户行为。之后可以接入真实 ATS / API / 手动后台职位发布。
         </div>
       </div>
 
       <aside class="profile-card">
-        <h2>你的匹配资料</h2>
-        <p>登录后系统会读取你的个人主页和 CV 文件记录。资料越完整，推荐排序越准确。</p>
+        <h2 data-i18n="profile.title">你的匹配资料</h2>
+        <p data-i18n="profile.copy">登录后系统会读取你的个人主页和 CV 文件记录。资料越完整，推荐排序越准确。</p>
         <div class="profile-grid">
-          <div class="profile-row"><span>登录状态</span><strong id="profileAuth">检查中</strong></div>
-          <div class="profile-row"><span>方向</span><strong id="profileCareer">未读取</strong></div>
-          <div class="profile-row"><span>目标市场</span><strong id="profileMarket">未读取</strong></div>
-          <div class="profile-row"><span>语言</span><strong id="profileLanguages">未读取</strong></div>
-          <div class="profile-row"><span>CV</span><strong id="profileCv">未读取</strong></div>
+          <div class="profile-row"><span data-i18n="profile.auth">登录状态</span><strong id="profileAuth">检查中</strong></div>
+          <div class="profile-row"><span data-i18n="profile.career">方向</span><strong id="profileCareer">未读取</strong></div>
+          <div class="profile-row"><span data-i18n="profile.market">目标市场</span><strong id="profileMarket">未读取</strong></div>
+          <div class="profile-row"><span data-i18n="profile.languages">语言</span><strong id="profileLanguages">未读取</strong></div>
+          <div class="profile-row"><span data-i18n="profile.cv">CV</span><strong id="profileCv">未读取</strong></div>
         </div>
-        <div class="status info show" id="profileStatus">正在检查你的账号资料...</div>
+        <div class="status info show" id="profileStatus" data-i18n="profile.checking">正在检查你的账号资料...</div>
       </aside>
     </section>
 
     <section class="toolbar">
       <label class="filter">
-        <span>目标市场</span>
+        <span data-i18n="filter.market">目标市场</span>
         <select id="marketFilter">
-          <option value="all">全部市场</option>
+          <option value="all" data-i18n="filter.allMarkets">全部市场</option>
           <option value="Japan">日本</option>
           <option value="Hong Kong">香港</option>
           <option value="Singapore">新加坡</option>
@@ -753,21 +753,21 @@
       </label>
 
       <label class="filter">
-        <span>职业方向</span>
+        <span data-i18n="filter.category">职业方向</span>
         <select id="categoryFilter">
-          <option value="all">全部方向</option>
-          <option value="Legal / Compliance">法律 / 合规</option>
-          <option value="Finance / AML">金融 / AML</option>
-          <option value="Web3 / Risk">Web3 / 风控</option>
-          <option value="Business / Strategy">商务 / 战略</option>
-          <option value="Data / Operations">数据 / 运营</option>
+          <option value="all" data-i18n="filter.allCategories">全部方向</option>
+          <option value="Legal / Compliance" data-i18n="filter.catLegal">法律 / 合规</option>
+          <option value="Finance / AML" data-i18n="filter.catFinance">金融 / AML</option>
+          <option value="Web3 / Risk" data-i18n="filter.catWeb3">Web3 / 风控</option>
+          <option value="Business / Strategy" data-i18n="filter.catBusiness">商务 / 战略</option>
+          <option value="Data / Operations" data-i18n="filter.catData">数据 / 运营</option>
         </select>
       </label>
 
       <label class="filter">
-        <span>语言要求</span>
+        <span data-i18n="filter.language">语言要求</span>
         <select id="languageFilter">
-          <option value="all">全部语言</option>
+          <option value="all" data-i18n="filter.allLanguages">全部语言</option>
           <option value="English">English</option>
           <option value="Japanese">Japanese</option>
           <option value="Mandarin">Mandarin</option>
@@ -775,12 +775,12 @@
       </label>
 
       <label class="filter">
-        <span>排序方式</span>
+        <span data-i18n="filter.sort">排序方式</span>
         <select id="sortFilter">
-          <option value="match">按匹配度</option>
-          <option value="visa">签证友好优先</option>
-          <option value="entry">Entry-level 优先</option>
-          <option value="market">目标市场优先</option>
+          <option value="match" data-i18n="filter.sortMatch">按匹配度</option>
+          <option value="visa" data-i18n="filter.sortVisa">签证友好优先</option>
+          <option value="entry" data-i18n="filter.sortEntry">Entry-level 优先</option>
+          <option value="market" data-i18n="filter.sortMarket">目标市场优先</option>
         </select>
       </label>
     </section>
@@ -788,27 +788,27 @@
     <section class="layout">
       <div>
         <div class="section-head">
-          <h2>推荐岗位</h2>
-          <p>分数不是录取概率，而是申请优先级。70+ 可以优先研究，60 左右适合作为探索方向。</p>
+          <h2 data-i18n="section.recommended">推荐岗位</h2>
+          <p data-i18n="section.recommendedCopy">分数不是录取概率，而是申请优先级。70+ 可以优先研究，60 左右适合作为探索方向。</p>
         </div>
         <div class="jobs-grid" id="jobsGrid"></div>
       </div>
 
       <aside class="side">
         <section class="saved-card">
-          <h2>已保存岗位</h2>
-          <p>登录后保存的岗位会进入账号记录，之后可以继续做申请材料。</p>
+          <h2 data-i18n="section.saved">已保存岗位</h2>
+          <p data-i18n="section.savedCopy">登录后保存的岗位会进入账号记录，之后可以继续做申请材料。</p>
           <div class="saved-list" id="savedList">
-            <div class="empty">还没有保存岗位。</div>
+            <div class="empty" data-i18n="section.savedEmpty">还没有保存岗位。</div>
           </div>
           <div class="status" id="saveStatus"></div>
         </section>
 
         <section class="apply-card">
-          <h2>申请中心</h2>
-          <p>职位页只负责推荐和保存岗位。真正的 Cover Letter、CV 修改方向和申请状态追踪，全部放到申请中心，页面会更清爽。</p>
-          <a class="btn primary" href="applications.html" style="width:100%;margin-top:12px;">进入申请中心</a>
-          <div class="status info show" id="applyStatus">点击某个岗位的“进入申请”，系统会先保存岗位，然后跳转到申请中心。</div>
+          <h2 data-i18n="section.apply">申请中心</h2>
+          <p data-i18n="section.applyCopy">职位页只负责推荐和保存岗位。真正的 Cover Letter、CV 修改方向和申请状态追踪，全部放到申请中心，页面会更清爽。</p>
+          <a class="btn primary" href="applications.html" style="width:100%;margin-top:12px;" data-i18n="section.applyCenter">进入申请中心</a>
+          <div class="status info show" id="applyStatus" data-i18n="section.applyHint">点击某个岗位的“进入申请”，系统会先保存岗位，然后跳转到申请中心。</div>
           <div class="apply-output" id="applyOutput"></div>
         </section>
       </aside>
@@ -818,6 +818,7 @@
   <script src="auth-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="jobs.js"></script>
+  <script src="jobs-lang.js"></script>
   <footer class="ds-footer">
     <div class="ds-footer-grid">
       <div class="ds-footer-brand">
