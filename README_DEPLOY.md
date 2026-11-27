@@ -2,23 +2,41 @@
 
 This folder is a static website for JapanOffer AI.
 
+## Before launch
+
+> Historical note (2026-11-27): this guide used to say "open `index.html`
+> and replace `YOUR_WENJUANXING_LINK_HERE` with your final Wenjuanxing
+> link". That placeholder no longer exists anywhere in the code — the
+> survey link step is obsolete and has been removed from this guide.
+> Do not search for it.
+
+Check the Vercel Environment Variables before deploying:
+
+- `SUPABASE_URL` and `SUPABASE_ANON_KEY` — used by `/api/analyze` to
+  verify a caller's Supabase access token (the anon key is also embedded
+  in `auth-config.js` for the browser client).
+- `SUPABASE_SERVICE_ROLE_KEY` — server-side Supabase access for
+  `/api/analyze` and `/api/import-public-jobs`.
+- `OPENAI_API_KEY` — used by `/api/analyze` (gpt-4o-mini).
+- `ADZUNA_APP_ID` / `ADZUNA_APP_KEY` — used by `/api/search-real-jobs`
+  and the job importer.
+- `ADMIN_PASSWORD` — shared password for the admin dashboard and the
+  manual job import endpoint.
+- `CRON_SECRET` — long random string; Vercel Cron sends it as
+  `Authorization: Bearer <CRON_SECRET>` to `/api/cron-import-jobs`
+  (daily 02:00 UTC). Never commit secrets to the repo.
+
 ## Included files
 
 - `index.html` - the website page
 - `styles.css` - website styling
+- `api/` - Vercel Serverless Functions (`analyze`, `jobs`,
+  `search-real-jobs`, `import-public-jobs`, `cron-import-jobs`)
 - `assets/images/dashboard-preview.png` - prototype dashboard preview
 - `assets/materials/JapanOffer_AI_Prototype.pdf` - product prototype
 - `assets/materials/JapanOffer_AI_One_Page_Memo.pdf` - one-page memo PDF
 - `assets/materials/JapanOffer_AI_Whitepaper.pdf` - whitepaper PDF
 - Original DOCX files are also included in `assets/materials/` as backups.
-
-## Before launch
-
-Open `index.html` and search for:
-
-`YOUR_WENJUANXING_LINK_HERE`
-
-Replace it with your final Wenjuanxing link.
 
 ## Recommended deployment method
 
