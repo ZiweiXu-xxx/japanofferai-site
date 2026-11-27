@@ -990,13 +990,14 @@ code {
     top: auto !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
-    background: rgba(255, 255, 255, 0.94) !important;
+    background: #fff !important;
   }
 
   .topbar-inner {
     grid-template-columns: minmax(0, 1fr) auto !important;
     gap: 10px !important;
     padding: 12px !important;
+    background: #fff !important;
   }
 
   .topbar:has(> .nav) {
