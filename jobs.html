@@ -681,6 +681,7 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="assets/css/design-system.css" />
 </head>
 <body>
   <header class="topbar">
@@ -688,7 +689,7 @@
       <span class="logo">J</span>
       <span>
         <strong>JapanOffer AI</strong>
-        <small>AI Job Recommendation</small>
+        <small>Job Recommendation</small>
       </span>
     </a>
 
@@ -702,7 +703,7 @@
       <a href="network.html">人脉</a>
       <a class="active" href="jobs.html">职位</a>
       <a href="applications.html">申请</a>
-      <a href="match.html">AI 匹配</a>
+      <a href="match.html">匹配</a>
       <a href="companies.html">公司</a>
       <a class="primary-link" href="profile.html">我的主页</a>
     </nav>
@@ -776,7 +777,7 @@
       <label class="filter">
         <span>排序方式</span>
         <select id="sortFilter">
-          <option value="match">按 AI 匹配度</option>
+          <option value="match">按匹配度</option>
           <option value="visa">签证友好优先</option>
           <option value="entry">Entry-level 优先</option>
           <option value="market">目标市场优先</option>
@@ -817,5 +818,35 @@
   <script src="auth-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="jobs.js"></script>
+  <footer class="ds-footer">
+    <div class="ds-footer-grid">
+      <div class="ds-footer-brand">
+        <strong>JapanOffer AI</strong>
+        <p>Cross-border talent intelligence network.</p>
+      </div>
+      <div>
+        <h3>Product</h3>
+        <ul>
+          <li><a href="jobs-search.html">Search jobs</a></li>
+          <li><a href="report.html">Match report</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="network.html">Member network</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Account</h3>
+        <ul>
+          <li><a href="signup.html">Create free account</a></li>
+          <li><a href="login.html">Sign in</a></li>
+          <li><a href="account.html">Your account</a></li>
+          <li><a href="feedback.html">Feedback</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="ds-footer-bottom">
+      <span>© 2026 JapanOffer AI</span>
+      <span>Secure checkout by Stripe. JapanOffer AI never sees or stores your card details.</span>
+    </div>
+  </footer>
 </body>
 </html>

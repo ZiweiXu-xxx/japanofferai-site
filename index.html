@@ -1410,9 +1410,11 @@
     }
 
   </style>
+  <link rel="stylesheet" href="assets/css/design-system.css" />
 </head>
 
 <body>
+  <a class="ds-skip-link" href="#main">Skip to main content</a>
   <div class="scroll-progress" id="scrollProgress"></div>
   <div class="noise" aria-hidden="true"></div>
   <div class="aurora" aria-hidden="true">
@@ -1459,14 +1461,14 @@
     </div>
   </header>
 
-  <main>
+  <main id="main">
     <section class="hero shell">
       <div class="hero-grid">
         <div class="reveal">
           <p class="eyebrow" data-i18n="hero.eyebrow">Cross-border talent intelligence platform</p>
           <h1 data-i18n-html="hero.title">Search globally.<span>Apply smarter.</span></h1>
           <p class="lede" data-i18n="hero.lead">
-            JapanOffer AI combines real job search, AI match reports, member networking and employer discovery for students and early-career professionals building international careers.
+            JapanOffer AI combines real job search, structured match reports, member networking and employer discovery for students and early-career professionals building international careers.
           </p>
           <p class="lede" data-i18n="hero.sublead">
             It is not just a landing page. It is a cross-border career operating system.
@@ -1494,8 +1496,9 @@
           </div>
 
           <div class="hero-actions">
-            <a class="btn" href="network.html" data-i18n="hero.network">Enter member network</a>
-            <a class="btn" href="report.html" data-i18n="hero.report">Generate AI report</a>
+            <a class="btn primary" href="report.html" data-i18n="hero.report">Generate your first match report — free</a>
+            <a class="btn" href="signup.html" data-i18n="hero.signup">Create free account</a>
+            <a class="text-link" href="network.html" data-i18n="hero.network">Enter member network →</a>
           </div>
         </div>
 
@@ -1573,16 +1576,30 @@
       </div>
     </section>
 
+    <section class="trust-bar" aria-label="Markets and industries">
+      <div class="shell trust-bar-inner">
+        <div class="trust-row">
+          <strong data-i18n="trust.marketsLabel">Target markets</strong>
+          <span data-i18n="trust.markets">Japan · United Kingdom · Hong Kong · Singapore · Canada · Australia · Remote</span>
+        </div>
+        <div class="trust-row">
+          <strong data-i18n="trust.industriesLabel">Focus industries</strong>
+          <span data-i18n="trust.industries">Legal · Compliance · Finance · AML · KYC · Web3 · International Business</span>
+        </div>
+        <p class="trust-note" data-i18n="trust.note">Free job search · First match report free · No card needed to start</p>
+      </div>
+    </section>
+
     <div class="ticker shell reveal">
       <div class="ticker-track">
         <span data-i18n="ticker.jobs">Global job search</span>
-        <span data-i18n="ticker.report">AI match report</span>
+        <span data-i18n="ticker.report">Match report</span>
         <span data-i18n="ticker.network">Member network</span>
         <span data-i18n="ticker.chat">Private chat</span>
         <span data-i18n="ticker.posts">Member updates</span>
         <span data-i18n="ticker.visa">Visa-aware scoring</span>
         <span data-i18n="ticker.jobs">Global job search</span>
-        <span data-i18n="ticker.report">AI match report</span>
+        <span data-i18n="ticker.report">Match report</span>
         <span data-i18n="ticker.network">Member network</span>
         <span data-i18n="ticker.chat">Private chat</span>
         <span data-i18n="ticker.posts">Member updates</span>
@@ -1603,7 +1620,7 @@
         <a class="feature-card" href="jobs-search.html">
           <span>01</span>
           <h3 data-i18n="features.jobsTitle">Search real jobs</h3>
-          <p data-i18n="features.jobsCopy">Search global roles across supported markets with AI-style fit and visa risk signals.</p>
+          <p data-i18n="features.jobsCopy">Search global roles across supported markets with structured fit and visa risk signals.</p>
         </a>
 
         <a class="feature-card" href="report.html">
@@ -1689,7 +1706,7 @@
           </article>
           <article class="timeline-item">
             <strong data-i18n="timeline.two">Step 2</strong>
-            <p data-i18n="timeline.twoCopy">Generate an AI match report to understand fit and risk.</p>
+            <p data-i18n="timeline.twoCopy">Generate a match report to understand fit and risk.</p>
           </article>
           <article class="timeline-item">
             <strong data-i18n="timeline.three">Step 3</strong>
@@ -1724,6 +1741,99 @@
       </div>
     </section>
 
+    <section class="section shell ds-pricing-preview" id="pricing-preview" aria-label="Pricing preview">
+      <div class="section-head center reveal">
+        <p class="eyebrow" data-i18n="pricing.kicker">Pricing</p>
+        <h2 data-i18n="pricing.title">Start free. Pay only for more reports.</h2>
+        <p data-i18n="pricing.copy">Job search is always free, and your first match report is free too. Need more? Buy one report, a pack, or go Premium.</p>
+      </div>
+
+      <div class="page-grid stagger reveal">
+        <article class="page-card price-card">
+          <span class="kicker" data-i18n="pricing.freeKicker">Free</span>
+          <h2 data-i18n="pricing.freeName">Free</h2>
+          <p class="price-amount">£0</p>
+          <ul>
+            <li data-i18n="pricing.free1">Unlimited job search</li>
+            <li data-i18n="pricing.free2">First match report free</li>
+            <li data-i18n="pricing.free3">Basic job-search features</li>
+          </ul>
+          <a class="btn secondary" href="signup.html" data-i18n="pricing.freeCta">Create a free account</a>
+        </article>
+
+        <article class="page-card price-card">
+          <span class="kicker" data-i18n="pricing.singleKicker">Single report</span>
+          <h2 data-i18n="pricing.singleName">Single Match Report</h2>
+          <p class="price-amount" data-price="single">…</p>
+          <ul>
+            <li><span data-product-credits="single">1 report</span></li>
+            <li data-i18n="pricing.single2">No subscription</li>
+            <li data-i18n="pricing.single3">Structured match analysis</li>
+          </ul>
+          <a class="btn primary" href="pricing.html" data-i18n="pricing.singleCta">Buy one report</a>
+        </article>
+
+        <article class="page-card price-card">
+          <span class="ds-badge ds-badge-teal ds-price-badge" data-i18n="pricing.bestValue">Best value</span>
+          <span class="kicker" data-i18n="pricing.packKicker">Report pack</span>
+          <h2 data-i18n="pricing.packName">5-Report Pack</h2>
+          <p class="price-amount" data-price="pack">…</p>
+          <ul>
+            <li><span data-product-credits="pack">5 reports</span></li>
+            <li data-i18n="pricing.pack2">Use any time, no expiry while your account is active</li>
+            <li data-i18n="pricing.pack3">Cheaper per report than buying singly</li>
+          </ul>
+          <a class="btn primary" href="pricing.html" data-i18n="pricing.packCta">Buy 5 reports</a>
+        </article>
+
+        <article class="page-card price-card featured">
+          <span class="ds-badge ds-badge-gold ds-price-badge" data-i18n="pricing.popular">Most popular</span>
+          <span class="kicker" data-i18n="pricing.premiumKicker">Premium</span>
+          <h2 data-i18n="pricing.premiumName">Premium Monthly</h2>
+          <p class="price-amount"><span data-price="premium">…</span> <span class="price-period" data-i18n="pricing.perMonth">/ month</span></p>
+          <ul>
+            <li><span data-product-credits="premium">20 reports / month</span></li>
+            <li data-i18n="pricing.premium2">Premium job matching</li>
+            <li data-i18n="pricing.premium3">Premium member features</li>
+            <li data-i18n="pricing.premium4">Cancel any time — Premium stays active until the period ends</li>
+          </ul>
+          <a class="btn primary" href="pricing.html" data-i18n="pricing.premiumCta">Go Premium</a>
+        </article>
+      </div>
+
+      <p style="text-align:center;margin-top:20px"><a class="text-link" href="pricing.html" data-i18n="pricing.more">See full pricing and how billing works →</a></p>
+    </section>
+
+    <section class="section shell" id="faq" aria-label="Frequently asked questions">
+      <div class="section-head reveal">
+        <p class="eyebrow" data-i18n="faq.kicker">Questions</p>
+        <h2 data-i18n="faq.title">Before you start.</h2>
+      </div>
+
+      <div class="faq-list reveal">
+        <details>
+          <summary data-i18n="faq.q1">Is the first match report really free?</summary>
+          <p data-i18n="faq.a1">Yes. Every new account gets one free match report. After that, each report uses one credit — buy a single report, a 5-report pack, or go Premium for 20 reports a month. Prices are listed in the pricing section above.</p>
+        </details>
+        <details>
+          <summary data-i18n="faq.q2">What does a match report cover?</summary>
+          <p data-i18n="faq.a2">A structured report on your target market, role direction, match score, visa and language risk, application priority and a cover-letter opening. It is a rule-based assessment of the information you provide — not a human review, and not a guarantee of an interview or an offer.</p>
+        </details>
+        <details>
+          <summary data-i18n="faq.q3">Which markets and roles does it cover?</summary>
+          <p data-i18n="faq.a3">Japan, the United Kingdom, Hong Kong, Singapore, Canada, Australia and remote roles, with a focus on legal, compliance, finance, AML, KYC, Web3 and international business.</p>
+        </details>
+        <details>
+          <summary data-i18n="faq.q4">Do I need a card for the free report?</summary>
+          <p data-i18n="faq.a4">No. Creating an account and generating your first match report needs no payment method. You only pay when you choose to buy more reports or Premium.</p>
+        </details>
+        <details>
+          <summary data-i18n="faq.q5">How does Premium work?</summary>
+          <p data-i18n="faq.a5">Premium gives you 20 match reports every billing month plus premium job-search features. Cancel any time from your account page — Premium stays active until the end of the current billing period. The monthly price is shown in the pricing section above.</p>
+        </details>
+      </div>
+    </section>
+
     <section class="final shell">
       <div class="final-card reveal">
         <p class="eyebrow" data-i18n="final.kicker">Beta access</p>
@@ -1738,9 +1848,36 @@
     </section>
   </main>
 
-  <footer class="footer">
-    <div><strong>JapanOffer AI</strong> <span data-i18n="footer.copy">Cross-border talent intelligence network.</span></div>
-    <div data-i18n="footer.status">Jobs · Reports · Network · Employers</div>
+  <footer class="ds-footer">
+    <div class="ds-footer-grid">
+      <div class="ds-footer-brand">
+        <strong>JapanOffer AI</strong>
+        <p data-i18n="footer.copy">Cross-border talent intelligence network.</p>
+        <p data-i18n="footer.status">Jobs · Reports · Network · Employers</p>
+      </div>
+      <div>
+        <h3 data-i18n="footer.product">Product</h3>
+        <ul>
+          <li><a href="jobs-search.html" data-i18n="footer.jobs">Search jobs</a></li>
+          <li><a href="report.html" data-i18n="footer.report">Match report</a></li>
+          <li><a href="pricing.html" data-i18n="footer.pricing">Pricing</a></li>
+          <li><a href="network.html" data-i18n="footer.network">Member network</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 data-i18n="footer.account">Account</h3>
+        <ul>
+          <li><a href="signup.html" data-i18n="footer.signup">Create free account</a></li>
+          <li><a href="login.html" data-i18n="footer.login">Sign in</a></li>
+          <li><a href="account.html" data-i18n="footer.accountPage">Your account</a></li>
+          <li><a href="feedback.html" data-i18n="footer.feedback">Feedback</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="ds-footer-bottom">
+      <span>© 2026 JapanOffer AI</span>
+      <span data-i18n="footer.stripe">Secure checkout by Stripe. JapanOffer AI never sees or stores your card details.</span>
+    </div>
   </footer>
 
   <script>
@@ -1763,11 +1900,12 @@
         hero: {
           eyebrow: "Cross-border talent intelligence platform",
           title: "Search globally.<span>Apply smarter.</span>",
-          lead: "JapanOffer AI combines real job search, AI match reports, member networking and employer discovery for students and early-career professionals building international careers.",
+          lead: "JapanOffer AI combines real job search, structured match reports, member networking and employer discovery for students and early-career professionals building international careers.",
           sublead: "It is not just a landing page. It is a cross-border career operating system.",
           primary: "Start job search",
           network: "Enter member network",
-          report: "Generate AI report"
+          report: "Generate your first match report — free",
+          signup: "Create free account"
         },
         preview: {
           title: "JapanOffer Intelligence OS", live: "Live beta", matches: "Matches", jobs: "Jobs", network: "Network", report: "Report",
@@ -1778,13 +1916,20 @@
           profileTitle: "Candidate profile", profileMeta: "LLB · English / Japanese / Mandarin · Compliance target", view: "View network"
         },
         proof: { score: "Match score", network: "Network layer" },
-        ticker: { jobs: "Global job search", report: "AI match report", network: "Member network", chat: "Private chat", posts: "Member updates", visa: "Visa-aware scoring" },
+        trust: {
+          marketsLabel: "Target markets",
+          markets: "Japan · United Kingdom · Hong Kong · Singapore · Canada · Australia · Remote",
+          industriesLabel: "Focus industries",
+          industries: "Legal · Compliance · Finance · AML · KYC · Web3 · International Business",
+          note: "Free job search · First match report free · No card needed to start"
+        },
+        ticker: { jobs: "Global job search", report: "Match report", network: "Member network", chat: "Private chat", posts: "Member updates", visa: "Visa-aware scoring" },
         platform: {
           kicker: "Platform architecture", title: "Four layers, one cross-border career system.",
           copy: "The homepage now leads into real product routes: search, report, network and employer discovery."
         },
         features: {
-          jobsTitle: "Search real jobs", jobsCopy: "Search global roles across supported markets with AI-style fit and visa risk signals.",
+          jobsTitle: "Search real jobs", jobsCopy: "Search global roles across supported markets with structured fit and visa risk signals.",
           reportTitle: "Generate reports", reportCopy: "Turn a student or early-career profile into a structured opportunity report.",
           networkTitle: "Join the network", networkCopy: "Members can post updates, connect and chat privately inside JapanOffer AI.",
           companyTitle: "Discover employers", companyCopy: "Build a bridge between overseas employers and cross-border candidates."
@@ -1807,7 +1952,7 @@
         },
         timeline: {
           one: "Step 1", oneCopy: "Search real jobs across countries and sectors.",
-          two: "Step 2", twoCopy: "Generate an AI match report to understand fit and risk.",
+          two: "Step 2", twoCopy: "Generate a match report to understand fit and risk.",
           three: "Step 3", threeCopy: "Enter the member network, share progress and chat with similar candidates."
         },
         institution: {
@@ -1817,12 +1962,48 @@
           card2Title: "Prepare applications", card2Copy: "Use match reports to clarify target market, application priority and cover letter direction.",
           card3Title: "Connect with peers", card3Copy: "Members can post updates, add connections and chat with similar cross-border candidates."
         },
+        pricing: {
+          kicker: "Pricing", title: "Start free. Pay only for more reports.",
+          copy: "Job search is always free, and your first match report is free too. Need more? Buy one report, a pack, or go Premium.",
+          freeKicker: "Free", freeName: "Free",
+          free1: "Unlimited job search", free2: "First match report free", free3: "Basic job-search features",
+          freeCta: "Create a free account",
+          singleKicker: "Single report", singleName: "Single Match Report",
+          single2: "No subscription", single3: "Structured match analysis", singleCta: "Buy one report",
+          packKicker: "Report pack", packName: "5-Report Pack",
+          pack2: "Use any time, no expiry while your account is active",
+          pack3: "Cheaper per report than buying singly", packCta: "Buy 5 reports",
+          bestValue: "Best value",
+          premiumKicker: "Premium", premiumName: "Premium Monthly", perMonth: "/ month",
+          premium2: "Premium job matching", premium3: "Premium member features",
+          premium4: "Cancel any time — Premium stays active until the period ends",
+          premiumCta: "Go Premium", popular: "Most popular",
+          more: "See full pricing and how billing works →"
+        },
+        faq: {
+          kicker: "Questions", title: "Before you start.",
+          q1: "Is the first match report really free?",
+          a1: "Yes. Every new account gets one free match report. After that, each report uses one credit — buy a single report, a 5-report pack, or go Premium for 20 reports a month. Prices are listed in the pricing section above.",
+          q2: "What does a match report cover?",
+          a2: "A structured report on your target market, role direction, match score, visa and language risk, application priority and a cover-letter opening. It is a rule-based assessment of the information you provide — not a human review, and not a guarantee of an interview or an offer.",
+          q3: "Which markets and roles does it cover?",
+          a3: "Japan, the United Kingdom, Hong Kong, Singapore, Canada, Australia and remote roles, with a focus on legal, compliance, finance, AML, KYC, Web3 and international business.",
+          q4: "Do I need a card for the free report?",
+          a4: "No. Creating an account and generating your first match report needs no payment method. You only pay when you choose to buy more reports or Premium.",
+          q5: "How does Premium work?",
+          a5: "Premium gives you 20 match reports every billing month plus premium job-search features. Cancel any time from your account page — Premium stays active until the end of the current billing period. The monthly price is shown in the pricing section above."
+        },
         final: {
           kicker: "Beta access", title: "Build your cross-border match profile.",
           copy: "Start with one real job search. Then generate a report, create your profile, post updates and connect with other members.",
           search: "Search jobs", network: "Enter network", profile: "Create profile"
         },
-        footer: { copy: "Cross-border talent intelligence network.", status: "Jobs · Reports · Network · Employers" }
+        footer: {
+          copy: "Cross-border talent intelligence network.", status: "Jobs · Reports · Network · Employers",
+          product: "Product", jobs: "Search jobs", report: "Match report", pricing: "Pricing", network: "Member network",
+          account: "Account", signup: "Create free account", login: "Sign in", accountPage: "Your account", feedback: "Feedback",
+          stripe: "Secure checkout by Stripe. JapanOffer AI never sees or stores your card details."
+        }
       },
 
       zh: {
@@ -1841,11 +2022,12 @@
         hero: {
           eyebrow: "跨境人才智能平台",
           title: "全球搜索。<span>专业连接。</span>",
-          lead: "JapanOffer AI 把真实岗位搜索、AI 匹配报告、会员网络和企业发现整合在一起，帮助学生和早期职业者建立国际职业路径。",
+          lead: "JapanOffer AI 把真实岗位搜索、匹配报告、会员网络和企业发现整合在一起，帮助学生和早期职业者建立国际职业路径。",
           sublead: "它不只是一个首页，而是一套跨境职业操作系统。",
           primary: "开始搜索岗位",
           network: "进入会员网络",
-          report: "生成 AI 报告"
+          report: "免费生成第一份匹配报告",
+          signup: "免费注册"
         },
         preview: {
           title: "JapanOffer 智能系统", live: "测试版", matches: "匹配", jobs: "岗位", network: "网络", report: "报告",
@@ -1856,7 +2038,14 @@
           profileTitle: "候选人档案", profileMeta: "LLB · 英语 / 日语 / 中文 · 合规方向", view: "查看网络"
         },
         proof: { score: "匹配分数", network: "会员网络层" },
-        ticker: { jobs: "全球岗位搜索", report: "AI 匹配报告", network: "会员网络", chat: "私聊", posts: "会员动态", visa: "签证风险评分" },
+        trust: {
+          marketsLabel: "目标市场",
+          markets: "日本 · 英国 · 香港 · 新加坡 · 加拿大 · 澳大利亚 · 远程",
+          industriesLabel: "重点行业",
+          industries: "法律 · 合规 · 金融 · AML · KYC · Web3 · 国际商务",
+          note: "免费搜索岗位 · 第一份匹配报告免费 · 开始使用不需要银行卡"
+        },
+        ticker: { jobs: "全球岗位搜索", report: "匹配报告", network: "会员网络", chat: "私聊", posts: "会员动态", visa: "签证风险评分" },
         platform: {
           kicker: "平台架构", title: "四个核心层，组成一套跨境职业系统。",
           copy: "首页现在会真正导向产品功能：搜索、报告、会员网络和企业发现。"
@@ -1885,7 +2074,7 @@
         },
         timeline: {
           one: "第一步", oneCopy: "跨国家和行业搜索真实岗位。",
-          two: "第二步", twoCopy: "生成 AI 匹配报告，理解适配度和风险。",
+          two: "第二步", twoCopy: "生成匹配报告，理解适配度和风险。",
           three: "第三步", threeCopy: "进入会员网络，发布进度，并和相似候选人聊天。"
         },
         institution: {
@@ -1895,12 +2084,48 @@
           card2Title: "准备申请", card2Copy: "用匹配报告整理目标市场、申请优先级和 Cover Letter 开头。",
           card3Title: "连接同路人", card3Copy: "登录后可以发布动态、添加联系，并和相似背景的候选人私聊。"
         },
+        pricing: {
+          kicker: "价格", title: "免费开始，只为更多报告付费。",
+          copy: "搜索岗位一直免费，第一份匹配报告也免费。需要更多？可以单买一份、买 5 次套餐，或者开通 Premium。",
+          freeKicker: "免费", freeName: "免费版",
+          free1: "无限搜索岗位", free2: "第一份匹配报告免费", free3: "基础求职功能",
+          freeCta: "免费创建账户",
+          singleKicker: "单次报告", singleName: "单次匹配报告",
+          single2: "无需订阅", single3: "结构化匹配分析", singleCta: "购买一份报告",
+          packKicker: "报告套餐", packName: "5 次报告套餐",
+          pack2: "账户有效期内随时使用，不过期",
+          pack3: "单次均价比单买更便宜", packCta: "购买 5 次报告",
+          bestValue: "最划算",
+          premiumKicker: "Premium", premiumName: "Premium 会员", perMonth: "/ 月",
+          premium2: "Premium 岗位匹配", premium3: "Premium 会员功能",
+          premium4: "随时取消，Premium 权益保留到当前周期结束",
+          premiumCta: "开通 Premium", popular: "最受欢迎",
+          more: "查看完整价格与计费说明 →"
+        },
+        faq: {
+          kicker: "常见问题", title: "开始之前，先了解这些。",
+          q1: "第一份匹配报告真的免费吗？",
+          a1: "是的，每个新账户都有一份免费匹配报告。之后每份报告消耗一次额度——可以单买一份、买 5 次套餐，或者开通 Premium，每月 20 次报告。价格见上方价格区。",
+          q2: "匹配报告包含什么内容？",
+          a2: "一份关于目标市场、岗位方向、匹配分数、签证和语言风险、申请优先级以及求职信开头的结构化报告。它是基于你提供的信息做的规则化评估，不是人工审核，也不保证面试或录用。",
+          q3: "覆盖哪些市场和岗位？",
+          a3: "日本、英国、香港、新加坡、加拿大、澳大利亚和远程岗位，重点是法律、合规、金融、AML、KYC、Web3 和国际商务方向。",
+          q4: "免费报告需要绑卡吗？",
+          a4: "不需要。注册账户、生成第一份匹配报告都不需要支付方式。只有当你决定购买更多报告或 Premium 时才需要付款。",
+          q5: "Premium 是怎么运作的？",
+          a5: "Premium 每个计费月提供 20 次匹配报告，以及 Premium 岗位搜索功能。随时可以在账户页取消，Premium 权益会保留到当前计费周期结束。月费见上方价格区。"
+        },
         final: {
           kicker: "测试版入口", title: "建立你的跨境匹配档案。",
           copy: "从一次真实岗位搜索开始，然后生成报告、创建档案、发布动态，并和其他会员连接。",
           search: "搜索岗位", network: "进入网络", profile: "创建档案"
         },
-        footer: { copy: "跨境人才智能网络。", status: "岗位 · 报告 · 网络 · 企业" }
+        footer: {
+          copy: "跨境人才智能网络。", status: "岗位 · 报告 · 网络 · 企业",
+          product: "产品", jobs: "搜索岗位", report: "匹配报告", pricing: "价格", network: "会员网络",
+          account: "账户", signup: "免费创建账户", login: "登录", accountPage: "我的账户", feedback: "反馈",
+          stripe: "Stripe による安全な決済。JapanOffer AI がカード情報を閲覧・保存することはありません。"
+        }
       },
 
       ja: {
@@ -1919,11 +2144,12 @@
         hero: {
           eyebrow: "クロスボーダー人材インテリジェンス",
           title: "世界で探し、<span>専門的につながる。</span>",
-          lead: "JapanOffer AI は、実際の求人検索、AI マッチングレポート、メンバーネットワーク、企業発見を統合し、学生や若手人材の国際キャリア形成を支援します。",
+          lead: "JapanOffer AI は、実際の求人検索、マッチングレポート、メンバーネットワーク、企業発見を統合し、学生や若手人材の国際キャリア形成を支援します。",
           sublead: "単なるランディングページではなく、クロスボーダーキャリアのオペレーティングシステムです。",
           primary: "求人検索を始める",
           network: "ネットワークへ",
-          report: "AI レポート生成"
+          report: "最初のマッチングレポートを無料で作成",
+          signup: "無料登録"
         },
         preview: {
           title: "JapanOffer Intelligence OS", live: "ベータ版", matches: "マッチ", jobs: "求人", network: "ネットワーク", report: "レポート",
@@ -1934,7 +2160,14 @@
           profileTitle: "候補者プロフィール", profileMeta: "LLB · 英語 / 日本語 / 中国語 · コンプライアンス志向", view: "ネットワークを見る"
         },
         proof: { score: "マッチスコア", network: "ネットワーク層" },
-        ticker: { jobs: "グローバル求人検索", report: "AI マッチングレポート", network: "メンバーネットワーク", chat: "プライベートチャット", posts: "メンバー投稿", visa: "ビザリスク評価" },
+        trust: {
+          marketsLabel: "対象マーケット",
+          markets: "日本 · 英国 · 香港 · シンガポール · カナダ · オーストラリア · リモート",
+          industriesLabel: "重点業界",
+          industries: "法務 · コンプライアンス · 金融 · AML · KYC · Web3 · 国際ビジネス",
+          note: "求人検索は無料 · 最初のマッチングレポートは無料 · 開始にカードは不要"
+        },
+        ticker: { jobs: "グローバル求人検索", report: "マッチングレポート", network: "メンバーネットワーク", chat: "プライベートチャット", posts: "メンバー投稿", visa: "ビザリスク評価" },
         platform: {
           kicker: "プラットフォーム構造", title: "4つの層で、一つのクロスボーダーキャリアシステムへ。",
           copy: "ホームページは、検索、レポート、ネットワーク、企業発見という実際の機能へつながります。"
@@ -1963,7 +2196,7 @@
         },
         timeline: {
           one: "Step 1", oneCopy: "国や業界をまたいで実際の求人を検索。",
-          two: "Step 2", twoCopy: "AI マッチングレポートで適性とリスクを理解。",
+          two: "Step 2", twoCopy: "マッチングレポートで適性とリスクを理解。",
           three: "Step 3", threeCopy: "メンバーネットワークで進捗を共有し、類似候補者とチャット。"
         },
         institution: {
@@ -1973,12 +2206,48 @@
           card2Title: "応募準備", card2Copy: "マッチングレポートで市場、優先順位、カバーレターの方向性を整理できます。",
           card3Title: "仲間とつながる", card3Copy: "メンバーは投稿、接続、類似候補者とのチャットができます。"
         },
+        pricing: {
+          kicker: "料金", title: "無料で始めて、必要な分だけ支払う。",
+          copy: "求人検索はずっと無料で、最初のマッチングレポートも無料です。さらに必要な場合は、1件ずつ、5件パック、または Premium をご利用ください。",
+          freeKicker: "無料", freeName: "無料",
+          free1: "求人検索は無制限", free2: "最初のマッチングレポートは無料", free3: "基本的な求人検索機能",
+          freeCta: "無料アカウントを作成",
+          singleKicker: "1件レポート", singleName: "マッチングレポート 1件",
+          single2: "サブスクリプション不要", single3: "構造化マッチング分析", singleCta: "1件購入",
+          packKicker: "レポートパック", packName: "5件レポートパック",
+          pack2: "アカウントが有効な間はいつでも利用可能",
+          pack3: "1件あたりの単価がお得", packCta: "5件購入",
+          bestValue: "お得",
+          premiumKicker: "Premium", premiumName: "Premium 月額", perMonth: "/ 月",
+          premium2: "Premium 求人マッチング", premium3: "Premium メンバー機能",
+          premium4: "いつでも解約可能。Premium は今期終了まで有効です",
+          premiumCta: "Premium に登録", popular: "一番人気",
+          more: "料金と課金の詳細を見る →"
+        },
+        faq: {
+          kicker: "よくある質問", title: "始める前に。",
+          q1: "最初のマッチングレポートは本当に無料ですか？",
+          a1: "はい。新規アカウントにはマッチングレポート 1件分が無料で付きます。その後は1件ごとにクレジットを使用します。1件ずつ購入、5件パック、または Premium（月20件）が選べます。料金は上記の料金セクションをご覧ください。",
+          q2: "マッチングレポートには何が含まれますか？",
+          a2: "対象市場、職種の方向性、マッチスコア、ビザ・語学リスク、応募の優先順位、カバーレターの書き出しをまとめた構造化レポートです。提供いただいた情報をもとにしたルールベースの評価であり、人の審査ではなく、面接や内定を保証するものではありません。",
+          q3: "対象の市場と職種は？",
+          a3: "日本、英国、香港、シンガポール、カナダ、オーストラリア、およびリモート求人で、法務、コンプライアンス、金融、AML、KYC、Web3、国際ビジネスに重点を置いています。",
+          q4: "無料レポートにカードは必要ですか？",
+          a4: "いいえ。アカウント作成と最初のマッチングレポートに支払い方法は不要です。支払いが必要になるのは、追加のレポートや Premium を購入する場合のみです。",
+          q5: "Premium の仕組みは？",
+          a5: "Premium では、毎月20件のマッチングレポートと Premium 求人検索機能が利用できます。アカウントページからいつでも解約でき、Premium は今期の終了まで有効です。月額料金は上記の料金セクションをご覧ください。"
+        },
         final: {
           kicker: "ベータ版アクセス", title: "クロスボーダー向けマッチプロフィールを作成。",
           copy: "まずは実際の求人検索から始め、レポート生成、プロフィール作成、投稿、メンバーとの接続へ進みます。",
           search: "求人検索", network: "ネットワークへ", profile: "プロフィール作成"
         },
-        footer: { copy: "クロスボーダー人材インテリジェンスネットワーク。", status: "求人 · レポート · ネットワーク · 企業" }
+        footer: {
+          copy: "クロスボーダー人材インテリジェンスネットワーク。", status: "求人 · レポート · ネットワーク · 企業",
+          product: "プロダクト", jobs: "求人を検索", report: "マッチングレポート", pricing: "料金", network: "メンバーネットワーク",
+          account: "アカウント", signup: "無料アカウントを作成", login: "ログイン", accountPage: "マイアカウント", feedback: "フィードバック",
+          stripe: "Stripe による安全な決済。JapanOffer AI がカード情報を閲覧・保存することはありません。"
+        }
       }
     };
 
@@ -2102,6 +2371,7 @@
   <script src="auth-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="auth.js"></script>
+  <script src="billing.js"></script>
   <script src="analytics.js"></script>
   <script src="mobile-header-fix.js"></script>
   <script src="legal-positioning.js"></script>
