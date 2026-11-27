@@ -1,11 +1,116 @@
+// JapanOffer AI AI match report API (secured).
+//
+// Security model (fixed 2026-11-27, audit P1-2):
+// - Requires a logged-in Supabase user: the caller must send
+//   `Authorization: Bearer <Supabase access token>`. The token is verified
+//   against Supabase Auth (/auth/v1/user); anonymous calls get 401.
+// - The free-report quota is counted per Supabase user id, not per email
+//   string, so a new email no longer resets the free report.
+// - In-memory per-user / per-IP rate limits (best-effort on serverless;
+//   buckets reset when the function instance is recycled).
+// - Upstream error bodies are never echoed to the client; they are only
+//   written to the server log.
+//
+// Required Vercel env vars:
+//   OPENAI_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY,
+//   SUPABASE_ANON_KEY (or SUPABASE_PUBLISHABLE_KEY) — used only to verify
+//   the caller's access token with Supabase Auth; the key itself is never
+//   sent to the client.
+
+// --- rate limiting (in-memory, best-effort) ---------------------------------
+const RATE_LIMITS = {
+  perUser: { windowMs: 10 * 60 * 1000, max: 5 }, // 5 reports / user / 10 min
+  perIp: { windowMs: 60 * 1000, max: 20 } // 20 requests / IP / min
+};
+
+const buckets = new Map();
+
+function rateLimited(key, { windowMs, max }) {
+  const now = Date.now();
+  const bucket = buckets.get(key) || { count: 0, resetAt: now + windowMs };
+  if (now > bucket.resetAt) {
+    bucket.count = 0;
+    bucket.resetAt = now + windowMs;
+  }
+  bucket.count += 1;
+  buckets.set(key, bucket);
+  return bucket.count > max;
+}
+
+function getClientIp(req) {
+  const forwarded = req.headers["x-forwarded-for"];
+  if (typeof forwarded === "string" && forwarded) {
+    return forwarded.split(",")[0].trim();
+  }
+  return (req.socket && req.socket.remoteAddress) || "unknown";
+}
+
+// --- Supabase Auth verification (no SDK, plain fetch) -----------------------
+async function getAuthenticatedUser(req) {
+  const authHeader = req.headers.authorization || "";
+  const match = /^Bearer\s+(.+)$/i.exec(authHeader);
+  if (!match) return null;
+
+  const token = match[1].trim();
+  const supabaseUrl = (process.env.SUPABASE_URL || "").replace(/\/+$/, "");
+  const anonKey = process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_PUBLISHABLE_KEY;
+  if (!supabaseUrl || !anonKey || !token) return null;
+
+  try {
+    const res = await fetch(`${supabaseUrl}/auth/v1/user`, {
+      headers: {
+        apikey: anonKey,
+        Authorization: `Bearer ${token}`
+      }
+    });
+    if (!res.ok) return null;
+    const user = await res.json();
+    if (!user || !user.id) return null;
+    return user; // { id, email, ... }
+  } catch {
+    return null;
+  }
+}
+
+// --- Supabase REST helpers ---------------------------------------------------
+function supabaseHeaders(serviceKey) {
+  return {
+    apikey: serviceKey,
+    Authorization: `Bearer ${serviceKey}`,
+    "Content-Type": "application/json"
+  };
+}
+
+async function supabaseFetch(url, serviceKey, options = {}) {
+  const { headers: extraHeaders, ...rest } = options;
+  const res = await fetch(url, {
+    ...rest,
+    headers: { ...supabaseHeaders(serviceKey), ...(extraHeaders || {}) }
+  });
+  const text = await res.text();
+  let data = null;
+  try {
+    data = text ? JSON.parse(text) : null;
+  } catch {
+    data = null;
+  }
+  return { ok: res.ok, status: res.status, data };
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
+  const clientIp = getClientIp(req);
+  if (rateLimited(`ip:${clientIp}`, RATE_LIMITS.perIp)) {
+    res.setHeader("Retry-After", "60");
+    return res.status(429).json({ error: "Too many requests. Please try again in a minute." });
+  }
+
   try {
     const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-    const SUPABASE_URL = process.env.SUPABASE_URL;
+    const SUPABASE_URL = (process.env.SUPABASE_URL || "").replace(/\/+$/, "");
     const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!OPENAI_API_KEY || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
@@ -14,12 +119,22 @@ export default async function handler(req, res) {
       });
     }
 
-    const body = req.body || {};
-    const email = String(body.email || "").trim().toLowerCase();
-
-    if (!email || !email.includes("@")) {
-      return res.status(400).json({ error: "Please enter a valid email." });
+    // Caller must be a signed-in Supabase user.
+    const authUser = await getAuthenticatedUser(req);
+    if (!authUser) {
+      return res.status(401).json({ error: "Sign in required to generate a report." });
     }
+
+    if (rateLimited(`user:${authUser.id}`, RATE_LIMITS.perUser)) {
+      res.setHeader("Retry-After", "600");
+      return res.status(429).json({ error: "Too many reports. Please try again later." });
+    }
+
+    // The authenticated user's email is authoritative; any email sent in the
+    // body is ignored so callers cannot claim someone else's quota.
+    const email = String(authUser.email || "").trim().toLowerCase();
+
+    const body = req.body || {};
 
     const candidate = {
       background: String(body.background || "").slice(0, 2500),
@@ -42,46 +157,64 @@ export default async function handler(req, res) {
       });
     }
 
-    const supabaseHeaders = {
-      "apikey": SUPABASE_SERVICE_ROLE_KEY,
-      "Authorization": `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-      "Content-Type": "application/json"
-    };
+    // Quota is keyed by Supabase user id. The `users` table is expected to
+    // have an `id` column holding the Supabase auth user id. If the deployed
+    // table was created email-only (no `id` column), fall back to the
+    // authenticated email — still tied to the verified login, not to an
+    // arbitrary string from the request body.
+    let user = null;
+    let userKey = { column: "id", value: authUser.id };
 
-    const userLookup = await fetch(
-      `${SUPABASE_URL}/rest/v1/users?email=eq.${encodeURIComponent(email)}&select=email,free_used,paid_credits`,
-      { headers: supabaseHeaders }
+    const byId = await supabaseFetch(
+      `${SUPABASE_URL}/rest/v1/users?id=eq.${encodeURIComponent(authUser.id)}&select=id,email,free_used,paid_credits`,
+      SUPABASE_SERVICE_ROLE_KEY
     );
-
-    if (!userLookup.ok) {
-      const text = await userLookup.text();
-      return res.status(500).json({ error: "Could not check user record.", details: text });
+    if (byId.ok && Array.isArray(byId.data) && byId.data[0]) {
+      user = byId.data[0];
+    } else if (!byId.ok) {
+      const byEmail = await supabaseFetch(
+        `${SUPABASE_URL}/rest/v1/users?email=eq.${encodeURIComponent(email)}&select=id,email,free_used,paid_credits`,
+        SUPABASE_SERVICE_ROLE_KEY
+      );
+      if (byEmail.ok && Array.isArray(byEmail.data) && byEmail.data[0]) {
+        user = byEmail.data[0];
+        userKey = { column: "email", value: email };
+      } else if (!byEmail.ok) {
+        console.error("analyze: user lookup failed", byId.status, byEmail.status);
+        return res.status(500).json({ error: "Could not check user record." });
+      }
     }
 
-    const users = await userLookup.json();
-    let user = users[0];
-
     if (!user) {
-      const createUser = await fetch(`${SUPABASE_URL}/rest/v1/users`, {
-        method: "POST",
-        headers: {
-          ...supabaseHeaders,
-          "Prefer": "return=representation"
-        },
-        body: JSON.stringify({
-          email,
-          free_used: false,
-          paid_credits: 0
-        })
-      });
-
-      if (!createUser.ok) {
-        const text = await createUser.text();
-        return res.status(500).json({ error: "Could not create user.", details: text });
+      const newRow = { email, free_used: false, paid_credits: 0 };
+      // Prefer storing the auth user id so future lookups are id-based.
+      let created = await supabaseFetch(
+        `${SUPABASE_URL}/rest/v1/users`,
+        SUPABASE_SERVICE_ROLE_KEY,
+        {
+          method: "POST",
+          headers: { Prefer: "return=representation" },
+          body: JSON.stringify({ id: authUser.id, ...newRow })
+        }
+      );
+      if (!created.ok) {
+        // Table may not have an `id` column; retry with email only.
+        created = await supabaseFetch(
+          `${SUPABASE_URL}/rest/v1/users`,
+          SUPABASE_SERVICE_ROLE_KEY,
+          {
+            method: "POST",
+            headers: { Prefer: "return=representation" },
+            body: JSON.stringify(newRow)
+          }
+        );
+        if (created.ok) userKey = { column: "email", value: email };
       }
-
-      const created = await createUser.json();
-      user = created[0];
+      if (!created.ok || !Array.isArray(created.data) || !created.data[0]) {
+        console.error("analyze: user create failed", created.status);
+        return res.status(500).json({ error: "Could not create user." });
+      }
+      user = created.data[0];
     }
 
     const freeUsed = Boolean(user.free_used);
@@ -169,11 +302,9 @@ Return this exact JSON structure:
     });
 
     if (!openaiResponse.ok) {
-      const text = await openaiResponse.text();
-      return res.status(500).json({
-        error: "OpenAI request failed.",
-        details: text
-      });
+      // Do not echo the upstream error body to the client.
+      console.error("analyze: OpenAI request failed", openaiResponse.status);
+      return res.status(500).json({ error: "OpenAI request failed." });
     }
 
     const openaiData = await openaiResponse.json();
@@ -187,44 +318,47 @@ Return this exact JSON structure:
     try {
       report = JSON.parse(content);
     } catch (e) {
-      return res.status(500).json({
-        error: "OpenAI returned invalid JSON.",
-        raw: content
-      });
+      console.error("analyze: OpenAI returned invalid JSON");
+      return res.status(500).json({ error: "OpenAI returned invalid JSON." });
     }
 
     const now = new Date().toISOString();
+    const userFilter = `${userKey.column}=eq.${encodeURIComponent(userKey.value)}`;
 
     if (!freeUsed) {
-      await fetch(`${SUPABASE_URL}/rest/v1/users?email=eq.${encodeURIComponent(email)}`, {
-        method: "PATCH",
-        headers: supabaseHeaders,
-        body: JSON.stringify({
-          free_used: true,
-          last_report_at: now
-        })
-      });
+      await supabaseFetch(
+        `${SUPABASE_URL}/rest/v1/users?${userFilter}`,
+        SUPABASE_SERVICE_ROLE_KEY,
+        {
+          method: "PATCH",
+          body: JSON.stringify({ free_used: true, last_report_at: now })
+        }
+      );
     } else if (paidCredits > 0) {
-      await fetch(`${SUPABASE_URL}/rest/v1/users?email=eq.${encodeURIComponent(email)}`, {
-        method: "PATCH",
-        headers: supabaseHeaders,
-        body: JSON.stringify({
-          paid_credits: paidCredits - 1,
-          last_report_at: now
-        })
-      });
+      await supabaseFetch(
+        `${SUPABASE_URL}/rest/v1/users?${userFilter}`,
+        SUPABASE_SERVICE_ROLE_KEY,
+        {
+          method: "PATCH",
+          body: JSON.stringify({ paid_credits: paidCredits - 1, last_report_at: now })
+        }
+      );
     }
 
-    await fetch(`${SUPABASE_URL}/rest/v1/reports`, {
-      method: "POST",
-      headers: supabaseHeaders,
-      body: JSON.stringify({
-        email,
-        candidate_input: candidate,
-        job_inputs: validJobs,
-        report_output: report
-      })
-    });
+    await supabaseFetch(
+      `${SUPABASE_URL}/rest/v1/reports`,
+      SUPABASE_SERVICE_ROLE_KEY,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          user_id: authUser.id,
+          email,
+          candidate_input: candidate,
+          job_inputs: validJobs,
+          report_output: report
+        })
+      }
+    );
 
     return res.status(200).json({
       success: true,
@@ -234,9 +368,8 @@ Return this exact JSON structure:
     });
 
   } catch (error) {
-    return res.status(500).json({
-      error: "Unexpected server error.",
-      details: error.message
-    });
+    // Never echo internal error details to the client.
+    console.error("analyze: unexpected error", error);
+    return res.status(500).json({ error: "Unexpected server error." });
   }
 }

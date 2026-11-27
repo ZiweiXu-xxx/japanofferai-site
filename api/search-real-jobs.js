@@ -1,10 +1,53 @@
+// Only our own front ends may call this API from a browser. Previously
+// `Access-Control-Allow-Origin: *` let any third-party site burn the Adzuna
+// quota through this endpoint.
+const ALLOWED_ORIGINS = [
+  "https://www.japanofferai.com",
+  "https://japanofferai-site.vercel.app"
+];
+
+// In-memory per-IP rate limit (best-effort on serverless; buckets reset
+// when the function instance is recycled).
+const RATE_WINDOW_MS = 60 * 1000;
+const RATE_MAX_PER_MINUTE = 30;
+const rateBuckets = new Map();
+
+function rateLimited(ip) {
+  const now = Date.now();
+  const bucket = rateBuckets.get(ip) || { count: 0, resetAt: now + RATE_WINDOW_MS };
+  if (now > bucket.resetAt) {
+    bucket.count = 0;
+    bucket.resetAt = now + RATE_WINDOW_MS;
+  }
+  bucket.count += 1;
+  rateBuckets.set(ip, bucket);
+  return bucket.count > RATE_MAX_PER_MINUTE;
+}
+
+function getClientIp(req) {
+  const forwarded = req.headers["x-forwarded-for"];
+  if (typeof forwarded === "string" && forwarded) {
+    return forwarded.split(",")[0].trim();
+  }
+  return (req.socket && req.socket.remoteAddress) || "unknown";
+}
+
 export default async function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  const origin = req.headers.origin;
+  if (origin && ALLOWED_ORIGINS.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+  res.setHeader("Vary", "Origin");
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
   if (req.method === "OPTIONS") {
     return res.status(200).end();
+  }
+
+  if (rateLimited(getClientIp(req))) {
+    res.setHeader("Retry-After", "60");
+    return res.status(429).json({ error: "Too many requests. Please try again in a minute." });
   }
 
   const appId = process.env.ADZUNA_APP_ID;
@@ -75,10 +118,9 @@ export default async function handler(req, res) {
       jobs
     });
   } catch (error) {
-    return res.status(500).json({
-      error: "Could not fetch real job data.",
-      detail: error.message
-    });
+    // Do not echo upstream error details to the client.
+    console.error("search-real-jobs: fetch failed", error);
+    return res.status(500).json({ error: "Could not fetch real job data." });
   }
 }
 
