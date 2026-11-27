@@ -115,3 +115,5 @@ Vercel usually asks for records like these:
 Use the values Vercel shows in your own dashboard if they differ.
 
 DNS can take several minutes to several hours to fully update.
+
+<!-- Deploy note 2026-11-27: PRs #1 (audit fixes), #2/#4 (Stripe billing) and #3 (premium frontend + mobile header/language fixes) merged to main. This line re-triggers the Vercel production build. -->
