@@ -18,6 +18,15 @@
   const roadmapList = document.getElementById("roadmapList");
   const copyButton = document.getElementById("copyResult");
   const statusMessage = document.getElementById("statusMessage");
+  const jobTitleInput = document.getElementById("jobTitleInput");
+  const jobDescInput = document.getElementById("jobDescInput");
+
+  // Short-lived status line under the form (also used by the copy button).
+  function showStatus(message) {
+    statusMessage.textContent = message;
+    statusMessage.classList.add("jo22-show");
+    setTimeout(() => statusMessage.classList.remove("jo22-show"), 4000);
+  }
 
   const urlParams = new URLSearchParams(window.location.search);
   const shouldLoadProfile = urlParams.get("source") === "profile" || urlParams.get("from") === "profile" || urlParams.get("auto") === "1";
@@ -194,10 +203,18 @@
     textarea.value = background;
     applyProfileSelects(profile);
 
+    // The AI report needs a job description too: only auto-submit when one
+    // is already pasted, otherwise ask the user to add it first.
+    const jobReady = jobDescInput && jobDescInput.value.trim().length >= 50;
+    if (!jobReady) {
+      showProfileNotice("已读取你的个人主页和 CV 内容。请再粘贴一个目标岗位描述，然后点击「生成我的岗位匹配」。", "success");
+      return;
+    }
+
     if (cvText) {
       showProfileNotice("已读取你的个人主页和 DOCX 简历内容，正在自动生成匹配结果。", "success");
     } else if (profile.cv_file_name) {
-      showProfileNotice("已读取你的个人主页和 CV 文件记录。当前浏览器版本会优先使用个人资料字段生成匹配，DOCX 可读取更多内容。", "success");
+      showProfileNotice("已读取你的个人主页和 CV 文件记录。正在自动生成匹配结果。", "success");
     } else {
       showProfileNotice("已读取你的个人主页资料，正在自动生成匹配结果。", "success");
     }
@@ -207,69 +224,6 @@
     }, 350);
   }
 
-
-  const ROLE_LIBRARY = [
-    {
-      title: "金融合规分析师",
-      titleEn: "Financial Compliance Analyst",
-      base: 44,
-      markets: ["日本", "香港", "新加坡"],
-      careers: ["金融 / 合规", "Web3 / 金融合规", "法律 / 合规"],
-      keywords: ["金融", "finance", "合规", "compliance", "监管", "kyc", "aml", "风控", "银行", "证券", "投行", "审计", "风险"],
-      reason: "适合有金融、法律、合规、风控或监管兴趣的候选人，可以优先看金融机构、支付公司、虚拟资产平台的合规岗位。",
-      caution: "如果缺少正式实习，需要用课程项目、案例分析或证书补足可信度。"
-    },
-    {
-      title: "法律合规分析师",
-      titleEn: "Legal Compliance Analyst",
-      base: 43,
-      markets: ["日本", "香港", "新加坡"],
-      careers: ["法律 / 合规", "金融 / 合规", "Web3 / 金融合规"],
-      keywords: ["法律", "法学", "llb", "llm", "合规", "合同", "监管", "法律研究", "法务", "kyc", "aml"],
-      reason: "适合有法律背景和跨境语言能力的人，尤其适合 legal operations、KYC/AML、合同支持和初级合规岗位。",
-      caution: "如果没有当地法律资格，应该先强调研究能力、语言能力和跨境业务理解。"
-    },
-    {
-      title: "Web3 / 虚拟资产合规助理",
-      titleEn: "Web3 Compliance Associate",
-      base: 42,
-      markets: ["香港", "新加坡", "日本"],
-      careers: ["Web3 / 金融合规", "金融 / 合规", "法律 / 合规"],
-      keywords: ["web3", "crypto", "加密", "虚拟资产", "交易所", "defi", "区块链", "kyc", "aml", "合规", "金融"],
-      reason: "适合对虚拟资产、交易所、KYC/AML 和金融监管感兴趣的人。",
-      caution: "这个方向要讲清楚监管和风险控制，不然容易显得只是兴趣。"
-    },
-    {
-      title: "跨境商务发展助理",
-      titleEn: "Cross-border Business Associate",
-      base: 40,
-      markets: ["日本", "香港", "新加坡"],
-      careers: ["国际业务", "市场 / 运营", "金融 / 合规"],
-      keywords: ["商务", "business", "bd", "销售", "客户", "项目", "运营", "市场", "国际", "跨境", "沟通", "合作"],
-      reason: "适合语言能力强、愿意做国际沟通、客户拓展和企业合作的人。",
-      caution: "如果没有销售或商业项目经历，需要先把沟通、项目和市场理解写得更具体。"
-    },
-    {
-      title: "数据 / 商业分析助理",
-      titleEn: "Business / Data Analyst Assistant",
-      base: 39,
-      markets: ["日本", "香港", "新加坡", "英国"],
-      careers: ["数据 / 分析", "金融 / 合规", "国际业务"],
-      keywords: ["数据", "分析", "excel", "sql", "python", "tableau", "power bi", "金融分析", "商业分析", "建模", "研究"],
-      reason: "适合有数据、金融分析、商业研究或工具能力的人。",
-      caution: "需要用作品集、数据项目或实习任务证明你不是只会写关键词。"
-    },
-    {
-      title: "国际人才匹配 / 招聘助理",
-      titleEn: "International Talent Matching Associate",
-      base: 37,
-      markets: ["日本", "香港", "新加坡"],
-      careers: ["国际业务", "市场 / 运营"],
-      keywords: ["人力", "招聘", "hr", "人才", "求职", "学生", "社群", "沟通", "咨询", "教育", "留学"],
-      reason: "适合理解留学生求职痛点、语言能力强、愿意做候选人沟通和企业匹配的人。",
-      caution: "这个方向相对容易进入，但长期上限取决于企业端资源和商业化能力。"
-    }
-  ];
 
   const COMPANY_ROUTES = {
     "金融 / 合规": [
@@ -438,34 +392,9 @@
     return keywords.some((keyword) => text.includes(String(keyword).toLowerCase()));
   }
 
-  function countMatches(text, keywords) {
-    return keywords.reduce((count, keyword) => count + (text.includes(String(keyword).toLowerCase()) ? 1 : 0), 0);
-  }
 
-  function inferEducation(text) {
-    if (hasAny(text, ["博士", "phd"])) return "博士";
-    if (hasAny(text, ["硕士", "研究生", "master", "llm", "msc"])) return "硕士";
-    if (hasAny(text, ["本科", "bachelor", "undergraduate", "llb"])) return "本科";
-    return "未明确";
-  }
 
-  function inferLanguages(text) {
-    const langs = [];
-    if (hasAny(text, ["中文", "普通话", "mandarin", "chinese"])) langs.push("中文");
-    if (hasAny(text, ["英文", "英语", "ielts", "雅思", "english"])) langs.push("英文");
-    if (hasAny(text, ["日语", "日本语", "jlpt", "n1", "n2", "japanese"])) langs.push("日语");
-    if (hasAny(text, ["韩语", "korean"])) langs.push("韩语");
-    return langs.length ? langs : ["未明确"];
-  }
 
-  function inferMarket(text, selected) {
-    if (selected && selected !== "auto") return selected;
-    if (hasAny(text, ["日本", "东京", "大阪", "japan", "tokyo"])) return "日本";
-    if (hasAny(text, ["香港", "hong kong", "hk"])) return "香港";
-    if (hasAny(text, ["新加坡", "singapore"])) return "新加坡";
-    if (hasAny(text, ["英国", "伦敦", "uk", "london"])) return "英国";
-    return "新加坡";
-  }
 
   function inferCareer(text, selected) {
     if (selected && selected !== "auto") return selected;
@@ -478,49 +407,7 @@
     return "国际业务";
   }
 
-  function inferRisks(text, market, languages) {
-    const risks = [];
 
-    if (market === "日本" && !languages.includes("日语")) {
-      risks.push("日本岗位通常更看重日语。没有日语时，应优先搜索英文岗位、外企岗位或跨境业务岗位。");
-    }
-
-    if ((market === "新加坡" || market === "香港") && !languages.includes("英文")) {
-      risks.push("新加坡和香港岗位通常更看重英文工作能力，需要补强英文 CV 和面试表达。");
-    }
-
-    if (hasAny(text, ["没有经验", "无经验", "没有正式工作经验", "没实习"])) {
-      risks.push("正式工作经验不足会拉低筛选通过率，需要用课程项目、案例分析或作品集补足。");
-    }
-
-    if (!hasAny(text, ["签证", "工签", "visa", "永居", "pr"])) {
-      risks.push("你没有说明签证情况。跨境求职里，签证路径会影响申请优先级。");
-    }
-
-    return risks.length ? risks : ["暂时没有明显硬伤，但还需要把经历、技能和目标岗位写得更具体。"];
-  }
-
-  function scoreRole(role, text, market, career, languages, education) {
-    let score = role.base;
-    score += Math.min(countMatches(text, role.keywords) * 3.3, 18);
-
-    if (role.markets.includes(market)) score += 4;
-    if (role.careers.includes(career)) score += 8;
-
-    if (languages.includes("英文")) score += 4;
-    if (languages.includes("中文")) score += 2;
-    if (languages.includes("日语") && market === "日本") score += 5;
-
-    if (education === "本科") score += 3;
-    if (education === "硕士") score += 4;
-    if (education === "博士") score += 5;
-
-    if (hasAny(text, ["项目", "project", "课程项目", "创业", "社团", "实习", "intern", "作品", "portfolio"])) score += 4;
-    if (hasAny(text, ["没有经验", "无经验", "没有正式工作经验", "没实习"])) score -= 8;
-    if (!hasAny(text, ["实习", "intern", "工作", "项目", "project", "作品", "portfolio"])) score -= 3;
-
-    return Math.max(38, Math.min(84, Math.round(score)));
-  }
 
   function priorityLabel(score) {
     if (score >= 74) return "优先申请";
@@ -529,103 +416,46 @@
     return "暂缓申请";
   }
 
-  function buildJudgements(profile, roles, risks) {
-    return [
-      {
-        title: "主方向判断",
-        text: `系统把你的主方向判断为「${profile.career}」。第一推荐岗位是「${roles[0].title}」，因为它最能承接你的背景和目标。`
-      },
-      {
-        title: "市场判断",
-        text: `当前目标市场优先级为「${profile.market}」。同时建议保留香港和新加坡作为平行申请市场。`
-      },
-      {
-        title: "语言判断",
-        text: `你的语言标签是「${profile.languages.join("、")}」。语言能力是跨境岗位最直接的筛选条件之一。`
-      },
-      {
-        title: "风险判断",
-        text: risks[0]
-      }
-    ];
-  }
 
-  function buildRoadmap(roles, risks) {
-    return [
-      {
-        title: "先投第一推荐",
-        text: `先围绕「${roles[0].title}」准备 CV、LinkedIn 和面试故事线。`
-      },
-      {
-        title: "第二推荐做备选",
-        text: `「${roles[1]?.title || "第二推荐岗位"}」适合作为备选路线，用来扩大机会池。`
-      },
-      {
-        title: "补足短板",
-        text: risks[0]
-      },
-      {
-        title: "用真实反馈调整",
-        text: "每投 10 个岗位记录一次回复率，再调整国家、公司类型和岗位关键词。"
-      }
-    ];
-  }
 
   function getRoutes(career) {
     return COMPANY_ROUTES[career] || COMPANY_ROUTES["国际业务"];
   }
 
-  function generateMatch(background, marketSelection, careerSelection) {
-    const text = normalize(background);
-    const education = inferEducation(text);
-    const languages = inferLanguages(text);
-    const market = inferMarket(text, marketSelection);
-    const career = inferCareer(text, careerSelection);
-    const risks = inferRisks(text, market, languages);
 
-    let roles = ROLE_LIBRARY
-      .map((role) => ({ ...role, score: scoreRole(role, text, market, career, languages, education) }))
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 3)
-      .map((role, index) => ({ ...role, score: Math.max(38, role.score - index * 4) }));
 
+  // Renders a real /api/analyze report into the existing result section.
+  // Company routes stay local static data (concrete companies to search);
+  // the scores, risks and advice below all come from the AI response.
+  function renderApiResult(report, meta, career) {
+    const jobs = Array.isArray(report.jobs) ? report.jobs : [];
+    const best = jobs.reduce((acc, job) => {
+      const s = Number(job.fit_score) || 0;
+      return !acc || s > (Number(acc.fit_score) || 0) ? job : acc;
+    }, null);
+    const bestScore = best ? (Number(best.fit_score) || 0) : 0;
+    const market = marketSelect.value === "auto" ? "" : marketSelect.value;
     const routes = getRoutes(career);
 
-    return {
-      background,
-      education,
-      languages,
-      market,
-      career,
-      risks,
-      roles,
-      routes,
-      bestScore: roles[0]?.score || 0,
-      judgements: buildJudgements({ education, languages, market, career }, roles, risks),
-      roadmap: buildRoadmap(roles, risks)
-    };
-  }
+    bestScoreEl.textContent = String(bestScore);
+    summaryText.textContent = report.overall_route || report.candidate_snapshot || "";
 
-  function renderResult(result) {
-    bestScoreEl.textContent = String(result.bestScore);
-    summaryText.textContent = `系统建议你先看「${result.roles[0].title}」，再用「${result.roles[1].title}」和「${result.roles[2].title}」作为备选路线。`;
-
-    roleGrid.innerHTML = result.roles.map((role, index) => `
+    roleGrid.innerHTML = jobs.map((job, index) => `
       <article class="jo22-role-card">
-        <div class="jo22-rank">第 ${index + 1} 推荐 · ${priorityLabel(role.score)}</div>
-        <h4>${escapeHtml(role.title)}</h4>
+        <div class="jo22-rank">第 ${index + 1} 位 · ${escapeHtml(job.priority || priorityLabel(Number(job.fit_score) || 0))}</div>
+        <h4>${escapeHtml(job.role || "")}</h4>
         <div class="jo22-role-meta">
-          <span class="jo22-pill">${escapeHtml(role.titleEn)}</span>
-          <span class="jo22-pill">${escapeHtml(priorityLabel(role.score))}</span>
-          <span class="jo22-pill">${escapeHtml(result.market)}</span>
+          <span class="jo22-pill">匹配 ${Number(job.fit_score) || 0} 分</span>
+          ${market ? `<span class="jo22-pill">${escapeHtml(market)}</span>` : ""}
         </div>
-        <p>${escapeHtml(role.reason)}</p>
-        <p style="margin-top:10px;"><strong>注意：</strong>${escapeHtml(role.caution)}</p>
-        <div class="jo22-score">${role.score} 分</div>
+        <p><strong>主要风险：</strong>${escapeHtml(job.main_risk || "")}</p>
+        <p>${escapeHtml(job.reason || "")}</p>
+        <p style="margin-top:10px;"><strong>下一步：</strong>${escapeHtml(job.suggested_action || "")}</p>
+        <div class="jo22-score">${Number(job.fit_score) || 0} 分</div>
       </article>
     `).join("");
 
-    routeGrid.innerHTML = result.routes.map((route, index) => {
+    routeGrid.innerHTML = routes.map((route, index) => {
       const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(route.query)}`;
       return `
         <article class="jo22-route-card">
@@ -642,27 +472,40 @@
       `;
     }).join("");
 
-    judgementList.innerHTML = result.judgements.map((item) => `
+    const consumedLabel =
+      meta && meta.consumed_from === "free" ? "免费报告" :
+      meta && meta.consumed_from === "premium" ? "Premium 报告" :
+      meta && meta.consumed_from === "paid" ? "付费点数" : "";
+
+    judgementList.innerHTML = [
+      { title: "候选人概况", text: report.candidate_snapshot || "" },
+      { title: "总体建议", text: report.final_advice || "" },
+      { title: "说明", text: report.disclaimer || "" }
+    ].filter(item => item.text).map((item) => `
       <div class="jo22-info-item">
         <strong>${escapeHtml(item.title)}</strong>
         <span>${escapeHtml(item.text)}</span>
       </div>
     `).join("");
 
-    roadmapList.innerHTML = result.roadmap.map((step) => `
+    const steps = jobs
+      .map((job) => ({ title: job.role || "", text: job.suggested_action || "" }))
+      .filter(step => step.text);
+    if (report.cover_letter_opening) {
+      steps.push({ title: "Cover Letter 开头", text: report.cover_letter_opening });
+    }
+    roadmapList.innerHTML = steps.map((step) => `
       <div class="jo22-info-item">
         <strong>${escapeHtml(step.title)}</strong>
         <span>${escapeHtml(step.text)}</span>
       </div>
     `).join("");
 
-    const tags = [
-      `目标市场：${result.market}`,
-      `方向：${result.career}`,
-      `学历：${result.education}`,
-      `语言：${result.languages.join("、")}`,
-      `最高匹配：${result.bestScore} 分`
-    ];
+    const tags = [];
+    if (market) tags.push(`目标市场：${market}`);
+    if (career) tags.push(`方向：${career}`);
+    tags.push(`最高匹配：${bestScore} 分`);
+    if (consumedLabel) tags.push(`本次使用：${consumedLabel}`);
 
     tagGrid.innerHTML = tags.map((tag) => `<span class="jo22-tag">${escapeHtml(tag)}</span>`).join("");
 
@@ -722,58 +565,46 @@
     }
   }
 
-  async function saveMatchResult(result) {
-    const anonymousId = getVisitorId();
-
+  async function saveMatchResult(stored) {
+    // The real report is stored server-side by /api/analyze (reports
+    // table). Only the anonymous analytics event is still written here.
     await supabaseInsert("page_events", {
       event_name: "ai_match_generated",
       page_path: "/match.html",
-      anonymous_id: anonymousId
-    });
-
-    await supabaseInsert("report_submissions", {
-      anonymous_id: anonymousId,
-      lang: "zh",
-      education: result.education,
-      languages: result.languages.join(" / "),
-      market: result.market,
-      career: result.career,
-      match_score: result.bestScore,
-      visa_risk: result.risks[0] || null,
-      language_risk: result.risks.find((risk) => risk.includes("语言") || risk.includes("日语") || risk.includes("英文")) || null,
-      recommended_roles: result.roles.map((role, index) => ({
-        rank: index + 1,
-        title: role.title,
-        title_en: role.titleEn,
-        score: role.score,
-        priority: priorityLabel(role.score)
-      })),
-      raw_input: result.background
+      anonymous_id: getVisitorId()
     });
   }
 
-  function resultToText(result) {
-    return [
-      "JapanOffer AI 中文岗位匹配结果",
+
+
+  function resultToText(stored) {
+    const report = stored.report || {};
+    const jobs = Array.isArray(report.jobs) ? report.jobs : [];
+    const best = jobs.reduce((acc, job) => {
+      const s = Number(job.fit_score) || 0;
+      return !acc || s > (Number(acc.fit_score) || 0) ? job : acc;
+    }, null);
+    const lines = [
+      "JapanOffer AI 岗位匹配结果",
       "",
-      `最高匹配分：${result.bestScore} 分`,
-      `目标市场：${result.market}`,
-      `职业方向：${result.career}`,
-      `学历判断：${result.education}`,
-      `语言标签：${result.languages.join("、")}`,
+      `最高匹配分：${best ? (Number(best.fit_score) || 0) : 0} 分`,
+      `目标市场：${stored.market || ""}`,
+      `职业方向：${stored.career || ""}`,
       "",
-      "岗位推荐排序：",
-      ...result.roles.map((role, index) => `${index + 1}. ${role.title} / ${role.titleEn} - ${role.score} 分 - ${priorityLabel(role.score)}`),
+      "岗位评估：",
+      ...jobs.map((job, index) =>
+        `${index + 1}. ${job.role || ""} - ${Number(job.fit_score) || 0} 分 - ${job.priority || ""}\n   主要风险：${job.main_risk || ""}\n   匹配原因：${job.reason || ""}\n   下一步：${job.suggested_action || ""}`),
       "",
-      "具体公司与岗位搜索路线：",
-      ...result.routes.map((route, index) => `${index + 1}. ${route.market}：${route.company} - ${route.role}`),
-      "",
-      "系统判断：",
-      ...result.judgements.map((item) => `- ${item.title}：${item.text}`),
-      "",
-      "下一步建议：",
-      ...result.roadmap.map((step) => `- ${step.title}：${step.text}`)
-    ].join("\n");
+      "总体建议：",
+      report.final_advice || "",
+    ];
+    if (report.cover_letter_opening) {
+      lines.push("", "Cover Letter 开头：", report.cover_letter_opening);
+    }
+    if (report.disclaimer) {
+      lines.push("", "说明：" + report.disclaimer);
+    }
+    return lines.join("\n");
   }
 
   let latestResult = null;
@@ -783,18 +614,55 @@
 
     const background = textarea.value.trim();
     if (background.length < 20) {
-      alert("先输入一段更完整的中文背景，至少写 20 个字左右。");
+      showStatus("先输入一段更完整的中文背景，至少写 20 个字左右。");
+      return;
+    }
+    const jobDesc = jobDescInput.value.trim();
+    if (jobDesc.length < 50) {
+      showStatus("请粘贴目标岗位的完整描述（至少 50 个字），AI 需要一个真实岗位来对比。");
       return;
     }
 
     generateButton.disabled = true;
-    generateButton.textContent = "正在生成匹配结果...";
+    generateButton.textContent = "正在生成 AI 匹配结果...";
+    showStatus("正在生成 AI 匹配结果，请稍等…");
 
     try {
-      const result = generateMatch(background, marketSelect.value, careerSelect.value);
-      latestResult = result;
-      renderResult(result);
-      saveMatchResult(result);
+      const payload = {
+        background: background.slice(0, 2400),
+        languages: "",
+        targetCountry: marketSelect.value === "auto" ? "" : marketSelect.value,
+        targetIndustry: careerSelect.value === "auto" ? "" : careerSelect.value,
+        concerns: "",
+        jobs: [{ title: jobTitleInput.value.trim() || "目标岗位", description: jobDesc }]
+      };
+      const result = await window.JOAnalyze.analyzeReport(payload);
+      if (result.status === 200 && result.data && result.data.success && result.data.report) {
+        const career = careerSelect.value === "auto" ? inferCareer(background) : careerSelect.value;
+        const market = marketSelect.value === "auto" ? "" : marketSelect.value;
+        latestResult = { report: result.data.report, meta: result.data, career, market };
+        renderApiResult(result.data.report, result.data, career);
+        saveMatchResult(latestResult);
+        window.JOAnalyze.refreshCredits();
+        showStatus("AI 匹配结果已生成。");
+        return;
+      }
+      if (result.status === 401) {
+        window.location.href = "login.html?redirect=match.html";
+        return;
+      }
+      if (window.JOAnalyze.errorKind(result) === "no_credits") {
+        statusMessage.innerHTML = '报告次数已用完。<a href="pricing.html">获取更多报告 →</a>';
+        statusMessage.classList.add("jo22-show");
+        return;
+      }
+      if (window.JOAnalyze.errorKind(result) === "rate_limited") {
+        showStatus("生成太频繁，请稍后再试。");
+        return;
+      }
+      showStatus("生成失败，请稍后再试。");
+    } catch (e) {
+      showStatus("无法连接服务器，请检查网络后重试。");
     } finally {
       generateButton.disabled = false;
       generateButton.textContent = "生成我的岗位匹配";
