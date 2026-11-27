@@ -72,7 +72,11 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
-body {
+/* The light theme is the default, but pages that define their own dark
+   theme (jobs-search.html) opt out with <body data-theme="dark">. Without
+   this, the dark page's own white text gets repainted dark ink and its
+   headings become unreadable on the dark background. */
+body:not([data-theme="dark"]) {
   font-family: var(--ds-font);
   color: var(--ds-ink);
   background-color: var(--ds-bg);
@@ -972,11 +976,47 @@ code {
     font-size: 34px;
   }
 
-  /* Shared header: let the grid collapse instead of overflowing. */
-  .topbar {
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 10px;
-    padding: 12px 0;
+  /* Shared mobile header.
+     The header scrolls away with the page instead of floating over the
+     content as a translucent bar (the old sticky + blur made page text
+     show through while scrolling), and the grid collapses to two
+     columns instead of overflowing the viewport. Every page loads this
+     sheet, so this is the one place that fixes the header for all
+     pages. .topbar-inner is the grid on index/legal-fit style pages;
+     .topbar itself is the grid on jobs/companies style pages. */
+  .topbar,
+  header.topbar {
+    position: relative !important;
+    top: auto !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(255, 255, 255, 0.94) !important;
+  }
+
+  .topbar-inner {
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    gap: 10px !important;
+    padding: 12px !important;
+  }
+
+  .topbar:has(> .nav) {
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    gap: 10px !important;
+    padding: 12px 14px !important;
+  }
+
+  .topbar:has(> .nav) > .top-search,
+  .topbar:has(> .nav) > .search {
+    grid-column: 1 / -1 !important;
+    order: 3 !important;
+  }
+
+  .topbar:has(> .nav) > .nav {
+    grid-column: 1 / -1 !important;
+    order: 4 !important;
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+    padding-bottom: 4px !important;
   }
 
   .top-search {
