@@ -13,9 +13,19 @@
 //
 // Required Vercel env vars:
 //   OPENAI_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY,
-//   SUPABASE_ANON_KEY (or SUPABASE_PUBLISHABLE_KEY) — used only to verify
-//   the caller's access token with Supabase Auth; the key itself is never
-//   sent to the client.
+//   SUPABASE_PUBLISHABLE_KEY (SUPABASE_ANON_KEY is only a legacy fallback)
+//   — used only to verify the caller's access token with Supabase Auth;
+//   the key itself is never sent to the client. Prefer the new publishable
+//   key: Vercel already has SUPABASE_PUBLISHABLE_KEY configured, while
+//   SUPABASE_ANON_KEY is not configured there.
+//
+// Billing (added 2026-11-27, Stripe Checkout): Premium subscribers get
+// PREMIUM_CREDITS_PER_MONTH reports per billing month (see
+// config/pricing.js and supabase/migrations/20261127_stripe_billing.sql).
+// The quota order is: free report first, then Premium monthly allowance,
+// then paid credits. All checks run server-side.
+
+import { PREMIUM_CREDITS_PER_MONTH } from "../config/pricing.js";
 
 // --- rate limiting (in-memory, best-effort) ---------------------------------
 const RATE_LIMITS = {
@@ -53,13 +63,13 @@ async function getAuthenticatedUser(req) {
 
   const token = match[1].trim();
   const supabaseUrl = (process.env.SUPABASE_URL || "").replace(/\/+$/, "");
-  const anonKey = process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_PUBLISHABLE_KEY;
-  if (!supabaseUrl || !anonKey || !token) return null;
+  const publishableKey = process.env.SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY;
+  if (!supabaseUrl || !publishableKey || !token) return null;
 
   try {
     const res = await fetch(`${supabaseUrl}/auth/v1/user`, {
       headers: {
-        apikey: anonKey,
+        apikey: publishableKey,
         Authorization: `Bearer ${token}`
       }
     });
@@ -70,6 +80,27 @@ async function getAuthenticatedUser(req) {
   } catch {
     return null;
   }
+}
+
+// --- Premium status --------------------------------------------------------
+// A Premium subscription is active when its status is "active" (or
+// "cancel_at_period_end", i.e. paid until the period ends) and the current
+// billing period has not ended yet.
+function premiumStatus(user) {
+  const status = String((user && user.subscription_status) || "");
+  const periodEndRaw = user ? user.subscription_current_period_end : null;
+  const periodEnd = periodEndRaw ? new Date(periodEndRaw) : null;
+  const active =
+    (status === "active" || status === "cancel_at_period_end") &&
+    periodEnd !== null &&
+    periodEnd.getTime() > Date.now();
+  const used = Number((user && user.premium_credits_used) || 0);
+  return {
+    active,
+    remaining: active ? Math.max(0, PREMIUM_CREDITS_PER_MONTH - used) : 0,
+    used,
+    resetAt: periodEnd ? periodEnd.toISOString() : null,
+  };
 }
 
 // --- Supabase REST helpers ---------------------------------------------------
@@ -162,25 +193,46 @@ export default async function handler(req, res) {
     // table was created email-only (no `id` column), fall back to the
     // authenticated email — still tied to the verified login, not to an
     // arbitrary string from the request body.
+    //
+    // The select asks for the billing columns added by
+    // supabase/migrations/20261127_stripe_billing.sql. If the migration
+    // has not been applied yet, PostgREST rejects the unknown columns and
+    // the lookup retries with the pre-billing column set; Premium is then
+    // treated as inactive (never as an error to the client).
     let user = null;
     let userKey = { column: "id", value: authUser.id };
 
-    const byId = await supabaseFetch(
-      `${SUPABASE_URL}/rest/v1/users?id=eq.${encodeURIComponent(authUser.id)}&select=id,email,free_used,paid_credits`,
+    const billingSelect =
+      "id,email,free_used,paid_credits,subscription_status,stripe_customer_id,subscription_current_period_end,premium_credits_used";
+    const legacySelect = "id,email,free_used,paid_credits";
+
+    const byIdBilling = await supabaseFetch(
+      `${SUPABASE_URL}/rest/v1/users?id=eq.${encodeURIComponent(authUser.id)}&select=${billingSelect}`,
       SUPABASE_SERVICE_ROLE_KEY
     );
-    if (byId.ok && Array.isArray(byId.data) && byId.data[0]) {
-      user = byId.data[0];
-    } else if (!byId.ok) {
-      const byEmail = await supabaseFetch(
-        `${SUPABASE_URL}/rest/v1/users?email=eq.${encodeURIComponent(email)}&select=id,email,free_used,paid_credits`,
+    if (byIdBilling.ok && Array.isArray(byIdBilling.data) && byIdBilling.data[0]) {
+      user = byIdBilling.data[0];
+    } else {
+      const byId = await supabaseFetch(
+        `${SUPABASE_URL}/rest/v1/users?id=eq.${encodeURIComponent(authUser.id)}&select=${legacySelect}`,
         SUPABASE_SERVICE_ROLE_KEY
       );
-      if (byEmail.ok && Array.isArray(byEmail.data) && byEmail.data[0]) {
-        user = byEmail.data[0];
-        userKey = { column: "email", value: email };
-      } else if (!byEmail.ok) {
-        console.error("analyze: user lookup failed", byId.status, byEmail.status);
+      if (byId.ok && Array.isArray(byId.data) && byId.data[0]) {
+        user = byId.data[0];
+      } else if (!byId.ok && !byIdBilling.ok) {
+        const byEmail = await supabaseFetch(
+          `${SUPABASE_URL}/rest/v1/users?email=eq.${encodeURIComponent(email)}&select=${legacySelect}`,
+          SUPABASE_SERVICE_ROLE_KEY
+        );
+        if (byEmail.ok && Array.isArray(byEmail.data) && byEmail.data[0]) {
+          user = byEmail.data[0];
+          userKey = { column: "email", value: email };
+        } else if (!byEmail.ok) {
+          console.error("analyze: user lookup failed", byIdBilling.status, byId.status, byEmail.status);
+          return res.status(500).json({ error: "Could not check user record." });
+        }
+      } else if (!byId.ok) {
+        console.error("analyze: user lookup failed", byIdBilling.status, byId.status);
         return res.status(500).json({ error: "Could not check user record." });
       }
     }
@@ -219,13 +271,23 @@ export default async function handler(req, res) {
 
     const freeUsed = Boolean(user.free_used);
     const paidCredits = Number(user.paid_credits || 0);
+    // Quota order: free report first, then the Premium monthly allowance,
+    // then paid credits. All of this is decided server-side.
+    const premium = premiumStatus(user);
 
-    if (freeUsed && paidCredits <= 0) {
+    if (freeUsed && premium.remaining <= 0 && paidCredits <= 0) {
       return res.status(402).json({
         error: "FREE_REPORT_USED",
-        message: "You have already used your free report. Additional reports will require paid credits."
+        message: "You have already used your free report. Additional reports will require paid credits or Premium."
       });
     }
+    // Which allowance pays for this report (decided now, applied after the
+    // report is generated successfully).
+    const consume = !freeUsed
+      ? "free"
+      : premium.remaining > 0
+        ? "premium"
+        : "paid";
 
 const prompt = `
 You are JapanOffer AI, an early-stage application priority analysis tool.
@@ -325,13 +387,22 @@ Return this exact JSON structure:
     const now = new Date().toISOString();
     const userFilter = `${userKey.column}=eq.${encodeURIComponent(userKey.value)}`;
 
-    if (!freeUsed) {
+    if (consume === "free") {
       await supabaseFetch(
         `${SUPABASE_URL}/rest/v1/users?${userFilter}`,
         SUPABASE_SERVICE_ROLE_KEY,
         {
           method: "PATCH",
           body: JSON.stringify({ free_used: true, last_report_at: now })
+        }
+      );
+    } else if (consume === "premium") {
+      await supabaseFetch(
+        `${SUPABASE_URL}/rest/v1/users?${userFilter}`,
+        SUPABASE_SERVICE_ROLE_KEY,
+        {
+          method: "PATCH",
+          body: JSON.stringify({ premium_credits_used: premium.used + 1, last_report_at: now })
         }
       );
     } else if (paidCredits > 0) {
@@ -363,8 +434,11 @@ Return this exact JSON structure:
     return res.status(200).json({
       success: true,
       report,
-      free_used_now: !freeUsed,
-      remaining_paid_credits: freeUsed ? Math.max(paidCredits - 1, 0) : paidCredits
+      free_used_now: consume === "free",
+      consumed_from: consume,
+      remaining_paid_credits: consume === "paid" ? Math.max(paidCredits - 1, 0) : paidCredits,
+      remaining_premium_credits: consume === "premium" ? Math.max(premium.remaining - 1, 0) : premium.remaining,
+      premium_active: premium.active
     });
 
   } catch (error) {
