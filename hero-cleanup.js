@@ -14,7 +14,7 @@
       body1: "JapanOffer AI helps international candidates find realistic cross-border roles, compare fit and risk, and prepare stronger applications.",
       body2: "Search real jobs, generate fit reports and enter a member network built for cross-border careers.",
       search: "Search jobs",
-      report: "Generate AI report",
+      report: "Generate your first match report — free",
       network: "Enter member network"
     },
     zh: {
@@ -23,7 +23,7 @@
       body1: "JapanOffer AI 帮跨境候选人搜索真实岗位、比较匹配度和风险，并准备更有方向的申请。",
       body2: "你可以搜索岗位、生成适配报告，并进入为跨境职业发展设计的会员网络。",
       search: "搜索岗位",
-      report: "生成 AI 报告",
+      report: "免费生成第一份匹配报告",
       network: "进入会员网络"
     },
     ja: {
@@ -32,7 +32,7 @@
       body1: "JapanOffer AI は、海外求人の検索、適性とリスクの比較、応募準備を一つの流れで支援します。",
       body2: "実際の求人検索、適性レポート、クロスボーダーキャリア向けのメンバーネットワークを利用できます。",
       search: "求人を検索",
-      report: "AI レポートを作成",
+      report: "最初のマッチングレポートを無料で作成",
       network: "ネットワークに入る"
     }
   };

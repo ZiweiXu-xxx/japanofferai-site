@@ -605,6 +605,7 @@
       .panel { border-radius:26px; }
     }
   </style>
+  <link rel="stylesheet" href="assets/css/design-system.css" />
 </head>
 
 <body>
@@ -793,7 +794,8 @@
         result:{ title:"Realistic application result", copy:"Your result will appear here.", copyBtn:"Copy", score:"Realistic apply score", summary:"Summary", barrier:"Qualification barrier", visa:"Visa/work-right risk", strategy:"Application strategy", next:"Next steps", disclaimer:"This is career planning information, not formal legal advice. Always check official visa rules, employer requirements and professional qualification rules." },
         empty:{ title:"Ready when you are.", copy:"Run the check to see your application priority, risks and next steps." },
         labels:{ low:"Low", medium:"Medium", high:"High", veryHigh:"Very high", priorityHigh:"High priority", priorityMed:"Medium priority", difficult:"Difficult", realistic:"Realistic", possible:"Possible with caution" },
-        copied:"Copied"
+        copied:"Copied",
+        footer:{copy:"Cross-border talent intelligence network.", product:"Product", jobs:"Search jobs", report:"Match report", pricing:"Pricing", network:"Member network", account:"Account", signup:"Create free account", login:"Sign in", accountPage:"Your account", feedback:"Feedback", stripe:"Secure checkout by Stripe. JapanOffer AI never sees or stores your card details."}
       },
       zh: {
         brand:{ subtitle:"跨境人才匹配网络" },
@@ -806,7 +808,8 @@
         result:{ title:"真实可申请性结果", copy:"你的结果会显示在这里。", copyBtn:"复制", score:"真实申请分数", summary:"总结", barrier:"资格门槛", visa:"签证/工作许可风险", strategy:"申请策略", next:"下一步", disclaimer:"这是职业规划信息，不构成正式法律意见。请始终核对官方签证规则、雇主要求和职业资格规则。" },
         empty:{ title:"准备好了就可以开始。", copy:"运行检查后，你会看到申请优先级、风险和下一步建议。" },
         labels:{ low:"低", medium:"中等", high:"高", veryHigh:"很高", priorityHigh:"高优先级", priorityMed:"中等优先级", difficult:"较难", realistic:"现实可投", possible:"可以谨慎尝试" },
-        copied:"已复制"
+        copied:"已复制",
+        footer:{copy:"跨境人才智能网络。", product:"产品", jobs:"搜索岗位", report:"匹配报告", pricing:"价格", network:"会员网络", account:"账户", signup:"免费创建账户", login:"登录", accountPage:"我的账户", feedback:"反馈", stripe:"Stripe 负责安全支付。JapanOffer AI 不会查看或保存你的银行卡信息。"}
       },
       ja: {
         brand:{ subtitle:"クロスボーダー人材ネットワーク" },
@@ -819,7 +822,8 @@
         result:{ title:"現実的な応募結果", copy:"結果がここに表示されます。", copyBtn:"コピー", score:"現実的な応募スコア", summary:"サマリー", barrier:"資格要件", visa:"ビザ・就労リスク", strategy:"応募戦略", next:"次のステップ", disclaimer:"これはキャリア計画情報であり、正式な法律助言ではありません。必ず公式のビザ規則、企業要件、専門資格ルールを確認してください。" },
         empty:{ title:"準備ができたら開始できます。", copy:"チェックを実行すると、応募優先度、リスク、次のステップが表示されます。" },
         labels:{ low:"低い", medium:"中程度", high:"高い", veryHigh:"非常に高い", priorityHigh:"高優先度", priorityMed:"中優先度", difficult:"難しい", realistic:"現実的", possible:"注意して応募可能" },
-        copied:"コピーしました"
+        copied:"コピーしました",
+        footer:{copy:"クロスボーダー人材インテリジェンスネットワーク。", product:"プロダクト", jobs:"求人を検索", report:"マッチングレポート", pricing:"料金", network:"メンバーネットワーク", account:"アカウント", signup:"無料アカウントを作成", login:"ログイン", accountPage:"マイアカウント", feedback:"フィードバック", stripe:"Stripe による安全な決済。JapanOffer AI がカード情報を閲覧・保存することはありません。"}
       }
     };
 
@@ -1066,5 +1070,35 @@
 
   <script src="mobile-header-fix.js"></script>
   <script src="mobile-text-fix.js"></script>
+  <footer class="ds-footer">
+    <div class="ds-footer-grid">
+      <div class="ds-footer-brand">
+        <strong>JapanOffer AI</strong>
+        <p data-i18n="footer.copy">Cross-border talent intelligence network.</p>
+      </div>
+      <div>
+        <h3 data-i18n="footer.product">Product</h3>
+        <ul>
+          <li><a href="jobs-search.html" data-i18n="footer.jobs">Search jobs</a></li>
+          <li><a href="report.html" data-i18n="footer.report">Match report</a></li>
+          <li><a href="pricing.html" data-i18n="footer.pricing">Pricing</a></li>
+          <li><a href="network.html" data-i18n="footer.network">Member network</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 data-i18n="footer.account">Account</h3>
+        <ul>
+          <li><a href="signup.html" data-i18n="footer.signup">Create free account</a></li>
+          <li><a href="login.html" data-i18n="footer.login">Sign in</a></li>
+          <li><a href="account.html" data-i18n="footer.accountPage">Your account</a></li>
+          <li><a href="feedback.html" data-i18n="footer.feedback">Feedback</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="ds-footer-bottom">
+      <span>© 2026 JapanOffer AI</span>
+      <span data-i18n="footer.stripe">Secure checkout by Stripe. JapanOffer AI never sees or stores your card details.</span>
+    </div>
+  </footer>
 </body>
 </html>
