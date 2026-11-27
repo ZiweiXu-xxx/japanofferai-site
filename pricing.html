@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="canonical" href="https://www.japanofferai.com/pricing" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="JapanOffer AI" />
+  <meta property="og:title" content="Pricing | JapanOffer AI" />
+  <meta property="og:description" content="Free job search and first AI report. Pay per report or go Premium for monthly AI reports." />
+  <meta property="og:url" content="https://www.japanofferai.com/pricing" />
+  <meta property="og:image" content="https://www.japanofferai.com/assets/images/dashboard-preview.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Pricing | JapanOffer AI" />
+  <meta name="twitter:description" content="Free job search and first AI report. Pay per report or go Premium for monthly AI reports." />
+  <meta name="twitter:image" content="https://www.japanofferai.com/assets/images/dashboard-preview.png" />
+  <link rel="alternate" hreflang="x-default" href="https://www.japanofferai.com/pricing" />
+  <link rel="alternate" hreflang="zh-CN" href="https://www.japanofferai.com/pricing?lang=zh" />
+  <link rel="alternate" hreflang="en" href="https://www.japanofferai.com/pricing?lang=en" />
+  <link rel="alternate" hreflang="ja" href="https://www.japanofferai.com/pricing?lang=ja" />
+  <title>Pricing | JapanOffer AI</title>
+  <meta name="description" content="Free job search and first AI report. Pay per report or go Premium for monthly AI reports." />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .price-amount { font-size: 2rem; font-weight: 700; margin: 0.25rem 0; }
+    .price-period { color: inherit; opacity: 0.75; font-size: 0.95rem; }
+    .price-card ul { margin: 0.75rem 0 1.25rem; padding-left: 1.1rem; }
+    .price-card ul li { margin: 0.35rem 0; }
+  </style>
+</head>
+<body class="auth-body">
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="JapanOffer AI home">
+      <span class="brand-mark">J</span>
+      <span class="brand-copy">
+        <strong>JapanOffer AI</strong>
+        <small>Cross-border Talent Network</small>
+      </span>
+    </a>
+    <div class="top-search" aria-label="Global platform search">
+      <span>⌕</span>
+      <input value="Search roles, talent or companies" />
+    </div>
+    <nav class="nav">
+      <a href="report.html">AI Report</a>
+      <a href="jobs.html">Jobs</a>
+      <a href="talent.html">Talent</a>
+      <a href="companies.html">Companies</a>
+      <a href="pricing.html">Pricing</a>
+    </nav>
+    <div class="auth-links">
+      <a class="signin-link" href="login.html">Sign in</a>
+      <a class="nav-cta" href="signup.html">Sign up</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <p class="eyebrow">Pricing</p>
+      <h1>Start free. Pay only for more reports.</h1>
+      <p>
+        Job search is always free, and your first AI report is free too.
+        Need more reports? Buy them one at a time, in a pack, or go Premium
+        for a monthly allowance. Secure checkout by Stripe.
+      </p>
+      <p class="auth-message info" data-checkout-banner hidden></p>
+      <p class="auth-message info" data-checkout-error hidden></p>
+    </section>
+
+    <section class="page-grid">
+      <article class="page-card price-card">
+        <span class="kicker">Free</span>
+        <h2>Free</h2>
+        <p class="price-amount">£0</p>
+        <ul>
+          <li>Unlimited job search</li>
+          <li>First AI report free</li>
+          <li>Basic job-search features</li>
+        </ul>
+        <a class="btn secondary" href="signup.html">Create a free account</a>
+      </article>
+
+      <article class="page-card price-card">
+        <span class="kicker">Single report</span>
+        <h2>Single AI Report</h2>
+        <p class="price-amount" data-price="single">…</p>
+        <ul>
+          <li><span data-product-credits="single">1 report</span></li>
+          <li>No subscription</li>
+          <li>Job matching analysis</li>
+        </ul>
+        <button class="btn primary" type="button" data-checkout-button data-product="single">Buy one report</button>
+      </article>
+
+      <article class="page-card price-card">
+        <span class="kicker">Report pack</span>
+        <h2>5-Report Pack</h2>
+        <p class="price-amount" data-price="pack">…</p>
+        <ul>
+          <li><span data-product-credits="pack">5 reports</span></li>
+          <li>Use any time, no expiry while your account is active</li>
+          <li>Works out cheaper per report</li>
+        </ul>
+        <button class="btn primary" type="button" data-checkout-button data-product="pack">Buy 5 reports</button>
+      </article>
+
+      <article class="page-card featured price-card">
+        <span class="kicker">Premium</span>
+        <h2>Premium Monthly</h2>
+        <p class="price-amount"><span data-price="premium">…</span> <span class="price-period">/ month</span></p>
+        <ul>
+          <li><span data-product-credits="premium">20 reports / month</span></li>
+          <li>Premium job matching</li>
+          <li>Premium member features</li>
+          <li>Cancel any time — Premium stays active until the period ends</li>
+        </ul>
+        <button class="btn primary" type="button" data-checkout-button data-product="premium">Go Premium</button>
+      </article>
+    </section>
+
+    <section class="wide-panel">
+      <p class="eyebrow">How billing works</p>
+      <h2>Your reports, your balance.</h2>
+      <p>
+        Your first AI report is free. After that, each AI report uses one
+        credit: single reports and packs add credits to your balance, and
+        Premium gives you 20 reports every billing month. Your remaining
+        balance is shown on the report pages and on your
+        <a href="account.html">account page</a>. Payments are processed by
+        Stripe; JapanOffer AI never sees or stores your card details.
+      </p>
+    </section>
+  </main>
+
+  <script src="auth-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth.js"></script>
+  <script src="billing.js"></script>
+  <script src="analytics.js"></script>
+</body>
+</html>
