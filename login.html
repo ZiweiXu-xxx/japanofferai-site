@@ -3,6 +3,21 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="canonical" href="https://www.japanofferai.com/login" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="JapanOffer AI" />
+  <meta property="og:title" content="Sign in | JapanOffer AI" />
+  <meta property="og:description" content="Sign in to JapanOffer AI." />
+  <meta property="og:url" content="https://www.japanofferai.com/login" />
+  <meta property="og:image" content="https://www.japanofferai.com/assets/images/dashboard-preview.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Sign in | JapanOffer AI" />
+  <meta name="twitter:description" content="Sign in to JapanOffer AI." />
+  <meta name="twitter:image" content="https://www.japanofferai.com/assets/images/dashboard-preview.png" />
+  <link rel="alternate" hreflang="x-default" href="https://www.japanofferai.com/login" />
+  <link rel="alternate" hreflang="zh-CN" href="https://www.japanofferai.com/login?lang=zh" />
+  <link rel="alternate" hreflang="en" href="https://www.japanofferai.com/login?lang=en" />
+  <link rel="alternate" hreflang="ja" href="https://www.japanofferai.com/login?lang=ja" />
   <title>Sign in | JapanOffer AI</title>
 
   <style>
@@ -463,19 +478,18 @@
       return window.supabase.createClient(supabaseUrl, supabaseKey);
     }
 
+    // Shows only a generic connection status. The Supabase project ref and
+    // URL used to be printed here on the login page; that leaks backend
+    // details to anyone who opens the page, so it was removed (2026-11-27).
     function showProjectInfo() {
       const box = document.getElementById("projectInfo");
       try {
         const { supabaseUrl, supabaseKey } = getSupabaseConfig();
-        if (!supabaseUrl || !supabaseKey) {
-          box.textContent = t("missing");
-          return;
-        }
-        const host = new URL(supabaseUrl).host;
-        const ref = host.split(".")[0];
-        box.textContent = "Connected project ref: " + ref + " | URL: " + supabaseUrl;
+        box.textContent = (supabaseUrl && supabaseKey)
+          ? "Backend connected."
+          : t("missing");
       } catch (e) {
-        box.textContent = String(e.message || e);
+        box.textContent = t("missing");
       }
     }
 

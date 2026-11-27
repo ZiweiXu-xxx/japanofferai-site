@@ -16,6 +16,44 @@
 // ADZUNA_APP_ID
 // ADZUNA_APP_KEY
 
+const crypto = require("crypto");
+
+// Timing-safe password comparison: hash both sides with SHA-256 first so
+// the comparison is constant-time regardless of password length, instead
+// of the previous plain `!==` string comparison.
+function passwordsMatch(provided, expected) {
+  const a = crypto.createHash("sha256").update(String(provided || "")).digest();
+  const b = crypto.createHash("sha256").update(String(expected || "")).digest();
+  return crypto.timingSafeEqual(a, b);
+}
+
+// In-memory per-IP rate limit for admin attempts (best-effort on
+// serverless; buckets reset when the function instance is recycled).
+// This slows password guessing against this endpoint.
+const ADMIN_RATE_WINDOW_MS = 60 * 1000;
+const ADMIN_RATE_MAX_PER_MINUTE = 10;
+const adminRateBuckets = new Map();
+
+function adminRateLimited(ip) {
+  const now = Date.now();
+  const bucket = adminRateBuckets.get(ip) || { count: 0, resetAt: now + ADMIN_RATE_WINDOW_MS };
+  if (now > bucket.resetAt) {
+    bucket.count = 0;
+    bucket.resetAt = now + ADMIN_RATE_WINDOW_MS;
+  }
+  bucket.count += 1;
+  adminRateBuckets.set(ip, bucket);
+  return bucket.count > ADMIN_RATE_MAX_PER_MINUTE;
+}
+
+function getClientIp(req) {
+  const forwarded = req.headers["x-forwarded-for"];
+  if (typeof forwarded === "string" && forwarded) {
+    return forwarded.split(",")[0].trim();
+  }
+  return (req.socket && req.socket.remoteAddress) || "unknown";
+}
+
 const DEFAULT_KEYWORDS = [
   "legal compliance",
   "compliance analyst",
@@ -619,7 +657,16 @@ module.exports = async function handler(req, res) {
     const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : (req.body || {});
     const password = clean(body.password);
 
-    if (!process.env.ADMIN_PASSWORD || password !== process.env.ADMIN_PASSWORD) {
+    if (adminRateLimited(getClientIp(req))) {
+      res.setHeader("Retry-After", "60");
+      return json(res, 429, { ok: false, error: "Too many requests. Please try again in a minute." });
+    }
+
+    if (!process.env.ADMIN_PASSWORD) {
+      return json(res, 500, { ok: false, error: "ADMIN_PASSWORD is not configured." });
+    }
+
+    if (!passwordsMatch(password, process.env.ADMIN_PASSWORD)) {
       return json(res, 401, { ok: false, error: "Invalid admin password." });
     }
 
