@@ -22,13 +22,13 @@
 
   <style>
     :root {
-      --bg: #f4f7fb;
-      --ink: #101828;
-      --muted: #667085;
-      --line: rgba(16, 24, 40, 0.1);
-      --blue: #1f57c8;
+      --bg: #060F22;
+      --ink: #EAF0FB;
+      --muted: #93A5C4;
+      --line: rgba(255,255,255,.12);
+      --blue: #3B74E8;
       --blue-2: #2f6df6;
-      --card: rgba(255,255,255,.82);
+      --card: rgba(12,33,72,.85);
       --shadow: 0 26px 80px rgba(31,87,200,.14);
     }
 
@@ -42,7 +42,7 @@
       background:
         radial-gradient(circle at top left, rgba(47,109,246,.15), transparent 34%),
         radial-gradient(circle at 78% 10%, rgba(214,179,106,.13), transparent 30%),
-        linear-gradient(180deg, #f8fbff 0%, #f1f5fb 55%, #edf3fa 100%);
+        linear-gradient(180deg, #10295A 0%, #060F22 55%, #071633 100%);
       overflow-x: hidden;
     }
 
@@ -99,14 +99,14 @@
     .top-search {
       height: 46px;
       border: 1px solid var(--line);
-      background: rgba(255,255,255,.72);
+      background: rgba(12,33,72,0.72);
       border-radius: 999px;
       display: flex;
       align-items: center;
       gap: 10px;
       padding: 0 14px;
       min-width: 0;
-      box-shadow: 0 12px 40px rgba(16,24,40,.06);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.26);
     }
 
     .top-search span {
@@ -127,7 +127,7 @@
       display: flex;
       align-items: center;
       gap: 16px;
-      color: #344054;
+      color: #C6D2E8;
       font-size: 14px;
       font-weight: 800;
       white-space: nowrap;
@@ -140,8 +140,8 @@
       width: 84px;
       border-radius: 999px;
       border: 1px solid var(--line);
-      background: rgba(255,255,255,.86);
-      color: #344054;
+      background: rgba(12,33,72,0.86);
+      color: #C6D2E8;
       padding: 0 8px;
       font-size: 12px;
       font-weight: 850;
@@ -199,7 +199,7 @@
 
     .lede {
       margin: 24px 0 0;
-      color: #475467;
+      color: #AEBCD8;
       font-size: 18px;
       line-height: 1.7;
       max-width: 620px;
@@ -215,19 +215,19 @@
       padding: 16px 18px;
       border: 1px solid var(--line);
       border-radius: 20px;
-      background: rgba(255,255,255,.68);
+      background: rgba(12,33,72,0.68);
       display: grid;
       grid-template-columns: 36px 1fr;
       gap: 13px;
       align-items: start;
-      box-shadow: 0 14px 38px rgba(16,24,40,.05);
+      box-shadow: 0 14px 38px rgba(0,0,0,0.25);
     }
 
     .benefit span {
       width: 36px;
       height: 36px;
       border-radius: 12px;
-      background: #eaf2ff;
+      background: #10295A;
       color: var(--blue);
       display: grid;
       place-items: center;
@@ -312,7 +312,7 @@
     }
 
     label {
-      color: #344054;
+      color: #C6D2E8;
       font-size: 13px;
       font-weight: 850;
     }
@@ -323,7 +323,7 @@
       height: 48px;
       border: 1px solid var(--line);
       border-radius: 15px;
-      background: #fff;
+      background: #0C2148;
       color: var(--ink);
       outline: 0;
       padding: 0 14px;
@@ -367,7 +367,7 @@
       padding: 13px 14px;
       border-radius: 16px;
       background: rgba(31,87,200,.08);
-      color: #234b9a;
+      color: #BFD2F7;
       line-height: 1.55;
       font-size: 14px;
       display: none;
@@ -381,12 +381,12 @@
 
     .auth-message.success {
       background: rgba(16,185,129,.1);
-      color: #047857;
+      color: #C6D2E8;
     }
 
     .auth-message.error {
       background: rgba(239,68,68,.1);
-      color: #b42318;
+      color: #F87171;
     }
 
     .fine-print {

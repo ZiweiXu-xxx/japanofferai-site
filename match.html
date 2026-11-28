@@ -22,14 +22,14 @@
   <link rel="stylesheet" href="styles.css" />
   <style>
     :root {
-      --jo22-blue: #0a66c2;
-      --jo22-blue-dark: #003f88;
-      --jo22-ink: #061a33;
-      --jo22-muted: #5f7086;
+      --jo22-blue: #3B74E8;
+      --jo22-blue-dark: #93B8FD;
+      --jo22-ink: #EAF0FB;
+      --jo22-muted: #93A5C4;
       --jo22-soft: #eef6ff;
       --jo22-line: rgba(6, 26, 51, .10);
       --jo22-card: rgba(255,255,255,.82);
-      --jo22-shadow: 0 24px 80px rgba(10, 35, 68, .10);
+      --jo22-shadow: 0 24px 80px rgba(0,0,0,0.3);
     }
 
     * {
@@ -42,7 +42,7 @@
       background:
         radial-gradient(circle at 8% 12%, rgba(10,102,194,.15), transparent 30%),
         radial-gradient(circle at 88% 5%, rgba(60,150,255,.16), transparent 34%),
-        linear-gradient(135deg, #f7fbff 0%, #ffffff 48%, #edf5ff 100%);
+        linear-gradient(135deg, #060F22 0%, #0A1F44 48%, #071633 100%);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
     }
 
@@ -56,7 +56,7 @@
       gap: 18px;
       min-height: 76px;
       padding: 15px 30px;
-      background: rgba(255,255,255,.86);
+      background: rgba(12,33,72,0.86);
       border-bottom: 1px solid var(--jo22-line);
       backdrop-filter: blur(18px);
     }
@@ -104,7 +104,7 @@
     }
 
     .jo22-nav a {
-      color: #243650;
+      color: #DCE6F7;
       text-decoration: none;
       font-size: 14px;
       font-weight: 850;
@@ -158,7 +158,7 @@
     .jo22-subtitle {
       max-width: 660px;
       margin: 24px 0 0;
-      color: #50637a;
+      color: #C6D2E8;
       font-size: 17px;
       line-height: 1.75;
       font-weight: 680;
@@ -168,9 +168,9 @@
       margin-top: 26px;
       padding: 18px;
       border-radius: 24px;
-      background: rgba(255,255,255,.68);
+      background: rgba(12,33,72,0.68);
       border: 1px solid var(--jo22-line);
-      box-shadow: 0 18px 56px rgba(10,35,68,.07);
+      box-shadow: 0 18px 56px rgba(0,0,0,0.27);
     }
 
     .jo22-sample strong {
@@ -181,7 +181,7 @@
 
     .jo22-sample p {
       margin: 0;
-      color: #53667d;
+      color: #C6D2E8;
       font-size: 14px;
       line-height: 1.75;
       font-weight: 650;
@@ -223,7 +223,7 @@
       border-radius: 22px;
       padding: 18px;
       outline: none;
-      background: rgba(255,255,255,.93);
+      background: rgba(12,33,72,0.93);
       color: var(--jo22-ink);
       font: inherit;
       font-size: 15px;
@@ -246,7 +246,7 @@
       min-height: 54px;
       border: 1px solid rgba(6,26,51,.13);
       border-radius: 18px;
-      background: rgba(255,255,255,.93);
+      background: rgba(12,33,72,0.93);
       padding: 0 14px;
       color: var(--jo22-ink);
       font: inherit;
@@ -266,7 +266,7 @@
       min-height: 54px;
       border: 1px solid rgba(6,26,51,.13);
       border-radius: 18px;
-      background: rgba(255,255,255,.93);
+      background: rgba(12,33,72,0.93);
       padding: 0 14px;
       color: var(--jo22-ink);
       font: inherit;
@@ -335,7 +335,7 @@
     .jo22-route-card,
     .jo22-role-card {
       border-radius: 30px;
-      background: rgba(255,255,255,.78);
+      background: rgba(12,33,72,0.78);
       border: 1px solid var(--jo22-line);
       box-shadow: var(--jo22-shadow);
       backdrop-filter: blur(14px);
@@ -356,7 +356,7 @@
     .jo22-result-title p {
       margin: 13px 0 0;
       max-width: 820px;
-      color: #52647a;
+      color: #AEBCD8;
       font-size: 15px;
       line-height: 1.72;
       font-weight: 680;
@@ -432,7 +432,7 @@
       margin-bottom: 14px;
       border-radius: 999px;
       background: rgba(10,102,194,.10);
-      color: #064b93;
+      color: #93B8FD;
       font-size: 12px;
       font-weight: 950;
     }
@@ -459,14 +459,14 @@
       padding: 0 10px;
       border-radius: 999px;
       background: rgba(6,26,51,.06);
-      color: #405168;
+      color: #C6D2E8;
       font-size: 12px;
       font-weight: 850;
     }
 
     .jo22-role-card p {
       margin: 0;
-      color: #52647a;
+      color: #AEBCD8;
       font-size: 13px;
       line-height: 1.66;
       font-weight: 650;
@@ -490,7 +490,7 @@
       padding: 22px;
       min-height: 300px;
       background:
-        linear-gradient(180deg, rgba(255,255,255,.88), rgba(255,255,255,.72)),
+        linear-gradient(180deg, rgba(12,33,72,0.88), rgba(12,33,72,0.72)),
         radial-gradient(circle at top right, rgba(10,102,194,.12), transparent 36%);
     }
 
@@ -512,7 +512,7 @@
 
     .jo22-company {
       margin: 0 0 12px;
-      color: #233956;
+      color: #EAF0FB;
       font-size: 15px;
       line-height: 1.55;
       font-weight: 850;
@@ -521,7 +521,7 @@
     .jo22-route-card ul {
       margin: 12px 0 0;
       padding-left: 18px;
-      color: #52647a;
+      color: #AEBCD8;
       font-size: 13px;
       line-height: 1.65;
       font-weight: 650;
@@ -568,7 +568,7 @@
     .jo22-info-item {
       padding: 16px;
       border-radius: 20px;
-      background: rgba(247,250,255,.94);
+      background: rgba(16,41,90,0.94);
       border: 1px solid rgba(6,26,51,.08);
     }
 
@@ -581,7 +581,7 @@
 
     .jo22-info-item span {
       display: block;
-      color: #52647a;
+      color: #AEBCD8;
       font-size: 13px;
       line-height: 1.68;
       font-weight: 650;
@@ -601,7 +601,7 @@
       padding: 0 11px;
       border-radius: 999px;
       background: rgba(10,102,194,.09);
-      color: #064b93;
+      color: #93B8FD;
       font-size: 12px;
       font-weight: 850;
     }
@@ -615,7 +615,7 @@
 
     .jo22-secondary {
       border: 1px solid rgba(10,102,194,.18);
-      background: rgba(255,255,255,.80);
+      background: rgba(12,33,72,0.8);
       color: var(--jo22-blue);
       border-radius: 999px;
       padding: 11px 14px;
@@ -631,7 +631,7 @@
       padding: 12px 14px;
       border-radius: 16px;
       background: rgba(16,185,129,.1);
-      color: #047857;
+      color: #C6D2E8;
       font-size: 13px;
       font-weight: 800;
     }

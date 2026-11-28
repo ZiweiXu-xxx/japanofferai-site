@@ -101,9 +101,9 @@
         align-items: center;
         padding: 20px 22px;
         border-radius: 26px;
-        background: linear-gradient(135deg, rgba(31,87,200,.10), rgba(255,255,255,.88));
-        border: 1px solid rgba(16,24,40,.10);
-        box-shadow: 0 18px 54px rgba(16,24,40,.08);
+        background: linear-gradient(135deg, rgba(31,87,200,.10), rgba(12,33,72,0.88));
+        border: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 18px 54px rgba(0,0,0,0.28);
         backdrop-filter: blur(18px);
       }
 
@@ -111,14 +111,14 @@
       .jo-legal-section h2 {
         margin: 0;
         letter-spacing: -0.055em;
-        color: #07111f;
+        color: #EAF0FB;
       }
 
       .jo-legal-banner h2 { font-size: 24px; }
 
       .jo-legal-banner p {
         margin: 6px 0 0;
-        color: #5c6b82;
+        color: #AEBCD8;
         line-height: 1.6;
       }
 
@@ -150,7 +150,7 @@
 
       .jo-legal-kicker {
         margin: 0 0 12px;
-        color: #1f57c8;
+        color: #7AA5F8;
         text-transform: uppercase;
         letter-spacing: .16em;
         font-size: 12px;
@@ -163,7 +163,7 @@
       }
 
       .jo-legal-head p {
-        color: #5c6b82;
+        color: #AEBCD8;
         line-height: 1.7;
         font-size: 17px;
       }
@@ -177,13 +177,13 @@
       .jo-legal-card {
         padding: 22px;
         border-radius: 28px;
-        background: rgba(255,255,255,.82);
-        border: 1px solid rgba(16,24,40,.10);
-        box-shadow: 0 18px 54px rgba(16,24,40,.07);
+        background: rgba(12,33,72,0.82);
+        border: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 18px 54px rgba(0,0,0,0.27);
       }
 
       .jo-legal-card span {
-        color: #1f57c8;
+        color: #7AA5F8;
         font-weight: 950;
       }
 
@@ -195,7 +195,7 @@
 
       .jo-legal-card p {
         margin: 0;
-        color: #5c6b82;
+        color: #AEBCD8;
         font-size: 14px;
         line-height: 1.65;
       }
@@ -203,7 +203,7 @@
       .jo-legal-disclaimer {
         margin-top: 16px;
         text-align: center;
-        color: #7b8798;
+        color: #93A5C4;
         font-size: 12px;
         line-height: 1.6;
       }
