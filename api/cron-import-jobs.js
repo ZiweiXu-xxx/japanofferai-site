@@ -98,6 +98,12 @@ module.exports = async function handler(req, res) {
     // leaves the server.
     const proto = req.headers["x-forwarded-proto"] || "https";
     const host = req.headers.host;
+    if (!host) {
+      // Vercel always sends Host on real cron invocations; without it
+      // there is no address to call back into, so fail loudly instead
+      // of fetching https://undefined/...
+      return json(res, 500, { ok: false, error: "Missing host header." });
+    }
     const importUrl = `${proto}://${host}/api/import-public-jobs`;
 
     const importResponse = await fetch(importUrl, {

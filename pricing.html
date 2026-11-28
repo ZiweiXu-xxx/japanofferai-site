@@ -28,6 +28,7 @@
     .price-card ul li { margin: 0.35rem 0; }
   </style>
   <link rel="stylesheet" href="assets/css/design-system.css?v=2" />
+  <script src="site-lang.js"></script>
 </head>
 <body class="auth-body">
   <header class="topbar">
@@ -35,34 +36,32 @@
       <span class="brand-mark">J</span>
       <span class="brand-copy">
         <strong>JapanOffer AI</strong>
-        <small>Cross-border Talent Network</small>
+        <small data-i18n="brand.subtitle">Cross-border Talent Network</small>
       </span>
     </a>
     <div class="top-search" aria-label="Global platform search">
       <span>⌕</span>
-      <input value="Search roles, talent or companies" />
+      <input data-i18n-value="search.value" value="Search roles, talent or companies" />
     </div>
     <nav class="nav">
-      <a href="report.html">Match Report</a>
-      <a href="jobs.html">Jobs</a>
-      <a href="talent.html">Talent</a>
-      <a href="companies.html">Companies</a>
-      <a href="pricing.html">Pricing</a>
+      <a href="report.html" data-i18n="nav.report">Match Report</a>
+      <a href="jobs.html" data-i18n="nav.jobs">Jobs</a>
+      <a href="talent.html" data-i18n="nav.talent">Talent</a>
+      <a href="companies.html" data-i18n="nav.companies">Companies</a>
+      <a href="pricing.html" data-i18n="nav.pricing">Pricing</a>
     </nav>
     <div class="auth-links">
-      <a class="signin-link" href="login.html">Sign in</a>
-      <a class="nav-cta" href="signup.html">Sign up</a>
+      <a class="signin-link" href="login.html" data-i18n="auth.signIn">Sign in</a>
+      <a class="nav-cta" href="signup.html" data-i18n="auth.signUp">Sign up</a>
     </div>
   </header>
 
   <main>
     <section class="page-hero">
-      <p class="eyebrow">Pricing</p>
-      <h1>Start free. Pay only for more reports.</h1>
+      <p class="eyebrow" data-i18n="hero.eyebrow">Pricing</p>
+      <h1 data-i18n="hero.title">Start free. Pay only for more reports.</h1>
       <p>
-        Job search is always free, and your first match report is free too.
-        Need more reports? Buy them one at a time, in a pack, or go Premium
-        for a monthly allowance. Secure checkout by Stripe.
+        <span data-i18n="hero.copy">Job search is always free, and your first match report is free too. Need more reports? Buy them one at a time, in a pack, or go Premium for a monthly allowance. Secure checkout by Stripe.</span>
       </p>
       <p class="auth-message info" data-checkout-banner hidden></p>
       <p class="auth-message info" data-checkout-error hidden></p>
@@ -70,63 +69,63 @@
 
     <section class="page-grid">
       <article class="page-card price-card">
-        <span class="kicker">Free</span>
-        <h2>Free</h2>
+        <span class="kicker" data-i18n="plan.freeKicker">Free</span>
+        <h2 data-i18n="plan.freeTitle">Free</h2>
         <p class="price-amount">£0</p>
         <ul>
-          <li>Unlimited job search</li>
-          <li>First match report free</li>
-          <li>Basic job-search features</li>
+          <li data-i18n="plan.free1">Unlimited job search</li>
+          <li data-i18n="plan.free2">First match report free</li>
+          <li data-i18n="plan.free3">Basic job-search features</li>
         </ul>
-        <a class="btn secondary" href="signup.html">Create a free account</a>
+        <a class="btn secondary" href="signup.html" data-i18n="plan.freeCta">Create a free account</a>
       </article>
 
       <article class="page-card price-card">
-        <span class="kicker">Single report</span>
-        <h2>Single Match Report</h2>
+        <span class="kicker" data-i18n="plan.singleKicker">Single report</span>
+        <h2 data-i18n="plan.singleTitle">Single Match Report</h2>
         <p class="price-amount" data-price="single">…</p>
         <ul>
           <li><span data-product-credits="single">1 report</span></li>
-          <li>No subscription</li>
-          <li>Job matching analysis</li>
+          <li data-i18n="plan.single2">No subscription</li>
+          <li data-i18n="plan.single3">Job matching analysis</li>
         </ul>
-        <button class="btn primary" type="button" data-checkout-button data-product="single">Buy one report</button>
+        <button class="btn primary" type="button" data-checkout-button data-product="single" data-i18n="plan.singleCta">Buy one report</button>
       </article>
 
       <article class="page-card price-card">
-        <span class="ds-badge ds-badge-teal ds-price-badge">Best value</span>
-        <span class="kicker">Report pack</span>
-        <h2>5-Report Pack</h2>
+        <span class="ds-badge ds-badge-teal ds-price-badge" data-i18n="plan.packBadge">Best value</span>
+        <span class="kicker" data-i18n="plan.packKicker">Report pack</span>
+        <h2 data-i18n="plan.packTitle">5-Report Pack</h2>
         <p class="price-amount" data-price="pack">…</p>
         <ul>
           <li><span data-product-credits="pack">5 reports</span></li>
-          <li>Use any time, no expiry while your account is active</li>
-          <li>Works out cheaper per report</li>
+          <li data-i18n="plan.pack2">Use any time, no expiry while your account is active</li>
+          <li data-i18n="plan.pack3">Works out cheaper per report</li>
         </ul>
-        <button class="btn primary" type="button" data-checkout-button data-product="pack">Buy 5 reports</button>
+        <button class="btn primary" type="button" data-checkout-button data-product="pack" data-i18n="plan.packCta">Buy 5 reports</button>
       </article>
 
       <article class="page-card featured price-card">
-        <span class="ds-badge ds-badge-gold ds-price-badge">Most popular</span>
-        <span class="kicker">Premium</span>
-        <h2>Premium Monthly</h2>
-        <p class="price-amount"><span data-price="premium">…</span> <span class="price-period">/ month</span></p>
+        <span class="ds-badge ds-badge-gold ds-price-badge" data-i18n="plan.premiumBadge">Most popular</span>
+        <span class="kicker" data-i18n="plan.premiumKicker">Premium</span>
+        <h2 data-i18n="plan.premiumTitle">Premium Monthly</h2>
+        <p class="price-amount"><span data-price="premium">…</span> <span class="price-period" data-i18n="plan.perMonth">/ month</span></p>
         <ul>
           <li><span data-product-credits="premium">20 reports / month</span></li>
-          <li>Premium job matching</li>
-          <li>Premium member features</li>
-          <li>Cancel any time — Premium stays active until the period ends</li>
+          <li data-i18n="plan.premium2">Premium job matching</li>
+          <li data-i18n="plan.premium3">Premium member features</li>
+          <li data-i18n="plan.premium4">Cancel any time — Premium stays active until the period ends</li>
         </ul>
-        <button class="btn primary" type="button" data-checkout-button data-product="premium">Go Premium</button>
+        <button class="btn primary" type="button" data-checkout-button data-product="premium" data-i18n="plan.premiumCta">Go Premium</button>
       </article>
     </section>
 
-    <p class="trust-note" style="text-align:center;margin:4px 0 28px">Secure checkout by Stripe · JapanOffer AI never sees or stores your card details · Cancel Premium any time</p>
+    <p class="trust-note" style="text-align:center;margin:4px 0 28px" data-i18n="trust.note">Secure checkout by Stripe · JapanOffer AI never sees or stores your card details · Cancel Premium any time</p>
 
     <section class="wide-panel">
-      <p class="eyebrow">How billing works</p>
-      <h2>Your reports, your balance.</h2>
-      <p>
+      <p class="eyebrow" data-i18n="billing.eyebrow">How billing works</p>
+      <h2 data-i18n="billing.title">Your reports, your balance.</h2>
+      <p data-i18n-html="billing.copy">
         Your first match report is free. After that, each match report uses one
         credit: single reports and packs add credits to your balance, and
         Premium gives you 20 reports every billing month. Your remaining
@@ -172,5 +171,172 @@
       <span>Secure checkout by Stripe. JapanOffer AI never sees or stores your card details.</span>
     </div>
   </footer>
+
+  <script>
+  // pricing page language. Follows the shared language (window.JOLang).
+  (function () {
+    var dict = {
+      en: {
+        "brand.subtitle": "Cross-border Talent Network",
+        "search.value": "Search roles, talent or companies",
+        "nav.report": "Match Report",
+        "nav.jobs": "Jobs",
+        "nav.talent": "Talent",
+        "nav.companies": "Companies",
+        "nav.pricing": "Pricing",
+        "auth.signIn": "Sign in",
+        "auth.signUp": "Sign up",
+        "hero.eyebrow": "Pricing",
+        "hero.title": "Start free. Pay only for more reports.",
+        "hero.copy": "Job search is always free, and your first match report is free too. Need more reports? Buy them one at a time, in a pack, or go Premium for a monthly allowance. Secure checkout by Stripe.",
+        "plan.freeKicker": "Free",
+        "plan.freeTitle": "Free",
+        "plan.free1": "Unlimited job search",
+        "plan.free2": "First match report free",
+        "plan.free3": "Basic job-search features",
+        "plan.freeCta": "Create a free account",
+        "plan.singleKicker": "Single report",
+        "plan.singleTitle": "Single Match Report",
+        "plan.single2": "No subscription",
+        "plan.single3": "Job matching analysis",
+        "plan.singleCta": "Buy one report",
+        "plan.packBadge": "Best value",
+        "plan.packKicker": "Report pack",
+        "plan.packTitle": "5-Report Pack",
+        "plan.pack2": "Use any time, no expiry while your account is active",
+        "plan.pack3": "Works out cheaper per report",
+        "plan.packCta": "Buy 5 reports",
+        "plan.premiumBadge": "Most popular",
+        "plan.premiumKicker": "Premium",
+        "plan.premiumTitle": "Premium Monthly",
+        "plan.perMonth": "/ month",
+        "plan.premium2": "Premium job matching",
+        "plan.premium3": "Premium member features",
+        "plan.premium4": "Cancel any time — Premium stays active until the period ends",
+        "plan.premiumCta": "Go Premium",
+        "trust.note": "Secure checkout by Stripe · JapanOffer AI never sees or stores your card details · Cancel Premium any time",
+        "billing.eyebrow": "How billing works",
+        "billing.title": "Your reports, your balance.",
+      "billing.copy": "Your first match report is free. After that, each match report uses one credit: single reports and packs add credits to your balance, and Premium gives you 20 reports every billing month. Your remaining balance is shown on the report pages and on your <a href=\"account.html\">account page</a>. Payments are processed by Stripe; JapanOffer AI never sees or stores your card details."
+      },
+      zh: {
+        "brand.subtitle": "跨境人才匹配网络",
+        "search.value": "搜索岗位、人才或企业",
+        "nav.report": "匹配报告",
+        "nav.jobs": "职位",
+        "nav.talent": "人才",
+        "nav.companies": "企业",
+        "nav.pricing": "价格",
+        "auth.signIn": "登录",
+        "auth.signUp": "注册",
+        "hero.eyebrow": "价格",
+        "hero.title": "免费开始，只为更多报告付费。",
+        "hero.copy": "找工作永远免费，第一份匹配报告也免费。需要更多报告？可以单份购买、买套餐，或开通 Premium 按月使用。Stripe 安全支付。",
+        "plan.freeKicker": "免费",
+        "plan.freeTitle": "免费",
+        "plan.free1": "无限次找工作",
+        "plan.free2": "第一份匹配报告免费",
+        "plan.free3": "基础找工作功能",
+        "plan.freeCta": "免费注册",
+        "plan.singleKicker": "单份报告",
+        "plan.singleTitle": "单份匹配报告",
+        "plan.single2": "无需订阅",
+        "plan.single3": "岗位匹配分析",
+        "plan.singleCta": "购买一份报告",
+        "plan.packBadge": "最划算",
+        "plan.packKicker": "报告套餐",
+        "plan.packTitle": "5 份报告套餐",
+        "plan.pack2": "随时可用，账户有效期内不过期",
+        "plan.pack3": "单份更便宜",
+        "plan.packCta": "购买 5 份报告",
+        "plan.premiumBadge": "最受欢迎",
+        "plan.premiumKicker": "Premium",
+        "plan.premiumTitle": "Premium 月费",
+        "plan.perMonth": "/ 月",
+        "plan.premium2": "Premium 岗位匹配",
+        "plan.premium3": "Premium 会员功能",
+        "plan.premium4": "随时取消 — Premium 权益保留到周期结束",
+        "plan.premiumCta": "开通 Premium",
+        "trust.note": "Stripe 安全支付 · JapanOffer AI 不会看到或保存你的银行卡信息 · 随时取消 Premium",
+        "billing.eyebrow": "计费方式",
+        "billing.title": "你的报告，你的余额。",
+      "billing.copy": "第一份匹配报告免费。之后每份匹配报告消耗 1 次额度：单份和套餐会给余额加次数，Premium 每月给 20 次。剩余次数显示在报告页和你的<a href=\"account.html\">账户页</a>。支付由 Stripe 处理；JapanOffer AI 不会看到或保存你的银行卡信息。"
+      },
+      ja: {
+        "brand.subtitle": "クロスボーダー人材ネットワーク",
+        "search.value": "求人、人材、企業を検索",
+        "nav.report": "マッチングレポート",
+        "nav.jobs": "求人",
+        "nav.talent": "人材",
+        "nav.companies": "企業",
+        "nav.pricing": "料金",
+        "auth.signIn": "ログイン",
+        "auth.signUp": "登録",
+        "hero.eyebrow": "料金",
+        "hero.title": "無料で始めて、追加のレポートだけ有料。",
+        "hero.copy": "求人検索はいつでも無料で、最初のマッチングレポートも無料です。さらに必要な場合は、1件ずつ、パックで、または Premium の月額プランで購入できます。Stripe による安全な決済です。",
+        "plan.freeKicker": "無料",
+        "plan.freeTitle": "無料",
+        "plan.free1": "求人検索は無制限",
+        "plan.free2": "最初のマッチングレポート無料",
+        "plan.free3": "基本的な求人検索機能",
+        "plan.freeCta": "無料アカウントを作成",
+        "plan.singleKicker": "単発レポート",
+        "plan.singleTitle": "単発マッチングレポート",
+        "plan.single2": "サブスクリプション不要",
+        "plan.single3": "求人マッチング分析",
+        "plan.singleCta": "レポートを1件購入",
+        "plan.packBadge": "お得",
+        "plan.packKicker": "レポートパック",
+        "plan.packTitle": "5件レポートパック",
+        "plan.pack2": "いつでも利用可能、アカウント有効中は期限なし",
+        "plan.pack3": "1件あたりお得",
+        "plan.packCta": "5件のレポートを購入",
+        "plan.premiumBadge": "人気No.1",
+        "plan.premiumKicker": "Premium",
+        "plan.premiumTitle": "Premium 月額",
+        "plan.perMonth": "/ 月",
+        "plan.premium2": "Premium 求人マッチング",
+        "plan.premium3": "Premium 会員機能",
+        "plan.premium4": "いつでも解約可能 — Premium は期間終了まで有効",
+        "plan.premiumCta": "Premium に登録",
+        "trust.note": "Stripe による安全な決済 · JapanOffer AI はカード情報を確認・保存しません · Premium はいつでも解約可能",
+        "billing.eyebrow": "課金の仕組み",
+        "billing.title": "あなたのレポート、あなたの残高。",
+      "billing.copy": "最初のマッチングレポートは無料です。その後はレポート1件につき1クレジットを使用します。単発やパックで残高にクレジットが追加され、Premium では毎月20件が付与されます。残高はレポートページと<a href=\"account.html\">アカウントページ</a>に表示されます。決済は Stripe が処理し、JapanOffer AI はカード情報を確認・保存しません。"
+      }
+    };
+    function lang() {
+      if (window.JOLang) return window.JOLang.get();
+      return localStorage.getItem("japanoffer_lang") || "en";
+    }
+    function apply() {
+      var t = dict[lang()] || dict.en;
+      document.documentElement.lang = lang() === "zh" ? "zh-CN" : lang();
+      document.querySelectorAll("[data-i18n]").forEach(function (el) {
+        var v = t[el.dataset.i18n];
+        if (v !== undefined) el.textContent = v;
+      });
+      document.querySelectorAll("[data-i18n-html]").forEach(function (el) {
+        var v = t[el.dataset.i18nHtml];
+        if (v !== undefined) el.innerHTML = v;
+      });
+      document.querySelectorAll("[data-i18n-placeholder]").forEach(function (el) {
+        var v = t[el.dataset.i18nPlaceholder];
+        if (v !== undefined) el.setAttribute("placeholder", v);
+      });
+      document.querySelectorAll("[data-i18n-value]").forEach(function (el) {
+        var v = t[el.dataset.i18nValue];
+        if (v !== undefined) el.value = v;
+      });
+    }
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", apply);
+    else apply();
+    window.addEventListener("japanoffer:languagechange", apply);
+    window.addEventListener("storage", apply);
+    setTimeout(apply, 300);
+    setTimeout(apply, 1000);
+  })();
+  </script>
 </body>
 </html>

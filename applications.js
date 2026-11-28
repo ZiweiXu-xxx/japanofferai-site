@@ -64,6 +64,14 @@
     return { url, key };
   }
 
+  // UI strings follow the shared language via applications-lang.js
+  // (window.JOAppsLang), loaded before this file. Falls back to the key
+  // itself if the lang file did not load.
+  function t(key, vars) {
+    if (window.JOAppsLang) return window.JOAppsLang.t(key, vars);
+    return key;
+  }
+
   function showStatus(el, message, type = "success") {
     if (!el) return;
     el.textContent = message;
@@ -79,17 +87,9 @@
     }
   }
 
-  function statusZh(value) {
-    const map = {
-      saved: "已保存",
-      drafting: "准备材料中",
-      ready: "可以投递",
-      applied: "已投递",
-      interview: "面试中",
-      rejected: "未通过",
-      offer: "拿到 Offer"
-    };
-    return map[value] || value || "已保存";
+  function statusText(value) {
+    if (WORKSPACE_STATUSES.indexOf(value) >= 0) return t("status." + value);
+    return t("status.saved");
   }
 
   // --- Job hunt workspace: status + deadline --------------------------------
@@ -143,7 +143,7 @@
   }
 
   function formatDeadline(value) {
-    if (!value) return "未设置";
+    if (!value) return t("deadline.notSet");
     try {
       return new Date(value + "T00:00:00").toLocaleDateString();
     } catch {
@@ -253,7 +253,7 @@
     if (!list.length) {
       savedJobsList.innerHTML = `
         <div class="empty">
-          ${savedJobs.length ? "没有符合该状态的已保存岗位。" : "还没有保存岗位。请先去「职位」页面保存一个岗位，再回到这里生成申请材料。"}
+          ${savedJobs.length ? t("saved.emptyFiltered") : t("saved.emptyNone")}
         </div>
       `;
       return;
@@ -269,8 +269,8 @@
         <button class="job-item ${active}" data-id="${escapeHtml(job.job_id)}" type="button">
           <strong>${escapeHtml(job.job_title || "Untitled role")}</strong>
           <span>${escapeHtml(job.company_name || "Unknown company")} · ${escapeHtml(job.market || "")} · ${escapeHtml(job.match_score || "--")} match</span>
-          <span class="status-pill">${escapeHtml(statusZh(status))}</span>
-          <span class="deadline-line${overdue ? " overdue" : ""}">截止日期：${escapeHtml(formatDeadline(deadline))}${overdue ? "（已过期）" : ""}</span>
+          <span class="status-pill">${escapeHtml(statusText(status))}</span>
+          <span class="deadline-line${overdue ? " overdue" : ""}">${escapeHtml(t("deadline.label"))}${escapeHtml(formatDeadline(deadline))}${overdue ? escapeHtml(t("deadline.overdue")) : ""}</span>
         </button>
       `;
     }).join("");
@@ -282,7 +282,7 @@
 
   function renderDrafts() {
     if (!drafts.length) {
-      draftList.innerHTML = `<div class="empty">还没有申请草稿。</div>`;
+      draftList.innerHTML = `<div class="empty">${escapeHtml(t("drafts.empty"))}</div>`;
       return;
     }
 
@@ -292,8 +292,8 @@
       return `
       <div class="draft-item">
         <strong>${escapeHtml(draft.job_title || draft.job_id)}</strong>
-        <span>${escapeHtml(draft.company_name || "")} · ${escapeHtml(statusZh(draft.status))} · ${escapeHtml(formatDate(draft.updated_at))}</span>
-        ${deadline ? `<span class="deadline-line${overdue ? " overdue" : ""}">截止日期：${escapeHtml(formatDeadline(deadline))}${overdue ? "（已过期）" : ""}</span>` : ""}
+        <span>${escapeHtml(draft.company_name || "")} · ${escapeHtml(statusText(draft.status))} · ${escapeHtml(formatDate(draft.updated_at))}</span>
+        ${deadline ? `<span class="deadline-line${overdue ? " overdue" : ""}">${escapeHtml(t("deadline.label"))}${escapeHtml(formatDeadline(deadline))}${overdue ? escapeHtml(t("deadline.overdue")) : ""}</span>` : ""}
       </div>
     `;
     }).join("");
@@ -304,8 +304,8 @@
     const draft = selectedJob ? loadSelectedJobDraft(selectedJob.job_id) : null;
 
     if (!selectedJob) {
-      selectedTitle.textContent = "选择一个岗位";
-      selectedSubtitle.textContent = "从左侧选择已保存岗位后，这里会显示申请分析。";
+      selectedTitle.textContent = t("editor.selectTitle");
+      selectedSubtitle.textContent = t("editor.selectSubtitle");
       matchScore.textContent = "--";
       marketLabel.textContent = "--";
       statusLabel.textContent = "--";
@@ -321,7 +321,7 @@
     matchScore.textContent = selectedJob.match_score || "--";
     marketLabel.textContent = selectedJob.market || "--";
     applicationStatus.value = effectiveStatus(selectedJob, draft);
-    statusLabel.textContent = statusZh(applicationStatus.value);
+    statusLabel.textContent = statusText(applicationStatus.value);
     if (deadlineInput) deadlineInput.value = effectiveDeadline(selectedJob, draft);
     notesInput.value = draft?.notes || selectedJob.notes || "";
     coverLetterOutput.value = draft?.cover_letter || "";
@@ -336,7 +336,7 @@
     if (!selectedJob) return null;
 
     if (!supabaseClient || !currentUser) {
-      showStatus(editorStatus, "请先登录，再保存申请状态。", "error");
+      showStatus(editorStatus, t("editor.needLoginStatus"), "error");
       return null;
     }
 
@@ -349,7 +349,7 @@
     const res = await persistWorkspace(supabaseClient, currentUser.id, selectedJob, patch, editor);
 
     if (res.error) {
-      showStatus(editorStatus, `保存失败：${res.error.message}`, "error");
+      showStatus(editorStatus, t("editor.saveFail", { error: res.error.message }), "error");
       return res;
     }
 
@@ -365,21 +365,21 @@
       if (patch.deadline !== undefined && !res.columnsMissing) draft.deadline = patch.deadline || "";
     }
 
-    statusLabel.textContent = statusZh(effectiveStatus(selectedJob, loadSelectedJobDraft(selectedJob.job_id)));
+    statusLabel.textContent = statusText(effectiveStatus(selectedJob, loadSelectedJobDraft(selectedJob.job_id)));
     renderSavedJobs();
     renderDrafts();
 
     if (res.columnsMissing) {
-      showStatus(editorStatus, "状态已保存到申请草稿。截止日期需要先运行数据库更新（supabase/migrations/20261127_job_workspace.sql）才能同步到岗位记录。", "info");
+      showStatus(editorStatus, t("editor.savedMigration"), "info");
     } else {
-      showStatus(editorStatus, "申请状态已保存。", "success");
+      showStatus(editorStatus, t("editor.saved"), "success");
     }
     return res;
   }
 
   function generateAdvice() {
     if (!selectedJob) {
-      showStatus(editorStatus, "请先从左侧选择一个已保存岗位。", "error");
+      showStatus(editorStatus, t("editor.selectFirst"), "error");
       return;
     }
 
@@ -398,61 +398,65 @@
     const gaps = [];
 
     if (normalize(career).includes("合规") || normalize(category).includes("compliance") || normalize(category).includes("aml")) {
-      strengths.push("法律或合规方向可以作为核心叙事，把学术背景转化成 risk / compliance awareness。");
+      strengths.push(t("strength.compliance"));
     }
 
     if (normalize(languages).includes("japanese") || normalize(languages).includes("日")) {
-      strengths.push("日语能力可以支持日本市场、跨境沟通和本地团队协作。");
+      strengths.push(t("strength.japanese"));
     }
 
     if (normalize(languages).includes("english")) {
-      strengths.push("英文能力可以支持 international team、policy review 和跨境沟通。");
+      strengths.push(t("strength.english"));
     }
 
     if (normalize(languages).includes("mandarin") || normalize(languages).includes("中文")) {
-      strengths.push("中文能力适合连接中国候选人、亚洲客户或跨境业务场景。");
+      strengths.push(t("strength.mandarin"));
     }
 
     if (normalize(profile).includes("web3") || normalize(category).includes("web3") || normalize(title).includes("crypto")) {
-      strengths.push("Web3 / virtual assets 兴趣可以放在 compliance、risk 或 platform operations 的交叉点上。");
+      strengths.push(t("strength.web3"));
     }
 
     if (!strengths.length) {
-      strengths.push("你的背景可以从跨境理解、语言能力和学习能力角度切入。");
+      strengths.push(t("strength.default"));
     }
 
     if (market === "Japan" && !normalize(languages).includes("japanese") && !normalize(languages).includes("日")) {
-      gaps.push("如果目标是日本岗位，最好补充日语能力证明或说明可以先从英文环境岗位切入。");
+      gaps.push(t("gap.japan"));
     }
 
     if (normalize(category).includes("aml") || normalize(category).includes("finance")) {
-      gaps.push("CV 中建议明确加入 AML、KYC、due diligence、risk review 等关键词。");
+      gaps.push(t("gap.aml"));
     }
 
     if (normalize(category).includes("web3")) {
-      gaps.push("建议在 CV 中补充 virtual assets、crypto exchange、blockchain compliance 或交易平台理解。");
+      gaps.push(t("gap.web3"));
     }
 
     if (!gaps.length) {
-      gaps.push("目前主要不是方向不匹配，而是需要把经历写得更贴近岗位语言。");
+      gaps.push(t("gap.default"));
     }
 
     const coverLetter = [
-      `申请岗位：${title}`,
-      `公司方向：${company}`,
-      `市场：${market}`,
-      `当前匹配分：${score}`,
+      `${t("cover.job")} ${title}`,
+      `${t("cover.company")} ${company}`,
+      `${t("cover.market")} ${market}`,
+      `${t("cover.score")} ${score}`,
       "",
-      "一、申请定位",
-      `${name === "I" ? "I" : name} 可以把自己定位为「${category} 方向的跨境候选人」。${profile ? `当前资料显示：${profile}。` : ""}`,
+      t("cover.s1"),
+      t("cover.positioning", {
+        name: name === "I" ? "I" : name,
+        category,
+        profile: profile ? t("cover.profilePart", { profile }) : ""
+      }),
       "",
-      "二、可以强调的优势",
+      t("cover.s2"),
       ...strengths.map((item) => `- ${item}`),
       "",
-      "三、CV 修改方向",
+      t("cover.s3"),
       ...gaps.map((item) => `- ${item}`),
       "",
-      "四、英文 Cover Letter 初稿",
+      t("cover.s4"),
       `Dear Hiring Team,`,
       "",
       `I am writing to express my interest in the ${title} position at ${company}. My background combines international legal and business training, multilingual communication, and a clear interest in ${category}. I am particularly interested in roles where cross-border understanding, compliance awareness and practical execution are valued.`,
@@ -464,26 +468,26 @@
       `Kind regards,`,
       `${currentProfile?.full_name || ""}`,
       "",
-      "五、下一步",
-      "- 先把 CV 的 Profile Summary 改成贴合该岗位方向。",
-      "- 把相关经历改成 action + task + result 的格式。",
-      "- 再根据公司官网和岗位描述微调 Cover Letter。"
+      t("cover.s5"),
+      `- ${t("cover.next1")}`,
+      `- ${t("cover.next2")}`,
+      `- ${t("cover.next3")}`
     ].join("\n");
 
     coverLetterOutput.value = coverLetter;
     applicationStatus.value = "drafting";
-    statusLabel.textContent = statusZh("drafting");
-    showStatus(editorStatus, "已生成申请材料。你可以继续手动修改，然后保存草稿。", "success");
+    statusLabel.textContent = statusText("drafting");
+    showStatus(editorStatus, t("editor.generated"), "success");
   }
 
   async function saveDraft() {
     if (!selectedJob) {
-      showStatus(editorStatus, "请先选择一个岗位。", "error");
+      showStatus(editorStatus, t("editor.selectFirstDraft"), "error");
       return;
     }
 
     if (!supabaseClient || !currentUser) {
-      showStatus(editorStatus, "请先登录，再保存申请草稿。", "error");
+      showStatus(editorStatus, t("editor.needLoginDraft"), "error");
       return;
     }
 
@@ -512,7 +516,7 @@
     let migrationNote = "";
     if (result.error && isMissingColumnError(result.error)) {
       delete payload.deadline;
-      migrationNote = "（截止日期需要先运行数据库更新 supabase/migrations/20261127_job_workspace.sql 才能同步。）";
+      migrationNote = t("editor.migrationNote");
       result = await supabaseClient
         .from("application_drafts")
         .upsert(payload, { onConflict: "user_id,job_id" })
@@ -523,7 +527,7 @@
     const { data, error } = result;
 
     if (error) {
-      showStatus(editorStatus, `保存失败：${error.message}`, "error");
+      showStatus(editorStatus, t("editor.saveFail", { error: error.message }), "error");
       return;
     }
 
@@ -533,10 +537,10 @@
 
     selectedJob.status = normalizeStatus(data.status);
     if (data.deadline) selectedJob.deadline = data.deadline;
-    statusLabel.textContent = statusZh(data.status);
+    statusLabel.textContent = statusText(data.status);
     renderDrafts();
     renderSavedJobs();
-    showStatus(editorStatus, `申请草稿已保存。${migrationNote}`, "success");
+    showStatus(editorStatus, t("editor.draftSaved", { migrationNote }), "success");
     logEvent("application_draft_saved", selectedJob.job_id);
   }
 
@@ -544,8 +548,8 @@
     const config = getConfig();
 
     if (!config) {
-      profileAuth.textContent = "配置缺失";
-      showStatus(profileStatus, "没有读取到 Supabase 配置。", "error");
+      profileAuth.textContent = t("profile.missing");
+      showStatus(profileStatus, t("profile.noConfig"), "error");
       return;
     }
 
@@ -555,17 +559,17 @@
 
     if (error || !data?.user) {
       currentUser = null;
-      profileAuth.textContent = "未登录";
-      profileCareer.textContent = "未登录";
-      profileMarket.textContent = "未登录";
-      profileCv.textContent = "未登录";
-      showStatus(profileStatus, "请先登录，再使用申请中心。登录后，这里会显示你保存的岗位和申请进度。", "info");
-      savedJobsList.innerHTML = `<div class="empty">请先<a href="login.html?redirect=applications.html">登录</a>，然后去职位页保存岗位，再回到这里管理申请。</div>`;
+      profileAuth.textContent = t("profile.notSignedIn");
+      profileCareer.textContent = t("profile.notSignedIn");
+      profileMarket.textContent = t("profile.notSignedIn");
+      profileCv.textContent = t("profile.notSignedIn");
+      showStatus(profileStatus, t("profile.signinHint"), "info");
+      savedJobsList.innerHTML = `<div class="empty">${t("saved.signin")}</div>`;
       return;
     }
 
     currentUser = data.user;
-    profileAuth.textContent = "已登录";
+    profileAuth.textContent = t("profile.signedIn");
 
     const { data: profile, error: profileError } = await supabaseClient
       .from("user_profiles")
@@ -577,10 +581,10 @@
       currentProfile = profile;
     }
 
-    profileCareer.textContent = currentProfile?.career_direction || "未填写";
-    profileMarket.textContent = currentProfile?.target_market || "未填写";
-    profileCv.textContent = currentProfile?.cv_file_name ? "已上传" : "未上传";
-    showStatus(profileStatus, currentProfile ? "已读取你的 Profile / CV 记录。" : "你还没有保存个人主页。建议先去我的主页上传 CV。", currentProfile ? "success" : "info");
+    profileCareer.textContent = currentProfile?.career_direction || t("profile.empty");
+    profileMarket.textContent = currentProfile?.target_market || t("profile.empty");
+    profileCv.textContent = currentProfile?.cv_file_name ? t("profile.uploaded") : t("profile.notUploaded");
+    showStatus(profileStatus, currentProfile ? t("profile.loaded") : t("profile.noProfile"), currentProfile ? "success" : "info");
 
     const { data: saved, error: savedError } = await supabaseClient
       .from("saved_jobs")
@@ -589,7 +593,7 @@
       .order("updated_at", { ascending: false });
 
     if (savedError) {
-      savedJobsList.innerHTML = `<div class="empty">读取已保存岗位失败：${escapeHtml(savedError.message)}</div>`;
+      savedJobsList.innerHTML = `<div class="empty">${escapeHtml(t("saved.loadFail", { error: savedError.message }))}</div>`;
       return;
     }
 
@@ -645,14 +649,14 @@
   // Status and deadline changes persist to Supabase immediately — the
   // user does not have to press "save draft" for tracking to stick.
   applicationStatus.addEventListener("change", () => {
-    statusLabel.textContent = statusZh(applicationStatus.value);
+    statusLabel.textContent = statusText(applicationStatus.value);
     persistSelectedWorkspace({ status: applicationStatus.value });
   });
 
   if (deadlineInput) {
     deadlineInput.addEventListener("change", () => {
       if (!isValidDeadline(deadlineInput.value)) {
-        showStatus(editorStatus, "截止日期格式不对，请选择一个有效日期。", "error");
+        showStatus(editorStatus, t("editor.deadlineInvalid"), "error");
         const draft = selectedJob ? loadSelectedJobDraft(selectedJob.job_id) : null;
         deadlineInput.value = selectedJob ? effectiveDeadline(selectedJob, draft) : "";
         return;
@@ -666,21 +670,28 @@
 
   copyButton.addEventListener("click", async () => {
     if (!coverLetterOutput.value.trim()) {
-      showStatus(copyStatus, "还没有可复制的内容。", "error");
+      showStatus(copyStatus, t("copy.empty"), "error");
       return;
     }
 
     try {
       await navigator.clipboard.writeText(coverLetterOutput.value);
-      showStatus(copyStatus, "已复制。", "success");
+      showStatus(copyStatus, t("copy.done"), "success");
     } catch {
-      showStatus(copyStatus, "复制失败，可以手动全选复制。", "error");
+      showStatus(copyStatus, t("copy.fail"), "error");
     }
   });
 
   clearButton.addEventListener("click", () => {
     coverLetterOutput.value = "";
-    showStatus(copyStatus, "内容已清空。", "info");
+    showStatus(copyStatus, t("copy.cleared"), "info");
+  });
+
+  // Re-render when the language changes so dynamic strings follow the
+  // new language (static chrome is handled by applications-lang.js).
+  // Same pattern as jobs.js.
+  window.addEventListener("japanoffer:languagechange", function () {
+    loadData();
   });
 
   loadData();

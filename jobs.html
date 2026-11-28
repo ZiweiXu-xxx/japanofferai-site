@@ -318,7 +318,7 @@
 
     .toolbar {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 12px;
       margin: 28px 0 20px;
     }
@@ -814,6 +814,24 @@
           <option value="visa" data-i18n="filter.sortVisa">签证友好优先</option>
           <option value="entry" data-i18n="filter.sortEntry">Entry-level 优先</option>
           <option value="market" data-i18n="filter.sortMarket">目标市场优先</option>
+        </select>
+      </label>
+
+      <label class="filter">
+        <span data-i18n="filter.remote">远程</span>
+        <select id="remoteFilter">
+          <option value="all" data-i18n="filter.allRemote">全部</option>
+          <option value="remote" data-i18n="filter.remoteOnly">仅支持远程</option>
+          <option value="onsite" data-i18n="filter.onSiteOnly">仅线下办公</option>
+        </select>
+      </label>
+
+      <label class="filter">
+        <span data-i18n="filter.visaRisk">签证风险</span>
+        <select id="visaFilter">
+          <option value="all" data-i18n="filter.allVisa">不限签证风险</option>
+          <option value="friendly" data-i18n="filter.visaFriendly">签证风险较低（70 分以上）</option>
+          <option value="higher" data-i18n="filter.visaHigher">签证风险较高（60 分以下）</option>
         </select>
       </label>
     </section>

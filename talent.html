@@ -22,6 +22,7 @@
   <meta name="description" content="Build a cross-border talent profile for overseas job matching." />
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="assets/css/design-system.css?v=2" />
+  <script src="site-lang.js"></script>
 </head>
 <body>
   <header class="topbar">
@@ -29,57 +30,57 @@
       <span class="brand-mark">J</span>
       <span class="brand-copy">
         <strong>JapanOffer AI</strong>
-        <small>Cross-border Talent Network</small>
+        <small data-i18n="brand.subtitle">Cross-border Talent Network</small>
       </span>
     </a>
 
     <div class="top-search" aria-label="Global platform search">
       <span>⌕</span>
-      <input value="Search roles, talent or companies" aria-label="Search roles, talent or companies" />
+      <input data-i18n-value="search.value" value="Search roles, talent or companies" aria-label="Search roles, talent or companies" />
     </div>
 
     <nav class="nav" aria-label="Main navigation">
-      <a href="index.html#network">Network</a>
-      <a href="jobs.html">Jobs</a>
-      <a href="talent.html">Talent</a>
-      <a href="companies.html">Companies</a>
-      <a href="employers.html">Employers</a>
+      <a href="index.html#network" data-i18n="nav.network">Network</a>
+      <a href="jobs.html" data-i18n="nav.jobs">Jobs</a>
+      <a href="talent.html" data-i18n="nav.talent">Talent</a>
+      <a href="companies.html" data-i18n="nav.companies">Companies</a>
+      <a href="employers.html" data-i18n="nav.employers">Employers</a>
     </nav>
 
-    <div class="auth-links"><a class="signin-link" href="login.html">Sign in</a><a class="nav-cta" href="signup.html">Sign up</a></div>
+    <div class="auth-links"><a class="signin-link" href="login.html" data-i18n="auth.signIn">Sign in</a><a class="nav-cta" href="signup.html" data-i18n="auth.signUp">Sign up</a></div>
   </header>
   <main>
     <section class="page-hero">
-      <p class="eyebrow">Talent</p>
-      <h1>Turn your background into a matchable talent profile.</h1>
+      <p class="eyebrow" data-i18n="hero.eyebrow">Talent</p>
+      <h1 data-i18n="hero.title">Turn your background into a matchable talent profile.</h1>
       <p>
-        Job seekers should not need to guess which country, role or employer fits them. JapanOffer AI converts education, language, visa status and career direction into a structured profile.
+        <span data-i18n="hero.copy">Job seekers should not need to guess which country, role or employer fits them. JapanOffer AI converts education, language, visa status and career direction into a structured profile.</span>
       </p>
     </section>
 
     <section class="page-grid">
       <article class="page-card featured">
-        <span class="kicker">Profile</span>
-        <h2>Background</h2>
-        <p>Education, experience, target market and career direction become the foundation of the match score.</p>
+        <span class="kicker" data-i18n="card1.kicker">Profile</span>
+        <h2 data-i18n="card1.title">Background</h2>
+        <p data-i18n="card1.copy">Education, experience, target market and career direction become the foundation of the match score.</p>
       </article>
 
       <article class="page-card">
-        <span class="kicker">Risk</span>
-        <h2>Language and visa</h2>
-        <p>The system flags when language expectations or visa conditions may block a role before the user applies.</p>
+        <span class="kicker" data-i18n="card2.kicker">Risk</span>
+        <h2 data-i18n="card2.title">Language and visa</h2>
+        <p data-i18n="card2.copy">The system flags when language expectations or visa conditions may block a role before the user applies.</p>
       </article>
 
       <article class="page-card">
-        <span class="kicker">Action</span>
-        <h2>Priority list</h2>
-        <p>Users receive a clear ranking of which roles to apply to first, which to avoid, and what to improve next.</p>
+        <span class="kicker" data-i18n="card3.kicker">Action</span>
+        <h2 data-i18n="card3.title">Priority list</h2>
+        <p data-i18n="card3.copy">Users receive a clear ranking of which roles to apply to first, which to avoid, and what to improve next.</p>
       </article>
     </section>
 
     <section class="wide-panel">
-      <p class="eyebrow">Start profile</p>
-      <h2>Choose your beta route</h2>
+      <p class="eyebrow" data-i18n="cta.eyebrow">Start profile</p>
+      <h2 data-i18n="cta.title">Choose your beta route</h2>
       <div class="hero-actions">
         <a class="btn primary" href="report.html?lang=zh">中文版：生成 AI 匹配报告</a>
         <a class="btn secondary" href="report.html?lang=en">English Auto Report</a>
@@ -88,7 +89,7 @@
   </main>
   <footer class="footer">
     <strong>JapanOffer AI</strong>
-    <span>Cross-border talent matching network.</span>
+    <span data-i18n="footer.copy">Cross-border talent matching network.</span>
   </footer>
   <script src="effects.js"></script>
   <script src="auth-config.js"></script>
@@ -96,5 +97,121 @@
   <script src="auth.js"></script>
   <script src="analytics.js"></script>
   <script src="platform-actions.js"></script>
+
+  <script>
+  // talent page language. Follows the shared language (window.JOLang).
+  (function () {
+    var dict = {
+      en: {
+        "brand.subtitle": "Cross-border Talent Network",
+        "search.value": "Search roles, talent or companies",
+        "nav.network": "Network",
+        "nav.jobs": "Jobs",
+        "nav.talent": "Talent",
+        "nav.companies": "Companies",
+        "nav.employers": "Employers",
+        "auth.signIn": "Sign in",
+        "auth.signUp": "Sign up",
+        "hero.eyebrow": "Talent",
+        "hero.title": "Turn your background into a matchable talent profile.",
+        "hero.copy": "Job seekers should not need to guess which country, role or employer fits them. JapanOffer AI converts education, language, visa status and career direction into a structured profile.",
+        "card1.kicker": "Profile",
+        "card1.title": "Background",
+        "card1.copy": "Education, experience, target market and career direction become the foundation of the match score.",
+        "card2.kicker": "Risk",
+        "card2.title": "Language and visa",
+        "card2.copy": "The system flags when language expectations or visa conditions may block a role before the user applies.",
+        "card3.kicker": "Action",
+        "card3.title": "Priority list",
+        "card3.copy": "Users receive a clear ranking of which roles to apply to first, which to avoid, and what to improve next.",
+        "cta.eyebrow": "Start profile",
+        "cta.title": "Choose your beta route",
+        "footer.copy": "Cross-border talent matching network."
+      },
+      zh: {
+        "brand.subtitle": "跨境人才匹配网络",
+        "search.value": "搜索岗位、人才或企业",
+        "nav.network": "人脉",
+        "nav.jobs": "职位",
+        "nav.talent": "人才",
+        "nav.companies": "企业",
+        "nav.employers": "雇主",
+        "auth.signIn": "登录",
+        "auth.signUp": "注册",
+        "hero.eyebrow": "人才",
+        "hero.title": "把你的背景变成可匹配的人才档案。",
+        "hero.copy": "求职者不应该靠猜来判断哪个国家、岗位或雇主适合自己。JapanOffer AI 把学历、语言、签证状态和职业方向转化成一份结构化档案。",
+        "card1.kicker": "档案",
+        "card1.title": "背景",
+        "card1.copy": "学历、经验、目标市场和职业方向成为匹配分数的基础。",
+        "card2.kicker": "风险",
+        "card2.title": "语言与签证",
+        "card2.copy": "系统会在语言要求或签证条件可能阻碍申请之前作出提示。",
+        "card3.kicker": "行动",
+        "card3.title": "优先清单",
+        "card3.copy": "用户会得到一份清晰的排序：先投哪些、避开哪些、下一步改进什么。",
+        "cta.eyebrow": "开始建档案",
+        "cta.title": "选择你的内测入口",
+        "footer.copy": "跨境人才匹配网络。"
+      },
+      ja: {
+        "brand.subtitle": "クロスボーダー人材ネットワーク",
+        "search.value": "求人、人材、企業を検索",
+        "nav.network": "ネットワーク",
+        "nav.jobs": "求人",
+        "nav.talent": "人材",
+        "nav.companies": "企業",
+        "nav.employers": "採用企業",
+        "auth.signIn": "ログイン",
+        "auth.signUp": "登録",
+        "hero.eyebrow": "人材",
+        "hero.title": "あなたの経歴を、マッチング可能な人材プロフィールに変えましょう。",
+        "hero.copy": "求職者は、どの国、職種、企業が自分に合うかを推測する必要はありません。JapanOffer AI は学歴、語学力、ビザの状況、キャリアの方向性を構造化されたプロフィールに変換します。",
+        "card1.kicker": "プロフィール",
+        "card1.title": "バックグラウンド",
+        "card1.copy": "学歴、経験、対象市場、キャリアの方向性がマッチ度スコアの基盤になります。",
+        "card2.kicker": "リスク",
+        "card2.title": "語学力とビザ",
+        "card2.copy": "語学力の期待値やビザ条件が応募の妨げになる場合、事前に警告します。",
+        "card3.kicker": "アクション",
+        "card3.title": "優先リスト",
+        "card3.copy": "どの求人にまず応募すべきか、避けるべきか、次に何を改善すべきか、明確な優先順位が示されます。",
+        "cta.eyebrow": "プロフィール作成",
+        "cta.title": "ベータ版の入口を選ぶ",
+        "footer.copy": "クロスボーダー人材マッチングネットワーク。"
+      }
+    };
+    function lang() {
+      if (window.JOLang) return window.JOLang.get();
+      return localStorage.getItem("japanoffer_lang") || "en";
+    }
+    function apply() {
+      var t = dict[lang()] || dict.en;
+      document.documentElement.lang = lang() === "zh" ? "zh-CN" : lang();
+      document.querySelectorAll("[data-i18n]").forEach(function (el) {
+        var v = t[el.dataset.i18n];
+        if (v !== undefined) el.textContent = v;
+      });
+      document.querySelectorAll("[data-i18n-html]").forEach(function (el) {
+        var v = t[el.dataset.i18nHtml];
+        if (v !== undefined) el.innerHTML = v;
+      });
+      document.querySelectorAll("[data-i18n-placeholder]").forEach(function (el) {
+        var v = t[el.dataset.i18nPlaceholder];
+        if (v !== undefined) el.setAttribute("placeholder", v);
+      });
+      document.querySelectorAll("[data-i18n-value]").forEach(function (el) {
+        var v = t[el.dataset.i18nValue];
+        if (v !== undefined) el.value = v;
+      });
+    }
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", apply);
+    else apply();
+    window.addEventListener("japanoffer:languagechange", apply);
+    window.addEventListener("storage", apply);
+    setTimeout(apply, 300);
+    setTimeout(apply, 1000);
+  })();
+  </script>
 </body>
 </html>
