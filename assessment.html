@@ -20,8 +20,17 @@
   <link rel="alternate" hreflang="ja" href="https://www.japanofferai.com/assessment?lang=ja" />
   <title>English Auto Report | JapanOffer AI</title>
   <meta name="description" content="Start a beta assessment for JapanOffer AI." />
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="assets/css/design-system.css?v=2" />
+  <link rel="stylesheet" href="styles.css?v=3" />
+  <link rel="stylesheet" href="assets/css/design-system.css?v=3" />
+  <style>
+    /* Basic matching form: stack each label above its field. Without this
+       the labels stay inline and the fields wrap onto the next label's
+       line, so label and input text overlap on narrow screens. */
+    .mock-form label { display: block; margin: 0 0 16px; }
+    .mock-form label > span { display: block; margin: 0 0 8px; }
+    .mock-form label > input,
+    .mock-form label > select { display: block; width: 100%; max-width: 100%; }
+  </style>
   <script src="site-lang.js"></script>
 </head>
 <body>
