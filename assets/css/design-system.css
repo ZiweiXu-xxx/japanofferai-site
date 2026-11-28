@@ -357,6 +357,22 @@ button:disabled {
   line-height: 1.7;
 }
 
+/* Pages whose hero is a .page-hero section: give <main> the same centred
+   column + padding profile.html / search.html carry inline, so the hero
+   title no longer sits flush against the left edge. */
+main:has(> .page-hero) {
+  width: min(1180px, calc(100% - 44px));
+  margin: 0 auto;
+  padding: 54px 0 90px;
+}
+
+@media (max-width: 760px) {
+  main:has(> .page-hero) {
+    width: min(100% - 28px, 1180px);
+    padding: 40px 0 68px;
+  }
+}
+
 .page-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
