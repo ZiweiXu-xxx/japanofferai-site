@@ -237,6 +237,23 @@
       box-shadow: 0 0 0 4px rgba(10,102,194,.10);
     }
 
+    .jo22-textarea-short {
+      min-height: 140px;
+    }
+
+    .jo22-job-title {
+      width: 100%;
+      min-height: 54px;
+      border: 1px solid rgba(6,26,51,.13);
+      border-radius: 18px;
+      background: rgba(255,255,255,.93);
+      padding: 0 14px;
+      color: var(--jo22-ink);
+      font: inherit;
+      font-weight: 830;
+      outline: none;
+    }
+
     .jo22-select-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -751,10 +768,22 @@
             </label>
           </div>
 
+          <label class="jo22-label-row" for="jobTitleInput" style="margin-top:14px">
+            <strong>目标岗位标题（可选）</strong>
+            <span>写上岗位名更清楚</span>
+          </label>
+          <input class="jo22-job-title" id="jobTitleInput" placeholder="例如：法务合规分析师" />
+
+          <label class="jo22-label-row" for="jobDescInput" style="margin-top:14px">
+            <strong>目标岗位描述</strong>
+            <span>必填，AI 用它来对比</span>
+          </label>
+          <textarea class="jo22-textarea jo22-textarea-short" id="jobDescInput" placeholder="粘贴你想申请的岗位完整描述（至少 50 个字）。AI 会把你的背景和这个岗位逐一对比，算出匹配分数、风险和下一步建议。"></textarea>
+
           <div class="auth-message info" data-credits-box>Checking your report credits…</div>
           <button class="jo22-generate" type="submit" id="generateButton">生成我的岗位匹配</button>
           <p class="jo22-note">
-            匹配分数是早期筛选分，不是录取概率。70 分以上代表值得优先投递，60 分左右代表可以作为探索方向。
+            匹配分数由 AI 根据你的背景和岗位描述评估，不是录取概率。85 分以上非常匹配、70–84 分值得优先投递、55–69 分可以尝试、55 分以下优先级较低。
           </p>
         </form>
       </section>
@@ -815,6 +844,7 @@
   <script src="analytics.js"></script>
   <script src="billing.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mammoth@1.7.2/mammoth.browser.min.js"></script>
+  <script src="api-report.js"></script>
   <script src="ai-match.js"></script>
   <footer class="ds-footer">
     <div class="ds-footer-grid">

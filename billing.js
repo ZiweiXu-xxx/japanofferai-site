@@ -288,6 +288,10 @@
     });
   }
 
+  // Exposed so report / match pages can refresh the credits display after
+  // generating a report (the box otherwise only renders once on page load).
+  window.JOBillingRefresh = renderCreditsBoxes;
+
   document.addEventListener("DOMContentLoaded", function () {
     fillPricing();
     showCheckoutBanner();

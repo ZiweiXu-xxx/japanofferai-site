@@ -590,6 +590,52 @@
       border-color: var(--blue);
     }
 
+    .profile-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .profile-btn {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: #f5f8fd;
+      color: #344054;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .profile-status {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    .field-hint {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+      font-weight: 650;
+    }
+
+    .job-block {
+      display: grid;
+      gap: 14px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #f8fafd;
+    }
+
+    .job-block .field {
+      gap: 7px;
+    }
+
     .generate {
       border: 0;
       border-radius: 18px;
@@ -903,23 +949,23 @@
           <div class="orb-toolbar">
             <i></i><i></i><i></i>
             <strong data-i18n="preview.title">JapanOffer Report OS</strong>
-            <em data-i18n="preview.live">Live demo</em>
+            <em data-i18n="preview.live">Preview</em>
           </div>
 
           <div class="score-stage">
-            <div class="score-ring"><strong>86%</strong></div>
+            <div class="score-ring"><strong id="orbScore">—</strong></div>
             <div class="score-row">
               <div>
                 <span data-i18n="preview.fit">Role fit</span>
-                <strong data-i18n="preview.strong">Strong</strong>
+                <strong id="orbFit">—</strong>
               </div>
               <div>
                 <span data-i18n="preview.visa">Visa risk</span>
-                <strong data-i18n="preview.medium">Medium</strong>
+                <strong id="orbVisa">—</strong>
               </div>
               <div>
                 <span data-i18n="preview.priority">Priority</span>
-                <strong data-i18n="preview.high">High</strong>
+                <strong id="orbPriority">—</strong>
               </div>
             </div>
           </div>
@@ -953,6 +999,11 @@
               <button type="button" class="active" data-report-lang="zh">中文报告</button>
               <button type="button" data-report-lang="en">English report</button>
               <button type="button" data-report-lang="ja">日本語レポート</button>
+            </div>
+
+            <div class="profile-row">
+              <button class="profile-btn" type="button" id="loadProfileButton" data-i18n="form.useProfile">Use my profile</button>
+              <span class="profile-status" id="profileStatus" hidden></span>
             </div>
 
             <div class="form-grid">
@@ -1019,7 +1070,46 @@
               </div>
             </div>
 
+            <div class="field full">
+              <label data-i18n="form.jobsTitle">Target jobs</label>
+              <p class="field-hint" data-i18n="form.jobsHint">Paste the description of a real job you want to apply for. The AI compares your background against each job. The first job is required; the other two are optional.</p>
+            </div>
+
+            <div class="job-block">
+              <div class="field">
+                <label for="jobTitle1" data-i18n="form.jobTitle1">Job 1 — title</label>
+                <input id="jobTitle1" data-i18n-placeholder="form.jobTitlePh" placeholder="Example: Legal Compliance Analyst" />
+              </div>
+              <div class="field">
+                <label for="jobDesc1" data-i18n="form.jobDesc1">Job 1 — description (required)</label>
+                <textarea id="jobDesc1" data-i18n-placeholder="form.jobDescPh" placeholder="Paste the full job description here (at least 50 characters)."></textarea>
+              </div>
+            </div>
+
+            <div class="job-block">
+              <div class="field">
+                <label for="jobTitle2" data-i18n="form.jobTitle2">Job 2 — title (optional)</label>
+                <input id="jobTitle2" data-i18n-placeholder="form.jobTitlePh" placeholder="Example: KYC / AML Analyst" />
+              </div>
+              <div class="field">
+                <label for="jobDesc2" data-i18n="form.jobDesc2">Job 2 — description (optional)</label>
+                <textarea id="jobDesc2" data-i18n-placeholder="form.jobDescPh" placeholder="Paste the full job description here (at least 50 characters)."></textarea>
+              </div>
+            </div>
+
+            <div class="job-block">
+              <div class="field">
+                <label for="jobTitle3" data-i18n="form.jobTitle3">Job 3 — title (optional)</label>
+                <input id="jobTitle3" data-i18n-placeholder="form.jobTitlePh" placeholder="Example: Business Operations Associate" />
+              </div>
+              <div class="field">
+                <label for="jobDesc3" data-i18n="form.jobDesc3">Job 3 — description (optional)</label>
+                <textarea id="jobDesc3" data-i18n-placeholder="form.jobDescPh" placeholder="Paste the full job description here (at least 50 characters)."></textarea>
+              </div>
+            </div>
+
             <div class="auth-message info" data-credits-box>Checking your report credits…</div>
+            <div class="auth-message" id="reportStatus" hidden></div>
             <button class="generate" type="button" id="generateButton" data-i18n="form.generate">Generate report</button>
           </div>
         </section>
@@ -1063,11 +1153,11 @@
           copy: "Build a structured international career report in one page: target market, role direction, match score, visa and language risk, application priority and cover letter opening."
         },
         pills: { market: "Target market", visa: "Visa risk", language: "Language fit", priority: "Apply priority" },
-        preview: { title: "JapanOffer Report OS", live: "Live demo", fit: "Role fit", strong: "Strong", visa: "Visa risk", medium: "Medium", priority: "Priority", high: "High" },
+        preview: { title: "JapanOffer Report OS", live: "Preview", fit: "Role fit", visa: "Visa risk", priority: "Priority" },
         note: { market: "Market", route: "Route" },
         form: {
           title: "Build your match profile",
-          subtitle: "Answer a few focused questions. The report is generated instantly on this page.",
+          subtitle: "Answer a few focused questions and paste a job description. The AI report uses one report credit.",
           badge: "Step 1",
           education: "Education background",
           educationPh: "Example: LLB student, business graduate",
@@ -1079,28 +1169,51 @@
           experience: "Experience level",
           background: "Short background",
           backgroundPh: "Briefly describe your degree, experience, target job, strengths or concerns.",
-          generate: "Generate report"
+          generate: "Generate report",
+          generating: "Generating your AI report…",
+          useProfile: "Use my profile",
+          jobsTitle: "Target jobs",
+          jobsHint: "Paste the description of a real job you want to apply for. The AI compares your background against each job. The first job is required; the other two are optional.",
+          jobTitle1: "Job 1 — title",
+          jobDesc1: "Job 1 — description (required)",
+          jobTitle2: "Job 2 — title (optional)",
+          jobDesc2: "Job 2 — description (optional)",
+          jobTitle3: "Job 3 — title (optional)",
+          jobDesc3: "Job 3 — description (optional)",
+          jobTitlePh: "Example: Legal Compliance Analyst",
+          jobDescPh: "Paste the full job description here (at least 50 characters).",
+          needBackground: "Please write a short background first (at least 20 characters) so the AI has something to assess.",
+          needJob: "Please paste the first job description (at least 50 characters). The AI needs a real job to compare against.",
+          jobShort: "A job description you pasted is shorter than 50 characters. Please complete it or clear it.",
+          profileLoaded: "Profile loaded from your account.",
+          profileEmpty: "No profile saved yet. Save your profile on the profile page first.",
+          profileLogin: "Sign in to load your profile.",
+          profileError: "Could not load your profile. Please try again.",
+          noCredits: "You have no reports left.",
+          noCreditsLink: "Get more reports",
+          rateLimited: "Too many reports in a short time. Please wait a little and try again.",
+          badRequest: "Something in the form is incomplete. Please check the background and job description.",
+          serverError: "The report could not be generated right now. Please try again in a moment.",
+          networkError: "Could not reach the server. Please check your connection and try again.",
+          consumedFree: "Used your free report.",
+          consumedPaid: "Used 1 paid credit.",
+          consumedPremium: "Used 1 Premium report this month."
         },
         output: { title: "Match report", subtitle: "Your structured report will appear here.", copy: "Copy report" },
         empty: { title: "Your report is ready to be generated.", copy: "Fill in the profile fields, choose a report language and click generate." },
-        report: {
-          score: "Overall match score",
-          summary: "Strategic summary",
-          summaryText: "Your profile is a practical fit for the selected market and direction. The strongest angle is to connect your education, language ability and cross-border background with a clearly defined role family.",
-          bestRoles: "Best role targets",
-          risks: "Main risks",
-          actions: "Next actions",
+        result: {
+          score: "Best match",
+          snapshot: "Candidate snapshot",
+          route: "Most realistic route",
+          jobs: "Job-by-job assessment",
+          fitScore: "Fit score",
+          priority: "Priority",
+          risk: "Main risk",
+          reason: "Why this fit",
+          nextStep: "Suggested next step",
+          advice: "Overall recommendation",
           cover: "Cover letter opening",
-          role1: "Legal Compliance Analyst",
-          role2: "KYC / AML Analyst",
-          role3: "Business Operations Associate",
-          risk1: "Confirm visa sponsorship or graduate-route eligibility before applying.",
-          risk2: "Avoid applying too broadly. Focus on roles where your language and legal or compliance background matter.",
-          risk3: "Add one concrete project or writing sample to prove practical ability.",
-          action1: "Search 20 roles in the target market and shortlist 5 with lower visa friction.",
-          action2: "Rewrite your CV summary around the selected role direction.",
-          action3: "Prepare one tailored cover letter opening for each priority role.",
-          coverText: "I am applying because this role sits at the intersection of international background, legal and compliance thinking, and cross-border communication. My education and language profile allow me to support teams that work across markets and regulatory expectations."
+          note: "Please note"
         },
         copied: "Report copied.",
         footer: { copy: "Cross-border talent intelligence network.", product: "Product", jobs: "Search jobs", report: "Match report", pricing: "Pricing", network: "Member network", account: "Account", signup: "Create free account", login: "Sign in", accountPage: "Your account", feedback: "Feedback", stripe: "Secure checkout by Stripe. JapanOffer AI never sees or stores your card details." }
@@ -1117,11 +1230,11 @@
           copy: "在一个页面里生成结构化国际求职报告：目标市场、岗位方向、匹配分数、签证和语言风险、申请优先级以及 Cover Letter 开头。"
         },
         pills: { market: "目标市场", visa: "签证风险", language: "语言匹配", priority: "申请优先级" },
-        preview: { title: "JapanOffer 报告系统", live: "在线演示", fit: "岗位匹配", strong: "较强", visa: "签证风险", medium: "中等", priority: "优先级", high: "高" },
+        preview: { title: "JapanOffer 报告系统", live: "预览", fit: "岗位匹配", visa: "签证风险", priority: "优先级" },
         note: { market: "市场", route: "路线" },
         form: {
           title: "建立你的匹配档案",
-          subtitle: "回答几个关键问题，系统会在本页面即时生成报告。",
+          subtitle: "回答几个关键问题，并粘贴一个岗位描述。AI 报告会使用一次报告额度。",
           badge: "第 1 步",
           education: "教育背景",
           educationPh: "例如：LLB 学生，商科毕业生",
@@ -1133,28 +1246,51 @@
           experience: "经验级别",
           background: "简短背景",
           backgroundPh: "简单描述你的学历、经历、目标岗位、优势或担忧。",
-          generate: "生成报告"
+          generate: "生成报告",
+          generating: "正在生成你的 AI 报告…",
+          useProfile: "使用我的档案",
+          jobsTitle: "目标岗位",
+          jobsHint: "粘贴一个你想申请的真实岗位描述，AI 会把你的背景和每个岗位逐一对比。第一个岗位必填，另外两个选填。",
+          jobTitle1: "岗位 1 — 标题",
+          jobDesc1: "岗位 1 — 描述（必填）",
+          jobTitle2: "岗位 2 — 标题（选填）",
+          jobDesc2: "岗位 2 — 描述（选填）",
+          jobTitle3: "岗位 3 — 标题（选填）",
+          jobDesc3: "岗位 3 — 描述（选填）",
+          jobTitlePh: "例如：法务合规分析师",
+          jobDescPh: "在此粘贴完整岗位描述（至少 50 个字符）。",
+          needBackground: "请先写一段简短背景（至少 20 个字），AI 需要有内容才能评估。",
+          needJob: "请粘贴第一个岗位的描述（至少 50 个字符），AI 需要一个真实岗位来对比。",
+          jobShort: "你粘贴的某个岗位描述不足 50 个字符，请补全或清空它。",
+          profileLoaded: "已从你的账号读取档案。",
+          profileEmpty: "还没有保存档案，请先在个人主页保存资料。",
+          profileLogin: "请先登录，再读取你的档案。",
+          profileError: "读取档案失败，请重试。",
+          noCredits: "你的报告次数已用完。",
+          noCreditsLink: "获取更多报告",
+          rateLimited: "短时间内生成报告太频繁，请稍等再试。",
+          badRequest: "表单有内容不完整，请检查背景和岗位描述。",
+          serverError: "报告暂时无法生成，请稍后再试。",
+          networkError: "无法连接服务器，请检查网络后重试。",
+          consumedFree: "已使用你的免费报告。",
+          consumedPaid: "已使用 1 次付费点数。",
+          consumedPremium: "本月已使用 1 次 Premium 报告。"
         },
         output: { title: "匹配报告", subtitle: "你的结构化报告会显示在这里。", copy: "复制报告" },
         empty: { title: "你的报告已经准备好生成。", copy: "填写档案信息，选择报告语言，然后点击生成。" },
-        report: {
-          score: "综合匹配分数",
-          summary: "战略总结",
-          summaryText: "你的背景与所选市场和方向具有现实匹配度。最强的申请角度，是把你的教育背景、语言能力和跨境经历，与一个清晰的岗位族群连接起来。",
-          bestRoles: "最适合优先申请的岗位",
-          risks: "主要风险",
-          actions: "下一步行动",
-          cover: "Cover Letter 开头建议",
-          role1: "法务合规分析师",
-          role2: "KYC / AML 分析师",
-          role3: "跨境商务运营助理",
-          risk1: "申请前先确认签证担保或毕业生签证路径是否可行。",
-          risk2: "不要过度海投，要集中申请能体现语言、法律或合规背景优势的岗位。",
-          risk3: "补充一个具体项目、文章或作品，用来证明实际能力。",
-          action1: "在目标市场搜索 20 个岗位，并筛选出 5 个签证阻力较低的岗位。",
-          action2: "围绕所选职业方向重写 CV Summary。",
-          action3: "为每个高优先级岗位准备一个定制化 Cover Letter 开头。",
-          coverText: "I am applying because this role sits at the intersection of international background, legal and compliance thinking, and cross-border communication. My education and language profile allow me to support teams that work across markets and regulatory expectations."
+        result: {
+          score: "最佳匹配",
+          snapshot: "候选人概况",
+          route: "最现实的求职路线",
+          jobs: "逐个岗位评估",
+          fitScore: "匹配分数",
+          priority: "优先级",
+          risk: "主要风险",
+          reason: "匹配原因",
+          nextStep: "建议下一步",
+          advice: "总体建议",
+          cover: "Cover Letter 开头",
+          note: "请注意"
         },
         copied: "报告已复制。",
         footer: { copy: "跨境人才智能网络。", product: "产品", jobs: "搜索岗位", report: "匹配报告", pricing: "价格", network: "会员网络", account: "账户", signup: "免费创建账户", login: "登录", accountPage: "我的账户", feedback: "反馈", stripe: "Stripe 负责安全支付。JapanOffer AI 不会查看或保存你的银行卡信息。" }
@@ -1171,11 +1307,11 @@
           copy: "対象市場、職種方向、マッチスコア、ビザと言語リスク、応募優先度、カバーレター冒頭文を一つのページで整理します。"
         },
         pills: { market: "対象市場", visa: "ビザリスク", language: "言語マッチ", priority: "応募優先度" },
-        preview: { title: "JapanOffer Report OS", live: "ライブデモ", fit: "職種適性", strong: "高い", visa: "ビザリスク", medium: "中程度", priority: "優先度", high: "高" },
+        preview: { title: "JapanOffer Report OS", live: "プレビュー", fit: "職種適性", visa: "ビザリスク", priority: "優先度" },
         note: { market: "市場", route: "ルート" },
         form: {
           title: "マッチングプロフィール作成",
-          subtitle: "いくつかの質問に答えるだけで、このページ上で即時にレポートを生成します。",
+          subtitle: "いくつかの質問に答え、求人内容を貼り付けると、AI レポートが1回分のクレジットを使用します。",
           badge: "Step 1",
           education: "学歴・教育背景",
           educationPh: "例：LLB 学生、ビジネス系卒業生",
@@ -1187,28 +1323,51 @@
           experience: "経験レベル",
           background: "簡単な背景",
           backgroundPh: "学歴、経験、目標職種、強みや不安点を簡単に記入してください。",
-          generate: "レポート生成"
+          generate: "レポート生成",
+          generating: "AI レポートを生成中…",
+          useProfile: "プロフィールを使う",
+          jobsTitle: "対象求人",
+          jobsHint: "応募したい実際の求人内容を貼り付けてください。AI があなたの背景と各求人を比較します。1件目は必須、2・3件目は任意です。",
+          jobTitle1: "求人 1 — タイトル",
+          jobDesc1: "求人 1 — 内容（必須）",
+          jobTitle2: "求人 2 — タイトル（任意）",
+          jobDesc2: "求人 2 — 内容（任意）",
+          jobTitle3: "求人 3 — タイトル（任意）",
+          jobDesc3: "求人 3 — 内容（任意）",
+          jobTitlePh: "例：法務コンプライアンスアナリスト",
+          jobDescPh: "求人内容をここに貼り付けてください（50文字以上）。",
+          needBackground: "まず簡単な背景を入力してください（20文字以上）。AI が評価するには内容が必要です。",
+          needJob: "1件目の求人内容を貼り付けてください（50文字以上）。AI には比較する実際の求人が必要です。",
+          jobShort: "貼り付けた求人内容が50文字未満のものがあります。補足するか、空にしてください。",
+          profileLoaded: "アカウントからプロフィールを読み込みました。",
+          profileEmpty: "プロフィールがまだ保存されていません。先にプロフィールページで保存してください。",
+          profileLogin: "プロフィールを読み込むにはログインしてください。",
+          profileError: "プロフィールを読み込めませんでした。もう一度お試しください。",
+          noCredits: "レポートの残り回数がありません。",
+          noCreditsLink: "レポートを追加する",
+          rateLimited: "短時間にレポートを生成しすぎました。少し待ってからもう一度お試しください。",
+          badRequest: "フォームの内容が不完全です。背景と求人内容を確認してください。",
+          serverError: "レポートを生成できませんでした。しばらくしてからもう一度お試しください。",
+          networkError: "サーバーに接続できませんでした。接続を確認してからもう一度お試しください。",
+          consumedFree: "無料レポートを使用しました。",
+          consumedPaid: "有料クレジットを1回使用しました。",
+          consumedPremium: "今月の Premium レポートを1回使用しました。"
         },
         output: { title: "マッチングレポート", subtitle: "構造化されたレポートがここに表示されます。", copy: "レポートをコピー" },
         empty: { title: "レポートを生成できます。", copy: "プロフィール項目を入力し、レポート言語を選んで生成してください。" },
-        report: {
-          score: "総合マッチスコア",
-          summary: "戦略サマリー",
-          summaryText: "あなたのプロフィールは、選択した市場と方向性に対して現実的な適合性があります。最も強い打ち出し方は、学歴、語学力、クロスボーダー経験を明確な職種群に結びつけることです。",
-          bestRoles: "優先して狙うべき職種",
-          risks: "主なリスク",
-          actions: "次のアクション",
+        result: {
+          score: "ベストマッチ",
+          snapshot: "候補者概要",
+          route: "最も現実的なルート",
+          jobs: "求人ごとの評価",
+          fitScore: "マッチスコア",
+          priority: "優先度",
+          risk: "主なリスク",
+          reason: "適合する理由",
+          nextStep: "次のステップ",
+          advice: "総合アドバイス",
           cover: "カバーレター冒頭案",
-          role1: "法務コンプライアンスアナリスト",
-          role2: "KYC / AML アナリスト",
-          role3: "クロスボーダービジネスオペレーション",
-          risk1: "応募前にビザスポンサーまたは就労資格の可能性を確認してください。",
-          risk2: "広く応募しすぎず、語学力や法務・コンプライアンス背景が活きる職種に集中してください。",
-          risk3: "実務力を示す具体的なプロジェクト、文章、成果物を追加してください。",
-          action1: "対象市場で 20 件の求人を検索し、ビザ面の摩擦が低い 5 件を選びます。",
-          action2: "選択した職種方向に合わせて CV Summary を書き直します。",
-          action3: "優先度の高い求人ごとにカバーレター冒頭文を用意します。",
-          coverText: "I am applying because this role sits at the intersection of international background, legal and compliance thinking, and cross-border communication. My education and language profile allow me to support teams that work across markets and regulatory expectations."
+          note: "ご注意"
         },
         copied: "レポートをコピーしました。",
         footer: { copy: "クロスボーダー人材インテリジェンスネットワーク。", product: "プロダクト", jobs: "求人を検索", report: "マッチングレポート", pricing: "料金", network: "メンバーネットワーク", account: "アカウント", signup: "無料アカウントを作成", login: "ログイン", accountPage: "マイアカウント", feedback: "フィードバック", stripe: "Stripe による安全な決済。JapanOffer AI がカード情報を閲覧・保存することはありません。" }
@@ -1250,8 +1409,8 @@
         lang === "ja" ? "マッチングレポート | JapanOffer AI" :
         "Match Report | JapanOffer AI";
 
-      if (!document.getElementById("reportBody").querySelector(".empty-state")) {
-        generateReport(false);
+      if (lastApiReport) {
+        renderApiReport(lastApiReport, lastApiMeta, false);
       }
     }
 
@@ -1271,8 +1430,8 @@
 
     function readProfile() {
       return {
-        education: document.getElementById("education").value.trim() || "LLB / international background",
-        languages: document.getElementById("languages").value.trim() || "English, Japanese, Mandarin",
+        education: document.getElementById("education").value.trim(),
+        languages: document.getElementById("languages").value.trim(),
         market: document.getElementById("market").value,
         career: document.getElementById("career").value,
         visa: document.getElementById("visa").value,
@@ -1281,119 +1440,282 @@
       };
     }
 
-    function calculateScore(profile) {
-      let score = 64;
-      const lang = profile.languages.toLowerCase();
-      const edu = profile.education.toLowerCase();
-      const bg = profile.background.toLowerCase();
+    // --- Real AI report (POST /api/analyze) ---------------------------------
+    // The old local rule scoring is gone: the report now comes from the
+    // server, which calls OpenAI and enforces the report credits. A credit
+    // is only consumed server-side after a report is generated successfully.
+    let lastApiReport = null;
+    let lastApiMeta = null;
 
-      if (lang.includes("japanese") || lang.includes("日") || lang.includes("japan")) score += 8;
-      if (lang.includes("english") || lang.includes("英")) score += 5;
-      if (lang.includes("mandarin") || lang.includes("中文") || lang.includes("chinese")) score += 5;
-      if (edu.includes("law") || edu.includes("llb") || edu.includes("legal") || edu.includes("法")) score += 8;
-      if (profile.career.includes("Compliance") || profile.career.includes("AML") || profile.career.includes("Legal")) score += 5;
-      if (profile.visa.includes("No sponsorship")) score += 8;
-      if (profile.visa.includes("Graduate route")) score += 4;
-      if (profile.visa.includes("Need sponsorship")) score -= 4;
-      if (bg.length > 40) score += 3;
-
-      return Math.max(48, Math.min(score, 92));
+    function readJobs() {
+      const jobs = [];
+      for (let i = 1; i <= 3; i++) {
+        const title = (document.getElementById("jobTitle" + i).value || "").trim();
+        const description = (document.getElementById("jobDesc" + i).value || "").trim();
+        if (description) jobs.push({ title: title || ("Job " + i), description });
+      }
+      return jobs;
     }
 
-    function risk(profile) {
-      if (profile.visa.includes("No sponsorship")) return reportLang === "zh" ? "低" : reportLang === "ja" ? "低い" : "Low";
-      if (profile.visa.includes("Need sponsorship")) return reportLang === "zh" ? "中高" : reportLang === "ja" ? "中から高" : "Medium high";
-      return reportLang === "zh" ? "中等" : reportLang === "ja" ? "中程度" : "Medium";
+    function reportLanguageInstruction() {
+      // The model writes the report in the language of the candidate
+      // background; this pins it to the report language picked on this page.
+      if (reportLang === "zh") return "Please write the report in Chinese.";
+      if (reportLang === "ja") return "Please write the report in Japanese.";
+      return "Please write the report in English.";
     }
 
-    function priority(score) {
-      if (score >= 82) return reportLang === "zh" ? "高" : reportLang === "ja" ? "高" : "High";
-      if (score >= 68) return reportLang === "zh" ? "中高" : reportLang === "ja" ? "中から高" : "Medium high";
-      return reportLang === "zh" ? "中等" : reportLang === "ja" ? "中程度" : "Medium";
-    }
-
-    function generateReport(scroll = true) {
+    function buildAnalyzePayload() {
       const profile = readProfile();
-      const score = calculateScore(profile);
-      const riskLabel = risk(profile);
-      const priorityLabel = priority(score);
+      if (!profile.background || profile.background.length < 20) {
+        return { error: "needBackground" };
+      }
+      const jobs = readJobs();
+      if (!jobs.length || jobs[0].description.length < 50) {
+        return { error: "needJob" };
+      }
+      if (jobs.some(job => job.description.length < 50)) {
+        return { error: "jobShort" };
+      }
+      const lines = [];
+      if (profile.education) lines.push("Education: " + profile.education);
+      if (profile.languages) lines.push("Languages: " + profile.languages);
+      if (profile.experience) lines.push("Experience level: " + profile.experience);
+      if (profile.visa) lines.push("Work authorisation: " + profile.visa);
+      lines.push("Background: " + profile.background);
+      lines.push(reportLanguageInstruction());
+      return {
+        payload: {
+          background: lines.join("\n").slice(0, 2400),
+          languages: profile.languages,
+          targetCountry: profile.market,
+          targetIndustry: profile.career,
+          concerns: "Work authorisation: " + profile.visa,
+          jobs: jobs.slice(0, 3)
+        }
+      };
+    }
 
-      const langPrefix =
-        reportLang === "zh"
-          ? `基于你的背景：${profile.education}，语言能力：${profile.languages}，目标市场：${profile.market}，方向：${profile.career}。`
-          : reportLang === "ja"
-            ? `あなたの背景：${profile.education}、言語能力：${profile.languages}、対象市場：${profile.market}、方向性：${profile.career}。`
-            : `Based on your background: ${profile.education}, languages: ${profile.languages}, target market: ${profile.market}, direction: ${profile.career}.`;
+    function setStatus(message, kind) {
+      const box = document.getElementById("reportStatus");
+      if (!message) {
+        box.hidden = true;
+        box.textContent = "";
+        return;
+      }
+      box.hidden = false;
+      box.textContent = message;
+      box.className = "auth-message " + (kind === "error" ? "error" : "info");
+    }
+
+    function setStatusHtml(html) {
+      const box = document.getElementById("reportStatus");
+      box.hidden = false;
+      box.innerHTML = html;
+      box.className = "auth-message error";
+    }
+
+    function bestJob(report) {
+      const jobs = Array.isArray(report.jobs) ? report.jobs : [];
+      let best = null;
+      jobs.forEach(job => {
+        const score = Number(job.fit_score) || 0;
+        if (!best || score > (Number(best.fit_score) || 0)) best = job;
+      });
+      return best;
+    }
+
+    function scoreRingStyle(score) {
+      const pct = Math.max(0, Math.min(100, Number(score) || 0));
+      const deg = Math.round(pct * 3.6);
+      return "background: conic-gradient(#93c5fd 0deg " + deg + "deg, rgba(255,255,255,.12) " + deg + "deg 360deg);";
+    }
+
+    function renderApiReport(report, meta, scroll = true) {
+      const jobs = Array.isArray(report.jobs) ? report.jobs : [];
+      const best = bestJob(report);
+      const bestScore = best ? (Number(best.fit_score) || 0) : 0;
+
+      // The hero preview orb shows the best score from the real report.
+      document.getElementById("orbScore").textContent = best ? bestScore + "%" : "—";
+      document.getElementById("orbFit").textContent = best ? bestScore + "%" : "—";
+      document.getElementById("orbVisa").textContent = best ? String(best.main_risk || "—").slice(0, 28) : "—";
+      document.getElementById("orbPriority").textContent = best ? String(best.priority || "—") : "—";
+
+      const consumedKey =
+        meta && meta.consumed_from === "free" ? "consumedFree" :
+        meta && meta.consumed_from === "premium" ? "consumedPremium" :
+        meta && meta.consumed_from === "paid" ? "consumedPaid" : null;
+
+      const jobCards = jobs.map(job => `
+        <div class="insight-card">
+          <h3>${escapeHtml(job.role || "")}</h3>
+          <p><strong>${escapeHtml(t("result.fitScore"))}: ${Number(job.fit_score) || 0}% · ${escapeHtml(t("result.priority"))}: ${escapeHtml(job.priority || "")}</strong></p>
+          <p>${escapeHtml(t("result.risk"))}: ${escapeHtml(job.main_risk || "")}</p>
+          <p>${escapeHtml(t("result.reason"))}: ${escapeHtml(job.reason || "")}</p>
+          <p>${escapeHtml(t("result.nextStep"))}: ${escapeHtml(job.suggested_action || "")}</p>
+        </div>`).join("");
 
       const html = `
         <div class="report-grid">
           <div class="report-top">
             <div class="report-score-card">
-              <div class="report-score-ring"><strong>${score}%</strong></div>
-              <p>${escapeHtml(t("report.score"))}</p>
+              <div class="report-score-ring" style="${scoreRingStyle(bestScore)}"><strong>${bestScore}%</strong></div>
+              <p>${escapeHtml(t("result.score"))}</p>
             </div>
 
             <div class="report-summary">
-              <h3>${escapeHtml(t("report.summary"))}</h3>
-              <p>${escapeHtml(langPrefix)} ${escapeHtml(t("report.summaryText"))}</p>
+              <h3>${escapeHtml(t("result.snapshot"))}</h3>
+              <p>${escapeHtml(report.candidate_snapshot || "")}</p>
+              <p>${escapeHtml(report.overall_route || "")}</p>
+              ${consumedKey ? `<p>${escapeHtml(t("form." + consumedKey))}</p>` : ""}
               <div class="chip-row">
-                <span class="chip">${escapeHtml(profile.market)}</span>
-                <span class="chip">${escapeHtml(profile.career)}</span>
-                <span class="chip">${escapeHtml(t("preview.visa"))}: ${escapeHtml(riskLabel)}</span>
-                <span class="chip">${escapeHtml(t("preview.priority"))}: ${escapeHtml(priorityLabel)}</span>
+                <span class="chip">${escapeHtml(readProfile().market)}</span>
+                <span class="chip">${escapeHtml(readProfile().career)}</span>
               </div>
             </div>
           </div>
 
           <div class="insights">
+            ${jobCards}
             <div class="insight-card">
-              <h3>${escapeHtml(t("report.bestRoles"))}</h3>
-              <ul>
-                <li>${escapeHtml(t("report.role1"))}</li>
-                <li>${escapeHtml(t("report.role2"))}</li>
-                <li>${escapeHtml(t("report.role3"))}</li>
-              </ul>
+              <h3>${escapeHtml(t("result.advice"))}</h3>
+              <p>${escapeHtml(report.final_advice || "")}</p>
             </div>
-
-            <div class="insight-card">
-              <h3>${escapeHtml(t("report.risks"))}</h3>
-              <ul>
-                <li>${escapeHtml(t("report.risk1"))}</li>
-                <li>${escapeHtml(t("report.risk2"))}</li>
-                <li>${escapeHtml(t("report.risk3"))}</li>
-              </ul>
-            </div>
-
-            <div class="insight-card">
-              <h3>${escapeHtml(t("report.actions"))}</h3>
-              <ul>
-                <li>${escapeHtml(t("report.action1"))}</li>
-                <li>${escapeHtml(t("report.action2"))}</li>
-                <li>${escapeHtml(t("report.action3"))}</li>
-              </ul>
-            </div>
-
+            ${report.cover_letter_opening ? `
             <div class="insight-card cover-letter">
-              <h3>${escapeHtml(t("report.cover"))}</h3>
-              <p>${escapeHtml(t("report.coverText"))}</p>
-            </div>
+              <h3>${escapeHtml(t("result.cover"))}</h3>
+              <p>${escapeHtml(report.cover_letter_opening)}</p>
+            </div>` : ""}
           </div>
+          <p style="color:#8ea0b5;font-size:12px;line-height:1.6;margin:6px 2px 0;">${escapeHtml(t("result.note"))}: ${escapeHtml(report.disclaimer || "")}</p>
         </div>
       `;
 
       document.getElementById("reportBody").innerHTML = html;
 
       lastReportText = [
-        t("report.score") + ": " + score + "%",
-        t("report.summary") + ": " + langPrefix + " " + t("report.summaryText"),
-        t("report.bestRoles") + ": " + [t("report.role1"), t("report.role2"), t("report.role3")].join(", "),
-        t("report.risks") + ": " + [t("report.risk1"), t("report.risk2"), t("report.risk3")].join(" "),
-        t("report.actions") + ": " + [t("report.action1"), t("report.action2"), t("report.action3")].join(" "),
-        t("report.cover") + ": " + t("report.coverText")
+        t("result.score") + ": " + bestScore + "%",
+        t("result.snapshot") + ": " + (report.candidate_snapshot || ""),
+        t("result.route") + ": " + (report.overall_route || ""),
+        t("result.jobs") + ":",
+        ...jobs.map(job => `- ${job.role || ""}: ${Number(job.fit_score) || 0}% (${job.priority || ""}) — ${job.main_risk || ""} — ${job.reason || ""} — ${job.suggested_action || ""}`),
+        t("result.advice") + ": " + (report.final_advice || ""),
+        ...(report.cover_letter_opening ? [t("result.cover") + ": " + report.cover_letter_opening] : []),
+        t("result.note") + ": " + (report.disclaimer || "")
       ].join("\n\n");
 
       if (scroll) {
         document.querySelector(".output").scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+
+    async function generateReport() {
+      const built = buildAnalyzePayload();
+      if (built.error) {
+        setStatus(t("form." + built.error), "error");
+        return;
+      }
+
+      const button = document.getElementById("generateButton");
+      const originalText = button.textContent;
+      button.disabled = true;
+      button.textContent = t("form.generating");
+      setStatus(null);
+
+      try {
+        const result = await window.JOAnalyze.analyzeReport(built.payload);
+        const kind = window.JOAnalyze.errorKind(result);
+        if (result.status === 200 && result.data && result.data.success && result.data.report) {
+          lastApiReport = result.data.report;
+          lastApiMeta = result.data;
+          renderApiReport(lastApiReport, lastApiMeta, true);
+          window.JOAnalyze.refreshCredits();
+          return;
+        }
+        if (result.status === 401) {
+          window.location.href = "login.html?redirect=report.html";
+          return;
+        }
+        if (kind === "no_credits") {
+          setStatusHtml(escapeHtml(t("form.noCredits")) + ' <a href="pricing.html">' + escapeHtml(t("form.noCreditsLink")) + " →</a>");
+          return;
+        }
+        if (kind === "rate_limited") setStatus(t("form.rateLimited"), "error");
+        else if (kind === "bad_request") setStatus(t("form.badRequest"), "error");
+        else setStatus(t("form.serverError"), "error");
+      } catch (e) {
+        setStatus(t("form.networkError"), "error");
+      } finally {
+        button.disabled = false;
+        button.textContent = originalText;
+      }
+    }
+
+    // --- "Use my profile" ----------------------------------------------------
+    // Fills the form from the signed-in user's saved profile (user_profiles).
+    // Only empty fields are filled; nothing the user already typed is lost.
+    const MARKET_MAP = {
+      "日本": "Japan", "英国": "United Kingdom", "香港": "Hong Kong",
+      "新加坡": "Singapore", "加拿大": "Canada", "澳大利亚": "Australia", "远程": "Remote"
+    };
+    const CAREER_MAP = {
+      "法律 / 合规": "Legal / Compliance", "金融 / 合规": "Legal / Compliance",
+      "AML / KYC": "AML / KYC", "金融 / 风险": "Finance / Risk",
+      "商务 / 运营": "Business / Operations", "国际业务": "Business / Operations",
+      "Web3 / Crypto": "Web3 / Crypto", "数据 / 产品": "Data / Product"
+    };
+
+    function setSelectValue(select, value, map) {
+      if (!select || !value) return;
+      const wanted = (map && map[value]) || value;
+      const option = Array.from(select.options || []).find(o => o.value === wanted);
+      if (option) select.value = option.value;
+    }
+
+    function setFieldValue(id, value) {
+      const el = document.getElementById(id);
+      if (el && value && !el.value.trim()) el.value = value;
+    }
+
+    async function loadProfile() {
+      const statusEl = document.getElementById("profileStatus");
+      const button = document.getElementById("loadProfileButton");
+      statusEl.hidden = false;
+      statusEl.textContent = "";
+      button.disabled = true;
+      try {
+        const token = await window.JOAnalyze.getAccessToken();
+        if (!token || !window.japanOfferAuth) {
+          statusEl.textContent = t("form.profileLogin");
+          return;
+        }
+        const client = window.japanOfferAuth;
+        const { data: userData, error: userError } = await client.auth.getUser();
+        const user = userData && userData.user;
+        if (userError || !user) {
+          statusEl.textContent = t("form.profileLogin");
+          return;
+        }
+        const { data: profile, error: profileError } = await client
+          .from("user_profiles")
+          .select("*")
+          .eq("user_id", user.id)
+          .maybeSingle();
+        if (profileError || !profile) {
+          statusEl.textContent = t("form.profileEmpty");
+          return;
+        }
+        setFieldValue("education", profile.headline || "");
+        setFieldValue("languages", profile.languages || "");
+        setSelectValue(document.getElementById("market"), profile.target_market, MARKET_MAP);
+        setSelectValue(document.getElementById("career"), profile.career_direction, CAREER_MAP);
+        setFieldValue("background", profile.bio || "");
+        statusEl.textContent = t("form.profileLoaded");
+      } catch (e) {
+        statusEl.textContent = t("form.profileError");
+      } finally {
+        button.disabled = false;
       }
     }
 
@@ -1409,14 +1731,15 @@
       btn.addEventListener("click", () => {
         reportLang = btn.dataset.reportLang;
         document.querySelectorAll("[data-report-lang]").forEach(item => item.classList.toggle("active", item === btn));
-        generateReport();
       });
     });
+
+    document.getElementById("loadProfileButton").addEventListener("click", () => loadProfile());
 
     document.getElementById("generateButton").addEventListener("click", () => generateReport());
 
     document.getElementById("copyButton").addEventListener("click", async () => {
-      if (!lastReportText) generateReport(false);
+      if (!lastReportText) return;
       try {
         await navigator.clipboard.writeText(lastReportText);
         document.getElementById("copyButton").textContent = I18N[reportLang].copied;
@@ -1455,6 +1778,7 @@
   <script src="auth-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="auth.js"></script>
+  <script src="api-report.js"></script>
   <script src="billing.js"></script>
   <script src="mobile-header-fix.js?v=2"></script>
   <script src="mobile-text-fix.js"></script>

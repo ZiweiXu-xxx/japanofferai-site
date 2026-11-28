@@ -336,6 +336,7 @@ Return this exact JSON structure:
     }
   ],
   "final_advice": "clear overall recommendation, including which job should be prioritised first and which should not waste too much time",
+  "cover_letter_opening": "a short tailored cover letter opening (2-3 sentences) for the top-priority job, written in the same language as the rest of the report",
   "disclaimer": "This is an early-stage AI assessment and not legal, immigration, or professional career advice."
 }
 `;
