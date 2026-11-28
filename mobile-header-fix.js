@@ -97,7 +97,7 @@
         grid-column: 2 !important;
         grid-row: 1 !important;
         justify-self: end !important;
-        width: 68px !important;
+        width: 88px !important;
         height: 34px !important;
         min-height: 34px !important;
         border-radius: 999px !important;

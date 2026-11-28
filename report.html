@@ -396,6 +396,68 @@
       color: var(--blue);
     }
 
+    /* Empty state: before any report exists the ring is a dashed
+       placeholder (not a near-full score arc) and the three values read
+       as muted dashes. renderApiReport removes .is-empty once a real
+       report is rendered, and hides .orb-empty with it. */
+    .score-stage.is-empty .score-ring {
+      background: transparent;
+      border: 2px dashed rgba(147,197,253,.45);
+      box-shadow: none;
+    }
+
+    .score-stage.is-empty .score-ring::before {
+      background: transparent;
+    }
+
+    .score-stage.is-empty .score-ring strong {
+      color: var(--muted);
+      font-size: 32px;
+    }
+
+    .score-stage.is-empty .score-row strong {
+      color: var(--muted);
+    }
+
+    .orb-empty {
+      padding: 0 28px 28px;
+      text-align: center;
+    }
+
+    .orb-empty[hidden] {
+      display: none;
+    }
+
+    .orb-empty strong {
+      display: block;
+      font-size: 18px;
+      letter-spacing: -.02em;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+
+    .orb-empty p {
+      margin: 0 auto 16px;
+      max-width: 340px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .orb-empty a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 22px;
+      border-radius: 999px;
+      background: var(--blue);
+      color: #fff;
+      font-weight: 850;
+      font-size: 15px;
+      text-decoration: none;
+    }
+
     .score-row {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -879,7 +941,7 @@
       }
     }
   </style>
-  <link rel="stylesheet" href="assets/css/design-system.css?v=2" />
+  <link rel="stylesheet" href="assets/css/design-system.css?v=3" />
   <script src="site-lang.js"></script>
 </head>
 
@@ -952,7 +1014,7 @@
             <em data-i18n="preview.live">Preview</em>
           </div>
 
-          <div class="score-stage">
+          <div class="score-stage is-empty">
             <div class="score-ring"><strong id="orbScore">—</strong></div>
             <div class="score-row">
               <div>
@@ -969,6 +1031,12 @@
               </div>
             </div>
           </div>
+
+          <div class="orb-empty" id="orbEmpty">
+            <strong data-i18n="preview.emptyTitle">No report yet</strong>
+            <p data-i18n="preview.emptyCopy">Fill in your profile below and generate your first match report — your score, visa risk and priority will appear here.</p>
+            <a href="#report-form" data-i18n="preview.emptyCta">Start the fit check</a>
+          </div>
         </div>
 
         <div class="floating-note note-a">
@@ -983,7 +1051,7 @@
       </aside>
     </section>
 
-    <section class="workspace">
+    <section class="workspace" id="report-form">
       <div class="workspace-card reveal">
         <section class="panel">
           <div class="panel-head">
@@ -1153,7 +1221,7 @@
           copy: "Build a structured international career report in one page: target market, role direction, match score, visa and language risk, application priority and cover letter opening."
         },
         pills: { market: "Target market", visa: "Visa risk", language: "Language fit", priority: "Apply priority" },
-        preview: { title: "JapanOffer Report OS", live: "Preview", fit: "Role fit", visa: "Visa risk", priority: "Priority" },
+        preview: { title: "JapanOffer Report OS", live: "Preview", fit: "Role fit", visa: "Visa risk", priority: "Priority", emptyTitle: "No report yet", emptyCopy: "Fill in your profile below and generate your first match report — your score, visa risk and priority will appear here.", emptyCta: "Start the fit check" },
         note: { market: "Market", route: "Route" },
         form: {
           title: "Build your match profile",
@@ -1230,7 +1298,7 @@
           copy: "在一个页面里生成结构化国际求职报告：目标市场、岗位方向、匹配分数、签证和语言风险、申请优先级以及 Cover Letter 开头。"
         },
         pills: { market: "目标市场", visa: "签证风险", language: "语言匹配", priority: "申请优先级" },
-        preview: { title: "JapanOffer 报告系统", live: "预览", fit: "岗位匹配", visa: "签证风险", priority: "优先级" },
+        preview: { title: "JapanOffer 报告系统", live: "预览", fit: "岗位匹配", visa: "签证风险", priority: "优先级", emptyTitle: "还没有生成报告", emptyCopy: "填写下面的档案并生成你的第一份匹配报告，分数、签证风险和优先级会显示在这里。", emptyCta: "开始适配检查" },
         note: { market: "市场", route: "路线" },
         form: {
           title: "建立你的匹配档案",
@@ -1307,7 +1375,7 @@
           copy: "対象市場、職種方向、マッチスコア、ビザと言語リスク、応募優先度、カバーレター冒頭文を一つのページで整理します。"
         },
         pills: { market: "対象市場", visa: "ビザリスク", language: "言語マッチ", priority: "応募優先度" },
-        preview: { title: "JapanOffer Report OS", live: "プレビュー", fit: "職種適性", visa: "ビザリスク", priority: "優先度" },
+        preview: { title: "JapanOffer Report OS", live: "プレビュー", fit: "職種適性", visa: "ビザリスク", priority: "優先度", emptyTitle: "まだレポートがありません", emptyCopy: "下のプロフィールを入力して最初のマッチレポートを生成すると、スコア、ビザリスク、優先度がここに表示されます。", emptyCta: "適性チェックを開始" },
         note: { market: "市場", route: "ルート" },
         form: {
           title: "マッチングプロフィール作成",
@@ -1541,6 +1609,13 @@
       document.getElementById("orbFit").textContent = best ? bestScore + "%" : "—";
       document.getElementById("orbVisa").textContent = best ? String(best.main_risk || "—").slice(0, 28) : "—";
       document.getElementById("orbPriority").textContent = best ? String(best.priority || "—") : "—";
+
+      // Empty state: keep the dashed placeholder + message until a real
+      // report exists; hide them once the orb shows real values.
+      const scoreStage = document.querySelector(".score-stage");
+      const orbEmpty = document.getElementById("orbEmpty");
+      if (scoreStage) scoreStage.classList.toggle("is-empty", !best);
+      if (orbEmpty) orbEmpty.hidden = !!best;
 
       const consumedKey =
         meta && meta.consumed_from === "free" ? "consumedFree" :
@@ -1780,9 +1855,9 @@
   <script src="auth.js"></script>
   <script src="api-report.js"></script>
   <script src="billing.js"></script>
-  <script src="mobile-header-fix.js?v=2"></script>
+  <script src="mobile-header-fix.js?v=3"></script>
   <script src="mobile-text-fix.js"></script>
-  <script src="legal-positioning.js"></script>
+  <script src="legal-positioning.js?v=3"></script>
   <footer class="ds-footer">
     <div class="ds-footer-grid">
       <div class="ds-footer-brand">

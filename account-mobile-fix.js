@@ -32,9 +32,10 @@
         z-index: 20 !important;
         padding: 0 !important;
         margin: 0 !important;
-        background: rgba(248, 251, 255, .84) !important;
-        backdrop-filter: blur(14px) !important;
-        -webkit-backdrop-filter: blur(14px) !important;
+        background: #0A1F44 !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        border-bottom: 1px solid rgba(234,240,251,.12) !important;
       }
 
       .topbar .shell,
@@ -63,9 +64,9 @@
         border-top: 0 !important;
         border-left: 0 !important;
         border-right: 0 !important;
-        border-bottom: 1px solid rgba(16,24,40,.08) !important;
-        background: rgba(255,255,255,.78) !important;
-        box-shadow: 0 8px 24px rgba(16,24,40,.055) !important;
+        border-bottom: 1px solid rgba(234,240,251,.12) !important;
+        background: #0A1F44 !important;
+        box-shadow: none !important;
         display: grid !important;
         grid-template-columns: minmax(0,1fr) auto !important;
         gap: 9px 10px !important;
@@ -110,13 +111,15 @@
         grid-column: 2 !important;
         grid-row: 1 !important;
         justify-self: end !important;
-        width: 68px !important;
+        width: 88px !important;
         height: 34px !important;
         min-height: 34px !important;
         border-radius: 999px !important;
         font-size: 12px !important;
         padding: 0 8px !important;
-        background: rgba(255,255,255,.94) !important;
+        background: rgba(255,255,255,.08) !important;
+        color: #EAF0FB !important;
+        border: 1px solid rgba(234,240,251,.2) !important;
       }
 
       .top-search,
@@ -157,10 +160,10 @@
         padding: 8px 11px !important;
         min-height: 32px !important;
         border-radius: 999px !important;
-        border: 1px solid rgba(16,24,40,.08) !important;
-        background: rgba(255,255,255,.86) !important;
+        border: 1px solid rgba(234,240,251,.16) !important;
+        background: rgba(255,255,255,.06) !important;
         box-shadow: none !important;
-        color: #27364a !important;
+        color: #EAF0FB !important;
         font-size: 12px !important;
         font-weight: 900 !important;
         line-height: 1 !important;
@@ -198,7 +201,7 @@
       .auth-links a:first-child,
       .auth-actions a:first-child {
         background: transparent !important;
-        color: #27364a !important;
+        color: #EAF0FB !important;
         border: 0 !important;
       }
 
