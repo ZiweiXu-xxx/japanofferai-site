@@ -25,11 +25,12 @@
         z-index: 50 !important;
         padding: 0 !important;
         margin: 0 !important;
-        /* Solid white: the old translucent + blur let hero text show
-           through the header while scrolling. This style element is
-           appended to <head> at runtime, so it wins over the design
-           system on equal importance — it must agree with it. */
-        background: #fff !important;
+        /* Solid navy (#0A1F44): the old translucent + blur let hero
+           text show through the header while scrolling. This style
+           element is appended to <head> at runtime, so it wins over
+           the design system on equal importance — it must agree
+           with it. */
+        background: #0A1F44 !important;
         backdrop-filter: none !important;
         -webkit-backdrop-filter: none !important;
       }
@@ -53,9 +54,9 @@
         border-top: 0 !important;
         border-left: 0 !important;
         border-right: 0 !important;
-        border-bottom: 1px solid rgba(16, 24, 40, 0.08) !important;
-        background: #fff !important;
-        box-shadow: 0 8px 24px rgba(16, 24, 40, 0.055) !important;
+        border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+        background: #0A1F44 !important;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.255) !important;
         display: grid !important;
         grid-template-columns: minmax(0, 1fr) auto !important;
         gap: 9px 10px !important;
@@ -102,7 +103,7 @@
         border-radius: 999px !important;
         font-size: 12px !important;
         padding: 0 8px !important;
-        background: rgba(255, 255, 255, 0.94) !important;
+        background: rgba(12,33,72,0.94) !important;
       }
 
       .top-search {
@@ -135,10 +136,10 @@
         padding: 8px 11px !important;
         min-height: 32px !important;
         border-radius: 999px !important;
-        border: 1px solid rgba(16, 24, 40, 0.08) !important;
-        background: rgba(255, 255, 255, 0.86) !important;
+        border: 1px solid rgba(255,255,255,0.08) !important;
+        background: rgba(12,33,72,0.86) !important;
         box-shadow: none !important;
-        color: #27364a !important;
+        color: #DCE6F7 !important;
         font-size: 12px !important;
         font-weight: 900 !important;
         line-height: 1 !important;
@@ -173,7 +174,7 @@
       .auth-links a:first-child,
       .auth-links button:first-child {
         background: transparent !important;
-        color: #27364a !important;
+        color: #DCE6F7 !important;
         border: 0 !important;
       }
 

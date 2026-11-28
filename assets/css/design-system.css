@@ -5,44 +5,46 @@
    each page's inline <style>, so rules here win ties in the cascade.
    No new external dependencies: system font stack only, no webfonts.
 
-   Palette: clean light surfaces, deep navy as the primary brand colour,
-   blue for actions, warm gold as the single accent. Text colours are
-   chosen for >= 4.5:1 contrast on white.
+   Palette: dark navy page (#060F22), navy surfaces, blue for actions,
+   warm gold as the single accent — the same theme as the homepage
+   (index.html). Text colours are chosen for >= 4.5:1 contrast on
+   the dark background.
    ========================================================================== */
 
 :root {
+  color-scheme: dark;
   /* Brand */
   --ds-navy: #0a1f44;
   --ds-navy-2: #10294f;
   --ds-navy-3: #16386a;
-  --ds-blue: #1f57c8;
+  --ds-blue: #3B74E8;
   --ds-blue-2: #2f6df6;
-  --ds-blue-soft: #eaf2ff;
-  --ds-blue-ink: #17419b;
-  --ds-gold: #c9a227;
-  --ds-gold-deep: #6b5410; /* gold text: 7.2:1 on white, 6.5:1 on gold-soft */
-  --ds-gold-soft: #fbf3dc;
-  --ds-teal: #0e7490;
-  --ds-teal-soft: #e6f4f8;
+  --ds-blue-soft: rgba(31,87,200,.25);
+  --ds-blue-ink: #93B8FD;
+  --ds-gold: #C9A227;
+  --ds-gold-deep: #E9CE7A; /* gold text: 7.2:1 on white, 6.5:1 on gold-soft */
+  --ds-gold-soft: rgba(201,162,39,.18);
+  --ds-teal: #5EEAD4;
+  --ds-teal-soft: rgba(14,116,144,.25);
 
   /* Neutrals */
-  --ds-ink: #101828;
-  --ds-body: #344054;
-  --ds-muted: #475467; /* 7.0:1 on white */
-  --ds-faint: #667085; /* 4.8:1 on white */
-  --ds-line: rgba(16, 24, 40, 0.1);
-  --ds-line-strong: rgba(16, 24, 40, 0.16);
-  --ds-bg: #f6f8fc;
-  --ds-surface: #ffffff;
-  --ds-surface-2: #f2f6fc;
+  --ds-ink: #EAF0FB;
+  --ds-body: #C6D2E8;
+  --ds-muted: #93A5C4; /* 7.0:1 on white */
+  --ds-faint: #7E90B0; /* 4.8:1 on white */
+  --ds-line: rgba(255,255,255,.12);
+  --ds-line-strong: rgba(255,255,255,.18);
+  --ds-bg: #060F22;
+  --ds-surface: #0C2148;
+  --ds-surface-2: #10295A;
 
   /* Shape + elevation */
   --ds-radius-sm: 12px;
   --ds-radius: 18px;
   --ds-radius-lg: 26px;
-  --ds-shadow-sm: 0 6px 20px rgba(16, 24, 40, 0.06);
-  --ds-shadow: 0 18px 48px rgba(16, 24, 40, 0.08);
-  --ds-shadow-lg: 0 28px 70px rgba(16, 24, 40, 0.14);
+  --ds-shadow-sm: 0 6px 20px rgba(0,0,0,0.26);
+  --ds-shadow: 0 18px 48px rgba(0,0,0,0.28);
+  --ds-shadow-lg: 0 28px 70px rgba(0,0,0,0.34);
   --ds-shadow-blue: 0 18px 44px rgba(31, 87, 200, 0.22);
 
   /* Type */
@@ -72,11 +74,11 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
-/* The light theme is the default, but pages that define their own dark
-   theme (jobs-search.html) opt out with <body data-theme="dark">. Without
-   this, the dark page's own white text gets repainted dark ink and its
-   headings become unreadable on the dark background. */
-body:not([data-theme="dark"]) {
+/* The dark theme is the default for every page now (site-wide dark
+   restyle, 2026-11-28). Pages that already had their own dark theme
+   (jobs-search.html, <body data-theme="dark">) keep working: their
+   own variables agree with these tokens. */
+body {
   font-family: var(--ds-font);
   color: var(--ds-ink);
   background-color: var(--ds-bg);
@@ -165,7 +167,7 @@ a:hover {
 
 .ds-eyebrow {
   margin: 0 0 14px;
-  color: var(--ds-blue);
+  color: #E9CE7A;
   font-size: var(--ds-text-xs);
   font-weight: 900;
   text-transform: uppercase;
@@ -398,7 +400,7 @@ button:disabled {
 }
 
 .kicker {
-  color: var(--ds-blue);
+  color: #E9CE7A;
   font-size: var(--ds-text-xs);
   font-weight: 900;
   text-transform: uppercase;
@@ -466,7 +468,7 @@ textarea {
 
 input::placeholder,
 textarea::placeholder {
-  color: #98a2b3;
+  color: #7E90B0;
 }
 
 input:focus,
@@ -508,20 +510,20 @@ textarea {
 .auth-message.info {
   background: var(--ds-blue-soft);
   border-color: rgba(31, 87, 200, 0.25);
-  color: #1e3a6e;
+  color: #BFD2F7;
 }
 
 .auth-message.error,
 .auth-message.danger {
-  background: #fef2f2;
+  background: rgba(185,28,28,.20);
   border-color: rgba(185, 28, 28, 0.3);
-  color: #7f1d1d;
+  color: #FECACA;
 }
 
 .auth-message.success {
-  background: #ecfdf5;
+  background: rgba(4,120,87,.22);
   border-color: rgba(4, 120, 87, 0.3);
-  color: #065f46;
+  color: #A7F3D0;
 }
 
 .auth-message[hidden] {
@@ -530,9 +532,11 @@ textarea {
 
 /* ------------------------------------------------------------------ header */
 .topbar {
-  background: rgba(255, 255, 255, 0.82);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  /* Solid navy header: the old translucent + blur let page text show
+     through the header while scrolling. Matches the homepage. */
+  background: #0A1F44;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   border-bottom: 1px solid var(--ds-line);
 }
 
@@ -655,9 +659,9 @@ select.lang-select {
   gap: 6px 12px;
   padding: 14px 18px;
   border-radius: var(--ds-radius);
-  background: linear-gradient(135deg, var(--ds-blue-soft), #f4f7ff);
+  background: linear-gradient(135deg, var(--ds-blue-soft), #10295A);
   border: 1px solid rgba(31, 87, 200, 0.28);
-  color: #1e3a6e;
+  color: #BFD2F7;
   font-size: 14px;
   font-weight: 700;
   line-height: 1.55;
@@ -778,7 +782,7 @@ select.lang-select {
 .trust-bar {
   padding: 26px 0;
   border-block: 1px solid var(--ds-line);
-  background: rgba(255, 255, 255, 0.66);
+  background: rgba(12,33,72,0.66);
 }
 
 .trust-bar-inner {
@@ -796,7 +800,7 @@ select.lang-select {
 }
 
 .trust-row strong {
-  color: var(--ds-navy);
+  color: #E9CE7A;
   font-size: 12px;
   font-weight: 900;
   text-transform: uppercase;
@@ -990,14 +994,14 @@ code {
     top: auto !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
-    background: #fff !important;
+    background: #0A1F44 !important;
   }
 
   .topbar-inner {
     grid-template-columns: minmax(0, 1fr) auto !important;
     gap: 10px !important;
     padding: 12px !important;
-    background: #fff !important;
+    background: #0A1F44 !important;
   }
 
   .topbar:has(> .nav) {
