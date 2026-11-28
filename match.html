@@ -110,6 +110,10 @@
       font-weight: 850;
     }
 
+    .jo22-nav .lang-select {
+      flex: 0 0 auto;
+    }
+
     .jo22-nav .jo22-primary-link {
       color: #fff;
       background: linear-gradient(135deg, var(--jo22-blue), var(--jo22-blue-dark));
@@ -145,7 +149,7 @@
       margin: 0;
       max-width: 680px;
       font-size: clamp(46px, 6vw, 78px);
-      line-height: .96;
+      line-height: 1.12;
       letter-spacing: -.074em;
       font-weight: 950;
     }
@@ -678,6 +682,68 @@
         display: none;
       }
 
+      /* Header row is tight at 390px now the language select shares it:
+         smaller nav gap, narrower select (tighter padding; the select sizes
+         to its widest option 日本語), tighter signup pill, and a slightly
+         smaller wordmark. Together they free the ~16px the one-line
+         "JapanOffer AI" wordmark needs in English (where "Sign up" is wider
+         than 注册/登録). The brand is left free to wrap on narrower screens
+         rather than forcing overflow. */
+      .jo22-nav {
+        gap: 8px;
+      }
+
+      .jo22-nav .lang-select {
+        min-width: 64px;
+        padding: 8px 6px;
+      }
+
+      .jo22-nav .jo22-primary-link {
+        flex: 0 0 auto;
+        white-space: nowrap;
+        padding: 10px 12px;
+      }
+
+      .jo22-brand strong {
+        font-size: 16px;
+      }
+
+      /* Header row is tight at 390px now the language select shares it:
+         smaller nav gap, narrower select (64px still fits EN/中文, and 日本語
+         sizes itself wider by content), tighter signup pill. Together they
+         free the ~16px the one-line "JapanOffer AI" wordmark needs in
+         English (where "Sign up" is wider than 注册/登録). The brand is
+         left free to wrap on narrower screens rather than forcing overflow. */
+      .jo22-nav {
+        gap: 8px;
+      }
+
+      .jo22-nav .lang-select {
+        min-width: 64px;
+      }
+
+      .jo22-nav .jo22-primary-link {
+        flex: 0 0 auto;
+        white-space: nowrap;
+        padding: 10px 12px;
+      }
+
+      /* Header row is tight at 390px now the language select shares it:
+         smaller nav gap, slightly narrower select (80px still fits 日本語),
+         and the signup pill never wraps or shrinks. */
+      .jo22-nav {
+        gap: 8px;
+      }
+
+      .jo22-nav .lang-select {
+        min-width: 80px;
+      }
+
+      .jo22-nav .jo22-primary-link {
+        flex: 0 0 auto;
+        white-space: nowrap;
+      }
+
       .jo22-main {
         width: min(100% - 28px, 1200px);
         padding: 42px 0 68px;
@@ -696,7 +762,8 @@
       }
     }
   </style>
-  <link rel="stylesheet" href="assets/css/design-system.css?v=3" />
+  <link rel="stylesheet" href="assets/css/design-system.css?v=4" />
+  <script src="site-lang.js"></script>
 </head>
 <body>
   <header class="jo22-topbar">
@@ -704,15 +771,20 @@
       <span class="jo22-logo">J</span>
       <span>
         <strong>JapanOffer AI</strong>
-        <small>中文 AI 岗位匹配</small>
+        <small data-i18n="brand.small">中文 AI 岗位匹配</small>
       </span>
     </a>
 
     <nav class="jo22-nav">
-      <a href="index.html">首页</a>
-      <a href="jobs.html">岗位</a>
-      <a href="report.html">匹配报告</a>
-      <a class="jo22-primary-link" href="signup.html">注册</a>
+      <a href="index.html" data-i18n="nav.home">首页</a>
+      <a href="jobs.html" data-i18n="nav.jobs">岗位</a>
+      <a href="report.html" data-i18n="nav.report">匹配报告</a>
+      <a class="jo22-primary-link" href="signup.html" data-i18n="nav.signup">注册</a>
+      <select class="lang-select" id="languageSelect" aria-label="Language">
+        <option value="en">EN</option>
+        <option value="zh">中文</option>
+        <option value="ja">日本語</option>
+      </select>
     </nav>
   </header>
 
@@ -720,14 +792,14 @@
     <section class="jo22-hero-grid">
       <div>
         <div class="jo22-eyebrow">AI Match Entry</div>
-        <h1 class="jo22-title">输入你的背景。<span>自动匹配岗位。</span></h1>
-        <p class="jo22-subtitle">
+        <h1 class="jo22-title" data-i18n-html="hero.title">输入你的背景。<span>自动匹配岗位。</span></h1>
+        <p class="jo22-subtitle" data-i18n="hero.subtitle">
           用中文描述你的学历、专业、语言、技能、项目经历和目标国家。系统会输出岗位排序、匹配分数，以及日本、香港、新加坡三个市场的具体公司与搜索方向。
         </p>
 
         <div class="jo22-sample">
-          <strong>示例输入</strong>
-          <p>
+          <strong data-i18n="sample.title">示例输入</strong>
+          <p data-i18n="sample.text">
             我是英国法律本科学生，会中文、英文和日语，想去日本或新加坡找法律合规、国际业务或 Web3 合规相关工作。我没有正式工作经验，但有项目经历和法律背景。
           </p>
         </div>
@@ -736,53 +808,53 @@
       <section class="jo22-input-card">
         <form id="matchForm">
           <label class="jo22-label-row" for="backgroundInput">
-            <strong>你的个人背景</strong>
-            <span>中文输入即可</span>
+            <strong data-i18n="form.background">你的个人背景</strong>
+            <span data-i18n="form.backgroundHint">中文输入即可</span>
           </label>
 
-          <textarea class="jo22-textarea" id="backgroundInput" placeholder="例如：我是中国金融本科学生，会中文、英文，想去国外找金融、合规、分析或跨境业务相关工作。我没有正式工作经验，但有课程项目和实习准备。"></textarea>
+          <textarea class="jo22-textarea" id="backgroundInput" data-i18n-placeholder="form.backgroundPh" data-i18n-placeholder="form.backgroundPh" data-i18n-placeholder="form.backgroundPh" data-i18n-placeholder="form.backgroundPh" data-i18n-placeholder="form.backgroundPh" data-i18n-placeholder="form.backgroundPh" data-i18n-placeholder="form.backgroundPh" data-i18n-placeholder="form.backgroundPh" data-i18n-placeholder="form.backgroundPh" data-i18n-placeholder="form.backgroundPh" placeholder="例如：我是中国金融本科学生，会中文、英文，想去国外找金融、合规、分析或跨境业务相关工作。我没有正式工作经验，但有课程项目和实习准备。"></textarea>
 
           <div class="jo22-select-grid">
             <label>
-              <span class="jo22-label-row"><strong>目标市场</strong></span>
+              <span class="jo22-label-row"><strong data-i18n="form.market">目标市场</strong></span>
               <select class="jo22-select" id="targetMarket">
-                <option value="auto">让系统判断</option>
-                <option value="日本">日本</option>
-                <option value="香港">香港</option>
-                <option value="新加坡">新加坡</option>
-                <option value="英国">英国</option>
+                <option value="auto" data-i18n="form.marketAuto">让系统判断</option>
+                <option value="日本" data-i18n="form.marketJapan">日本</option>
+                <option value="香港" data-i18n="form.marketHongKong">香港</option>
+                <option value="新加坡" data-i18n="form.marketSingapore">新加坡</option>
+                <option value="英国" data-i18n="form.marketUK">英国</option>
               </select>
             </label>
 
             <label>
-              <span class="jo22-label-row"><strong>职业方向</strong></span>
+              <span class="jo22-label-row"><strong data-i18n="form.career">职业方向</strong></span>
               <select class="jo22-select" id="careerDirection">
-                <option value="auto">让系统判断</option>
-                <option value="金融 / 合规">金融 / 合规</option>
-                <option value="法律 / 合规">法律 / 合规</option>
-                <option value="Web3 / 金融合规">Web3 / 金融合规</option>
-                <option value="国际业务">国际业务</option>
-                <option value="数据 / 分析">数据 / 分析</option>
-                <option value="市场 / 运营">市场 / 运营</option>
+                <option value="auto" data-i18n="form.careerAuto">让系统判断</option>
+                <option value="金融 / 合规" data-i18n="form.careerFinance">金融 / 合规</option>
+                <option value="法律 / 合规" data-i18n="form.careerLegal">法律 / 合规</option>
+                <option value="Web3 / 金融合规" data-i18n="form.careerWeb3">Web3 / 金融合规</option>
+                <option value="国际业务" data-i18n="form.careerBusiness">国际业务</option>
+                <option value="数据 / 分析" data-i18n="form.careerData">数据 / 分析</option>
+                <option value="市场 / 运营" data-i18n="form.careerMarketing">市场 / 运营</option>
               </select>
             </label>
           </div>
 
           <label class="jo22-label-row" for="jobTitleInput" style="margin-top:14px">
-            <strong>目标岗位标题（可选）</strong>
-            <span>写上岗位名更清楚</span>
+            <strong data-i18n="form.jobTitle">目标岗位标题（可选）</strong>
+            <span data-i18n="form.jobTitleHint">写上岗位名更清楚</span>
           </label>
-          <input class="jo22-job-title" id="jobTitleInput" placeholder="例如：法务合规分析师" />
+          <input class="jo22-job-title" id="jobTitleInput" data-i18n-placeholder="form.jobTitlePh" data-i18n-placeholder="form.jobTitlePh" data-i18n-placeholder="form.jobTitlePh" data-i18n-placeholder="form.jobTitlePh" data-i18n-placeholder="form.jobTitlePh" data-i18n-placeholder="form.jobTitlePh" data-i18n-placeholder="form.jobTitlePh" data-i18n-placeholder="form.jobTitlePh" data-i18n-placeholder="form.jobTitlePh" data-i18n-placeholder="form.jobTitlePh" placeholder="例如：法务合规分析师" />
 
           <label class="jo22-label-row" for="jobDescInput" style="margin-top:14px">
-            <strong>目标岗位描述</strong>
-            <span>必填，AI 用它来对比</span>
+            <strong data-i18n="form.jobDesc">目标岗位描述</strong>
+            <span data-i18n="form.jobDescHint">必填，AI 用它来对比</span>
           </label>
-          <textarea class="jo22-textarea jo22-textarea-short" id="jobDescInput" placeholder="粘贴你想申请的岗位完整描述（至少 50 个字）。AI 会把你的背景和这个岗位逐一对比，算出匹配分数、风险和下一步建议。"></textarea>
+          <textarea class="jo22-textarea jo22-textarea-short" id="jobDescInput" data-i18n-placeholder="form.jobDescPh" data-i18n-placeholder="form.jobDescPh" data-i18n-placeholder="form.jobDescPh" data-i18n-placeholder="form.jobDescPh" data-i18n-placeholder="form.jobDescPh" data-i18n-placeholder="form.jobDescPh" data-i18n-placeholder="form.jobDescPh" data-i18n-placeholder="form.jobDescPh" data-i18n-placeholder="form.jobDescPh" data-i18n-placeholder="form.jobDescPh" placeholder="粘贴你想申请的岗位完整描述（至少 50 个字）。AI 会把你的背景和这个岗位逐一对比，算出匹配分数、风险和下一步建议。"></textarea>
 
           <div class="auth-message info" data-credits-box>Checking your report credits…</div>
-          <button class="jo22-generate" type="submit" id="generateButton">生成我的岗位匹配</button>
-          <p class="jo22-note">
+          <button class="jo22-generate" type="submit" id="generateButton" data-i18n="form.generate">生成我的岗位匹配</button>
+          <p class="jo22-note" data-i18n="form.note">
             匹配分数由 AI 根据你的背景和岗位描述评估，不是录取概率。85 分以上非常匹配、70–84 分值得优先投递、55–69 分可以尝试、55 分以下优先级较低。
           </p>
         </form>
@@ -793,7 +865,7 @@
       <div class="jo22-result-top">
         <div class="jo22-result-title">
           <div class="jo22-eyebrow">Match result</div>
-          <h2>你的岗位推荐排序</h2>
+          <h2 data-i18n="result.title">你的岗位推荐排序</h2>
           <p id="summaryText">系统会根据你的背景，把岗位分成优先申请、可以尝试和探索方向。</p>
         </div>
 
@@ -806,32 +878,32 @@
       </div>
 
       <div class="jo22-section-head">
-        <h3>第一、第二、第三推荐岗位</h3>
-        <p>这部分解决“我到底先投什么岗位”的问题，不再只给抽象方向。</p>
+        <h3 data-i18n="result.rankTitle">第一、第二、第三推荐岗位</h3>
+        <p data-i18n="result.rankCopy">这部分解决“我到底先投什么岗位”的问题，不再只给抽象方向。</p>
       </div>
       <div class="jo22-role-grid" id="roleGrid"></div>
 
       <div class="jo22-section-head">
-        <h3>具体公司与岗位搜索路线</h3>
-        <p>这里不是实时招聘库，而是根据你的背景给出最应该优先搜索的公司和岗位关键词。下一步可以接入公开岗位 API。</p>
+        <h3 data-i18n="result.routeTitle">具体公司与岗位搜索路线</h3>
+        <p data-i18n="result.routeCopy">这里不是实时招聘库，而是根据你的背景给出最应该优先搜索的公司和岗位关键词。下一步可以接入公开岗位 API。</p>
       </div>
       <div class="jo22-route-grid" id="routeGrid"></div>
 
       <div class="jo22-two-col">
         <div class="jo22-panel">
-          <h3>系统判断</h3>
+          <h3 data-i18n="result.judgement">系统判断</h3>
           <div class="jo22-stack" id="judgementList"></div>
           <div class="jo22-tags" id="tagGrid"></div>
         </div>
 
         <div class="jo22-panel">
-          <h3>下一步建议</h3>
+          <h3 data-i18n="result.roadmap">下一步建议</h3>
           <div class="jo22-stack" id="roadmapList"></div>
 
           <div class="jo22-actions">
-            <button class="jo22-secondary" id="copyResult" type="button">复制结果</button>
-            <a class="jo22-secondary" href="report.html">生成完整报告</a>
-            <a class="jo22-secondary" href="jobs.html">查看岗位页</a>
+            <button class="jo22-secondary" id="copyResult" type="button" data-i18n="result.copy">复制结果</button>
+            <a class="jo22-secondary" href="report.html" data-i18n="result.fullReport">生成完整报告</a>
+            <a class="jo22-secondary" href="jobs.html" data-i18n="result.viewJobs">查看岗位页</a>
           </div>
           <div class="jo22-status" id="statusMessage">结果已复制。</div>
         </div>
@@ -845,6 +917,16 @@
   <script src="billing.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mammoth@1.7.2/mammoth.browser.min.js"></script>
   <script src="api-report.js"></script>
+  <script src="match-lang.js"></script>
+  <script src="match-lang.js"></script>
+  <script src="match-lang.js"></script>
+  <script src="match-lang.js"></script>
+  <script src="match-lang.js"></script>
+  <script src="match-lang.js"></script>
+  <script src="match-lang.js"></script>
+  <script src="match-lang.js"></script>
+  <script src="match-lang.js"></script>
+  <script src="match-lang.js"></script>
   <script src="ai-match.js"></script>
   <footer class="ds-footer">
     <div class="ds-footer-grid">

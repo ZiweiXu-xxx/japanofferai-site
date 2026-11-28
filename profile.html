@@ -128,6 +128,10 @@
       color: var(--blue);
     }
 
+    .nav .lang-select {
+      flex: 0 0 auto;
+    }
+
     .primary-link {
       color: #fff !important;
       background: linear-gradient(135deg, var(--blue), var(--blue-dark));
@@ -179,7 +183,7 @@
     h1 {
       margin: 0;
       font-size: clamp(44px, 5.8vw, 74px);
-      line-height: .96;
+      line-height: 1.12;
       letter-spacing: -.074em;
       font-weight: 950;
     }
@@ -509,7 +513,8 @@
       }
     }
   </style>
-  <link rel="stylesheet" href="assets/css/design-system.css?v=3" />
+  <link rel="stylesheet" href="assets/css/design-system.css?v=4" />
+  <script src="site-lang.js"></script>
 </head>
 <body>
   <header class="topbar">
@@ -517,60 +522,65 @@
       <span class="logo">J</span>
       <span>
         <strong>JapanOffer AI</strong>
-        <small>Personal Career Profile</small>
+        <small data-i18n="brand.small">Personal Career Profile</small>
       </span>
     </a>
 
-    <div class="search">搜索职位、公司、人脉或目标市场</div>
+    <div class="search" data-i18n="search.placeholder">搜索职位、公司、人脉或目标市场</div>
 
     <nav class="nav">
-      <a href="index.html">首页</a>
-      <a href="network.html">人脉</a>
-      <a href="jobs.html">职位</a>
-      <a href="match.html?source=profile&auto=1">AI 匹配</a>
-      <a href="companies.html">公司</a>
-      <a class="active" href="profile.html">我的主页</a>
+      <a href="index.html" data-i18n="nav.home">首页</a>
+      <a href="network.html" data-i18n="nav.network">人脉</a>
+      <a href="jobs.html" data-i18n="nav.jobs">职位</a>
+      <a href="match.html?source=profile&auto=1" data-i18n="nav.match">AI 匹配</a>
+      <a href="companies.html" data-i18n="nav.companies">公司</a>
+      <a class="active" href="profile.html" data-i18n="nav.profile">我的主页</a>
+      <select class="lang-select" id="languageSelect" aria-label="Language">
+        <option value="en">EN</option>
+        <option value="zh">中文</option>
+        <option value="ja">日本語</option>
+      </select>
     </nav>
   </header>
 
   <main>
     <section class="hero">
       <div class="hero-card">
-        <div class="eyebrow">Personal profile</div>
-        <h1>保存你的履历。<span>一键用于申请。</span></h1>
-        <p>
+        <div class="eyebrow" data-i18n="hero.eyebrow">Personal profile</div>
+        <h1 data-i18n-html="hero.title">保存你的履历。<span>一键用于申请。</span></h1>
+        <p data-i18n="hero.copy">
           用户注册后，可以在这里保存个人主页、目标市场、职业方向和 CV。之后申请岗位、生成 AI 匹配报告、联系企业时，都可以直接调用这份资料。
         </p>
         <div class="btn-row">
-          <a class="btn primary" href="match.html?source=profile&auto=1" id="useProfileForMatch">用我的资料做 AI 匹配</a>
-          <a class="btn" href="jobs.html">查看职位</a>
+          <a class="btn primary" href="match.html?source=profile&auto=1" id="useProfileForMatch" data-i18n="hero.match">用我的资料做 AI 匹配</a>
+          <a class="btn" href="jobs.html" data-i18n="hero.jobs">查看职位</a>
         </div>
       </div>
 
       <aside class="upload-card">
-        <h2>上传 CV / Resume</h2>
-        <p>支持 PDF、DOC、DOCX。登录后文件会保存到你的账号下，不会因为刷新页面消失。</p>
+        <h2 data-i18n="upload.title">上传 CV / Resume</h2>
+        <p data-i18n="upload.copy">支持 PDF、DOC、DOCX。登录后文件会保存到你的账号下，不会因为刷新页面消失。</p>
 
         <div class="auth-box" id="authBox">
-          <strong>正在检查登录状态...</strong>
-          <span>如果没有登录，请先注册或登录，再上传 CV。</span>
+          <strong data-i18n="auth.checking">正在检查登录状态...</strong>
+          <span data-i18n="auth.checkingCopy">如果没有登录，请先注册或登录，再上传 CV。</span>
         </div>
 
         <label class="upload-drop" id="uploadDrop">
           <input id="cvInput" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
           <div>
             <div class="upload-icon">CV</div>
-            <strong>点击这里选择文件</strong>
-            <span>最大建议 5MB。文件会保存到 Supabase Storage。</span>
+            <strong data-i18n="drop.title">点击这里选择文件</strong>
+            <span data-i18n="drop.copy">最大建议 5MB。文件会保存到 Supabase Storage。</span>
           </div>
         </label>
 
         <div class="cv-card" id="cvCard">
-          <strong id="cvName">还没有上传 CV</strong>
-          <span id="cvMeta">上传后会显示文件名和保存时间。</span>
+          <strong id="cvName" data-i18n="cv.empty">还没有上传 CV</strong>
+          <span id="cvMeta" data-i18n="cv.emptyMeta">上传后会显示文件名和保存时间。</span>
           <div class="btn-row">
-            <button class="btn" id="downloadCvButton" type="button">打开 CV</button>
-            <button class="btn danger" id="deleteCvButton" type="button">删除 CV</button>
+            <button class="btn" id="downloadCvButton" type="button" data-i18n="cv.open">打开 CV</button>
+            <button class="btn danger" id="deleteCvButton" type="button" data-i18n="cv.delete">删除 CV</button>
           </div>
         </div>
 
@@ -580,77 +590,77 @@
 
     <section class="panel-grid">
       <div class="panel">
-        <h2>个人资料</h2>
-        <p>这里会成为用户的个人主页基础资料。先做 MVP 保存，之后可以升级成公开/私密 Profile。</p>
+        <h2 data-i18n="panel.profile">个人资料</h2>
+        <p data-i18n="panel.profileCopy">这里会成为用户的个人主页基础资料。先做 MVP 保存，之后可以升级成公开/私密 Profile。</p>
 
         <div class="field-grid" id="profileForm">
           <label class="field">
-            <span>姓名</span>
-            <input class="input" id="fullName" placeholder="例如：Ziwei Xu" />
+            <span data-i18n="field.name">姓名</span>
+            <input class="input" id="fullName" data-i18n-placeholder="field.namePh" data-i18n-placeholder="field.namePh" data-i18n-placeholder="field.namePh" data-i18n-placeholder="field.namePh" data-i18n-placeholder="field.namePh" data-i18n-placeholder="field.namePh" data-i18n-placeholder="field.namePh" data-i18n-placeholder="field.namePh" data-i18n-placeholder="field.namePh" placeholder="例如：Ziwei Xu" />
           </label>
 
           <label class="field">
-            <span>当前身份</span>
-            <input class="input" id="headline" placeholder="例如：LLB student · Legal / Compliance target" />
+            <span data-i18n="field.headline">当前身份</span>
+            <input class="input" id="headline" data-i18n-placeholder="field.headlinePh" data-i18n-placeholder="field.headlinePh" data-i18n-placeholder="field.headlinePh" data-i18n-placeholder="field.headlinePh" data-i18n-placeholder="field.headlinePh" data-i18n-placeholder="field.headlinePh" data-i18n-placeholder="field.headlinePh" data-i18n-placeholder="field.headlinePh" data-i18n-placeholder="field.headlinePh" placeholder="例如：LLB student · Legal / Compliance target" />
           </label>
 
           <label class="field">
-            <span>目标市场</span>
+            <span data-i18n="field.market">目标市场</span>
             <select class="select" id="targetMarket">
-              <option value="">请选择</option>
-              <option>日本</option>
-              <option>香港</option>
-              <option>新加坡</option>
-              <option>英国</option>
-              <option>多个市场</option>
+              <option value="" data-i18n="field.marketSelect">请选择</option>
+              <option value="日本" data-i18n="market.japan">日本</option>
+              <option value="香港" data-i18n="market.hongkong">香港</option>
+              <option value="新加坡" data-i18n="market.singapore">新加坡</option>
+              <option value="英国" data-i18n="market.uk">英国</option>
+              <option value="多个市场" data-i18n="market.multi">多个市场</option>
             </select>
           </label>
 
           <label class="field">
-            <span>职业方向</span>
+            <span data-i18n="field.career">职业方向</span>
             <select class="select" id="careerDirection">
-              <option value="">请选择</option>
-              <option>法律 / 合规</option>
-              <option>金融 / 合规</option>
-              <option>Web3 / 金融合规</option>
-              <option>国际业务</option>
-              <option>数据 / 分析</option>
-              <option>市场 / 运营</option>
+              <option value="" data-i18n="field.marketSelect">请选择</option>
+              <option value="法律 / 合规" data-i18n="career.legal">法律 / 合规</option>
+              <option value="金融 / 合规" data-i18n="career.finance">金融 / 合规</option>
+              <option value="Web3 / 金融合规" data-i18n="career.web3">Web3 / 金融合规</option>
+              <option value="国际业务" data-i18n="career.business">国际业务</option>
+              <option value="数据 / 分析" data-i18n="career.data">数据 / 分析</option>
+              <option value="市场 / 运营" data-i18n="career.marketing">市场 / 运营</option>
             </select>
           </label>
 
           <label class="field">
-            <span>语言能力</span>
-            <input class="input" id="languages" placeholder="例如：中文 / English / 日本語" />
+            <span data-i18n="field.languages">语言能力</span>
+            <input class="input" id="languages" data-i18n-placeholder="field.languagesPh" data-i18n-placeholder="field.languagesPh" data-i18n-placeholder="field.languagesPh" data-i18n-placeholder="field.languagesPh" data-i18n-placeholder="field.languagesPh" data-i18n-placeholder="field.languagesPh" data-i18n-placeholder="field.languagesPh" data-i18n-placeholder="field.languagesPh" data-i18n-placeholder="field.languagesPh" placeholder="例如：中文 / English / 日本語" />
           </label>
 
           <label class="field">
-            <span>个人简介</span>
-            <textarea class="textarea" id="bio" placeholder="简单写一下你的背景、优势和目标岗位。"></textarea>
+            <span data-i18n="field.bio">个人简介</span>
+            <textarea class="textarea" id="bio" data-i18n-placeholder="field.bioPh" data-i18n-placeholder="field.bioPh" data-i18n-placeholder="field.bioPh" data-i18n-placeholder="field.bioPh" data-i18n-placeholder="field.bioPh" data-i18n-placeholder="field.bioPh" data-i18n-placeholder="field.bioPh" data-i18n-placeholder="field.bioPh" data-i18n-placeholder="field.bioPh" placeholder="简单写一下你的背景、优势和目标岗位。"></textarea>
           </label>
 
-          <button class="btn primary" id="saveProfileButton" type="button">保存个人资料</button>
+          <button class="btn primary" id="saveProfileButton" type="button" data-i18n="form.save">保存个人资料</button>
           <div class="status" id="profileStatus"></div>
         </div>
       </div>
 
       <div class="panel">
-        <h2>申请资料概览</h2>
-        <p>之后用户申请岗位时，就可以直接用这里保存的资料和 CV。</p>
+        <h2 data-i18n="panel.overview">申请资料概览</h2>
+        <p data-i18n="panel.overviewCopy">之后用户申请岗位时，就可以直接用这里保存的资料和 CV。</p>
 
         <div class="profile-summary">
-          <div class="summary-row"><span>账号状态</span><strong id="summaryAuth">检查中</strong></div>
-          <div class="summary-row"><span>姓名</span><strong id="summaryName">未填写</strong></div>
-          <div class="summary-row"><span>方向</span><strong id="summaryCareer">未选择</strong></div>
-          <div class="summary-row"><span>市场</span><strong id="summaryMarket">未选择</strong></div>
-          <div class="summary-row"><span>语言</span><strong id="summaryLanguages">未填写</strong></div>
-          <div class="summary-row"><span>CV</span><strong id="summaryCv">未上传</strong></div>
+          <div class="summary-row"><span data-i18n="summary.auth">账号状态</span><strong id="summaryAuth">检查中</strong></div>
+          <div class="summary-row"><span data-i18n="summary.name">姓名</span><strong id="summaryName">未填写</strong></div>
+          <div class="summary-row"><span data-i18n="summary.career">方向</span><strong id="summaryCareer">未选择</strong></div>
+          <div class="summary-row"><span data-i18n="summary.market">市场</span><strong id="summaryMarket">未选择</strong></div>
+          <div class="summary-row"><span data-i18n="summary.languages">语言</span><strong id="summaryLanguages">未填写</strong></div>
+          <div class="summary-row"><span data-i18n="summary.cv">CV</span><strong id="summaryCv">未上传</strong></div>
         </div>
 
         <div class="btn-row">
-          <a class="btn primary" href="match.html?source=profile&auto=1">生成匹配报告</a>
-          <a class="btn" href="network.html">进入人脉网络</a>
-          <a class="btn" href="jobs.html">用资料申请岗位</a>
+          <a class="btn primary" href="match.html?source=profile&auto=1" data-i18n="overview.match">生成匹配报告</a>
+          <a class="btn" href="network.html" data-i18n="overview.network">进入人脉网络</a>
+          <a class="btn" href="jobs.html" data-i18n="overview.apply">用资料申请岗位</a>
         </div>
       </div>
     </section>
@@ -659,6 +669,15 @@
   <script src="auth-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="profile.js"></script>
+  <script src="profile-lang.js"></script>
+  <script src="profile-lang.js"></script>
+  <script src="profile-lang.js"></script>
+  <script src="profile-lang.js"></script>
+  <script src="profile-lang.js"></script>
+  <script src="profile-lang.js"></script>
+  <script src="profile-lang.js"></script>
+  <script src="profile-lang.js"></script>
+  <script src="profile-lang.js"></script>
   <footer class="ds-footer">
     <div class="ds-footer-grid">
       <div class="ds-footer-brand">

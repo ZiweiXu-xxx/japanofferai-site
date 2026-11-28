@@ -31,6 +31,24 @@
   const summaryLanguages = document.getElementById("summaryLanguages");
   const summaryCv = document.getElementById("summaryCv");
 
+  // UI strings follow the shared language via profile-lang.js
+  // (window.JOProfileLang), loaded after this file. Falls back to the key
+  // itself if the lang file did not load.
+  function t(key, vars) {
+    if (window.JOProfileLang) return window.JOProfileLang.t(key, vars);
+    return key;
+  }
+
+  function displayMarket(value) {
+    if (window.JOProfileLang) return window.JOProfileLang.displayMarket(value);
+    return value;
+  }
+
+  function displayCareer(value) {
+    if (window.JOProfileLang) return window.JOProfileLang.displayCareer(value);
+    return value;
+  }
+
   let supabaseClient = null;
   let currentUser = null;
   let currentProfile = null;
@@ -76,12 +94,12 @@
   }
 
   function updateSummary() {
-    summaryAuth.textContent = currentUser ? "已登录" : "未登录";
-    summaryName.textContent = fullName.value || "未填写";
-    summaryCareer.textContent = careerDirection.value || "未选择";
-    summaryMarket.textContent = targetMarket.value || "未选择";
-    summaryLanguages.textContent = languages.value || "未填写";
-    summaryCv.textContent = currentProfile?.cv_file_name || "未上传";
+    summaryAuth.textContent = currentUser ? t("summary.loggedIn") : t("summary.notLoggedIn");
+    summaryName.textContent = fullName.value || t("summary.empty");
+    summaryCareer.textContent = careerDirection.value ? displayCareer(careerDirection.value) : t("summary.notSelected");
+    summaryMarket.textContent = targetMarket.value ? displayMarket(targetMarket.value) : t("summary.notSelected");
+    summaryLanguages.textContent = languages.value || t("summary.empty");
+    summaryCv.textContent = currentProfile?.cv_file_name || t("summary.noCv");
   }
 
   function fillProfile(profile) {
@@ -96,18 +114,18 @@
     if (currentProfile.cv_file_name) {
       cvCard.classList.add("show");
       cvName.textContent = currentProfile.cv_file_name;
-      cvMeta.textContent = `已保存到你的账号 · ${formatDate(currentProfile.updated_at || currentProfile.created_at)}`;
+      cvMeta.textContent = t("summary.savedAt", { date: formatDate(currentProfile.updated_at || currentProfile.created_at) });
     } else {
       cvCard.classList.remove("show");
-      cvName.textContent = "还没有上传 CV";
-      cvMeta.textContent = "上传后会显示文件名和保存时间。";
+      cvName.textContent = t("cv.empty");
+      cvMeta.textContent = t("cv.emptyMeta");
     }
 
     updateSummary();
   }
 
   function formatDate(value) {
-    if (!value) return "刚刚";
+    if (!value) return t("summary.justNow");
     try {
       return new Date(value).toLocaleString();
     } catch {
@@ -139,7 +157,7 @@
       .maybeSingle();
 
     if (error) {
-      showStatus(profileStatus, `读取个人资料失败：${error.message}`, "error");
+      showStatus(profileStatus, t("status.readFail", { error: error.message }), "error");
       return;
     }
 
@@ -162,7 +180,7 @@
       .single();
 
     if (createError) {
-      showStatus(profileStatus, `创建个人资料失败：${createError.message}`, "error");
+      showStatus(profileStatus, t("status.createFail", { error: createError.message }), "error");
       return;
     }
 
@@ -171,12 +189,12 @@
 
   async function saveProfile() {
     if (!currentUser) {
-      showStatus(profileStatus, "请先登录，再保存个人资料。", "error");
+      showStatus(profileStatus, t("status.needLoginSave"), "error");
       return;
     }
 
     clearStatus(profileStatus);
-    saveProfileButton.textContent = "正在保存...";
+    saveProfileButton.textContent = t("status.saving");
     saveProfileButton.disabled = true;
 
     const payload = {
@@ -197,31 +215,31 @@
       .select("*")
       .single();
 
-    saveProfileButton.textContent = "保存个人资料";
+    saveProfileButton.textContent = t("form.save");
     saveProfileButton.disabled = false;
 
     if (error) {
-      showStatus(profileStatus, `保存失败：${error.message}`, "error");
+      showStatus(profileStatus, t("status.saveFail", { error: error.message }), "error");
       return;
     }
 
     fillProfile(data);
-    showStatus(profileStatus, "个人资料已保存。", "success");
+    showStatus(profileStatus, t("status.saved"), "success");
   }
 
   async function uploadCv(file) {
     if (!currentUser) {
-      showStatus(uploadStatus, "请先登录，再上传 CV。", "error");
+      showStatus(uploadStatus, t("status.needLoginUpload"), "error");
       return;
     }
 
     if (!isAllowedFile(file)) {
-      showStatus(uploadStatus, "文件格式或大小不符合要求。请上传 PDF、DOC 或 DOCX，建议不超过 5MB。", "error");
+      showStatus(uploadStatus, t("status.badFile"), "error");
       return;
     }
 
     clearStatus(uploadStatus);
-    showStatus(uploadStatus, "正在上传 CV...", "success");
+    showStatus(uploadStatus, t("status.uploading"), "success");
 
     const fileName = safeFileName(file.name);
     const path = `${currentUser.id}/${Date.now()}_${fileName}`;
@@ -235,7 +253,7 @@
       });
 
     if (uploadError) {
-      showStatus(uploadStatus, `上传失败：${uploadError.message}`, "error");
+      showStatus(uploadStatus, t("status.uploadFail", { error: uploadError.message }), "error");
       return;
     }
 
@@ -268,17 +286,17 @@
       .single();
 
     if (error) {
-      showStatus(uploadStatus, `CV 已上传，但保存资料失败：${error.message}`, "error");
+      showStatus(uploadStatus, t("status.uploadSavedFail", { error: error.message }), "error");
       return;
     }
 
     fillProfile(data);
-    showStatus(uploadStatus, "CV 已上传并保存到你的账号。", "success");
+    showStatus(uploadStatus, t("status.uploaded"), "success");
   }
 
   async function openCv() {
     if (!currentUser || !currentProfile?.cv_storage_path) {
-      showStatus(uploadStatus, "还没有可打开的 CV。", "error");
+      showStatus(uploadStatus, t("status.noCvOpen"), "error");
       return;
     }
 
@@ -287,7 +305,7 @@
       .createSignedUrl(currentProfile.cv_storage_path, 60);
 
     if (error || !data?.signedUrl) {
-      showStatus(uploadStatus, `打开失败：${error?.message || "无法生成链接"}`, "error");
+      showStatus(uploadStatus, t("status.openFail", { error: error?.message || t("status.cannotGenerateLink") }), "error");
       return;
     }
 
@@ -296,11 +314,11 @@
 
   async function deleteCv() {
     if (!currentUser || !currentProfile?.cv_storage_path) {
-      showStatus(uploadStatus, "还没有可删除的 CV。", "error");
+      showStatus(uploadStatus, t("status.noCvDelete"), "error");
       return;
     }
 
-    if (!window.confirm("确定要删除这份 CV 吗？")) return;
+    if (!window.confirm(t("confirm.deleteCv"))) return;
 
     const oldPath = currentProfile.cv_storage_path;
 
@@ -319,12 +337,12 @@
       .single();
 
     if (error) {
-      showStatus(uploadStatus, `删除记录失败：${error.message}`, "error");
+      showStatus(uploadStatus, t("status.deleteFail", { error: error.message }), "error");
       return;
     }
 
     fillProfile(data);
-    showStatus(uploadStatus, "CV 已删除。", "success");
+    showStatus(uploadStatus, t("status.deleted"), "success");
   }
 
   async function init() {
@@ -332,10 +350,10 @@
 
     if (!config || !window.supabase?.createClient) {
       authBox.innerHTML = `
-        <strong>Supabase 配置未读取到</strong>
-        <span>请检查 auth-config.js 是否存在，并且里面有项目 URL 和 anon / publishable key。</span>
+        <strong>${t("auth.configMissing")}</strong>
+        <span>${t("auth.configMissingCopy")}</span>
       `;
-      summaryAuth.textContent = "配置缺失";
+      summaryAuth.textContent = t("auth.configMissingSummary");
       setLocked(true);
       return;
     }
@@ -347,13 +365,13 @@
     if (error || !data?.user) {
       currentUser = null;
       authBox.innerHTML = `
-        <strong>你还没有登录</strong>
-        <span>请先注册或登录。登录后，CV 和个人资料才会永久保存到你的账号下。</span>
+        <strong>${t("auth.notLoggedIn")}</strong>
+        <span>${t("auth.notLoggedInCopy")}</span>
         <div class="btn-row">
-          <a class="btn primary" href="signup.html">注册 / 登录</a>
+          <a class="btn primary" href="signup.html">${t("auth.signupLogin")}</a>
         </div>
       `;
-      summaryAuth.textContent = "未登录";
+      summaryAuth.textContent = t("summary.notLoggedIn");
       setLocked(true);
       updateSummary();
       return;
@@ -361,8 +379,8 @@
 
     currentUser = data.user;
     authBox.innerHTML = `
-      <strong>已登录</strong>
-      <span>${currentUser.email || "当前账号"} · 你的 CV 会保存到这个账号。</span>
+      <strong>${t("auth.loggedIn")}</strong>
+      <span>${t("auth.loggedInCopy", { email: currentUser.email || t("auth.currentAccount") })}</span>
     `;
 
     setLocked(false);
@@ -385,7 +403,13 @@
     el.addEventListener("change", updateSummary);
   });
 
-  init();
+  // Run after DOMContentLoaded so profile-lang.js (loaded after this
+  // file) has defined window.JOProfileLang before init() calls t().
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
 })();
 
 

@@ -21,7 +21,7 @@
   <title>English Auto Report | JapanOffer AI</title>
   <meta name="description" content="Start a beta assessment for JapanOffer AI." />
   <link rel="stylesheet" href="styles.css?v=3" />
-  <link rel="stylesheet" href="assets/css/design-system.css?v=3" />
+  <link rel="stylesheet" href="assets/css/design-system.css?v=4" />
   <style>
     /* Basic matching form: stack each label above its field. Without this
        the labels stay inline and the fields wrap onto the next label's
@@ -30,6 +30,12 @@
     .mock-form label > span { display: block; margin: 0 0 8px; }
     .mock-form label > input,
     .mock-form label > select { display: block; width: 100%; max-width: 100%; }
+
+    /* Dark header language select (design-system.css provides the dark
+       select styling); keep it from being squeezed by the nav flex row. */
+    .nav .lang-select {
+      flex: 0 0 auto;
+    }
   </style>
   <script src="site-lang.js"></script>
 </head>
@@ -54,6 +60,11 @@
       <a href="talent.html" data-i18n="nav.talent">Talent</a>
       <a href="companies.html" data-i18n="nav.companies">Companies</a>
       <a href="employers.html" data-i18n="nav.employers">Employers</a>
+      <select class="lang-select" id="languageSelect" aria-label="Language">
+        <option value="en">EN</option>
+        <option value="zh">中文</option>
+        <option value="ja">日本語</option>
+      </select>
     </nav>
 
     <div class="auth-links"><a class="signin-link" href="login.html" data-i18n="auth.signIn">Sign in</a><a class="nav-cta" href="signup.html" data-i18n="auth.signUp">Sign up</a></div>
@@ -267,6 +278,8 @@
     function apply() {
       var t = dict[lang()] || dict.en;
       document.documentElement.lang = lang() === "zh" ? "zh-CN" : lang();
+      var sel = document.getElementById("languageSelect");
+      if (sel) sel.value = lang();
       document.querySelectorAll("[data-i18n]").forEach(function (el) {
         var v = t[el.dataset.i18n];
         if (v !== undefined) el.textContent = v;

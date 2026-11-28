@@ -21,6 +21,11 @@
   const jobTitleInput = document.getElementById("jobTitleInput");
   const jobDescInput = document.getElementById("jobDescInput");
 
+  function t(key, vars) {
+    if (window.JOMatchLang) return window.JOMatchLang.t(key, vars);
+    return key;
+  }
+
   // Short-lived status line under the form (also used by the copy button).
   function showStatus(message) {
     statusMessage.textContent = message;
@@ -154,19 +159,19 @@
 
     const config = getClientSupabaseConfig();
     if (!config) {
-      showProfileNotice("没有读取到 Supabase 配置，所以暂时不能自动调用你的个人主页资料。", "error");
+      showProfileNotice(t("status.noConfig"), "error");
       return;
     }
 
     const client = window.supabase.createClient(config.url, config.key);
 
-    showProfileNotice("正在读取你的个人主页和已上传 CV...");
+    showProfileNotice(t("status.loadingProfile"));
 
     const { data: userData, error: userError } = await client.auth.getUser();
     const user = userData?.user;
 
     if (userError || !user) {
-      showProfileNotice("你还没有登录。请先登录后再用个人资料做 AI 匹配。", "error");
+      showProfileNotice(t("status.notLoggedIn"), "error");
       return;
     }
 
@@ -177,12 +182,12 @@
       .maybeSingle();
 
     if (profileError) {
-      showProfileNotice(`读取个人主页失败：${profileError.message}`, "error");
+      showProfileNotice(t("status.profileLoadFail", { error: profileError.message }), "error");
       return;
     }
 
     if (!profile) {
-      showProfileNotice("还没有找到你的个人主页资料。请先在「我的主页」保存资料或上传 CV。", "error");
+      showProfileNotice(t("status.noProfile"), "error");
       return;
     }
 
@@ -196,7 +201,7 @@
     const background = buildBackgroundFromProfile(profile, cvText);
 
     if (!background || background.length < 20) {
-      showProfileNotice("已找到你的账号，但个人资料内容太少。请先在「我的主页」补充目标市场、方向和简介。", "error");
+      showProfileNotice(t("status.profileTooThin"), "error");
       return;
     }
 
@@ -207,16 +212,16 @@
     // is already pasted, otherwise ask the user to add it first.
     const jobReady = jobDescInput && jobDescInput.value.trim().length >= 50;
     if (!jobReady) {
-      showProfileNotice("已读取你的个人主页和 CV 内容。请再粘贴一个目标岗位描述，然后点击「生成我的岗位匹配」。", "success");
+      showProfileNotice(t("status.needJobDesc"), "success");
       return;
     }
 
     if (cvText) {
-      showProfileNotice("已读取你的个人主页和 DOCX 简历内容，正在自动生成匹配结果。", "success");
+      showProfileNotice(t("status.autoDocx"), "success");
     } else if (profile.cv_file_name) {
-      showProfileNotice("已读取你的个人主页和 CV 文件记录。正在自动生成匹配结果。", "success");
+      showProfileNotice(t("status.autoCv"), "success");
     } else {
-      showProfileNotice("已读取你的个人主页资料，正在自动生成匹配结果。", "success");
+      showProfileNotice(t("status.autoProfile"), "success");
     }
 
     setTimeout(() => {
@@ -410,10 +415,10 @@
 
 
   function priorityLabel(score) {
-    if (score >= 74) return "优先申请";
-    if (score >= 64) return "重点尝试";
-    if (score >= 55) return "探索方向";
-    return "暂缓申请";
+    if (score >= 74) return t("priority.first");
+    if (score >= 64) return t("priority.try");
+    if (score >= 55) return t("priority.explore");
+    return t("priority.hold");
   }
 
 
@@ -442,16 +447,16 @@
 
     roleGrid.innerHTML = jobs.map((job, index) => `
       <article class="jo22-role-card">
-        <div class="jo22-rank">第 ${index + 1} 位 · ${escapeHtml(job.priority || priorityLabel(Number(job.fit_score) || 0))}</div>
+        <div class="jo22-rank">${escapeHtml(t("result.rank", { n: index + 1 }))} · ${escapeHtml(job.priority || priorityLabel(Number(job.fit_score) || 0))}</div>
         <h4>${escapeHtml(job.role || "")}</h4>
         <div class="jo22-role-meta">
-          <span class="jo22-pill">匹配 ${Number(job.fit_score) || 0} 分</span>
+          <span class="jo22-pill">${escapeHtml(t("result.matchScore", { score: Number(job.fit_score) || 0 }))}</span>
           ${market ? `<span class="jo22-pill">${escapeHtml(market)}</span>` : ""}
         </div>
-        <p><strong>主要风险：</strong>${escapeHtml(job.main_risk || "")}</p>
+        <p><strong>${escapeHtml(t("result.mainRisk"))}</strong>${escapeHtml(job.main_risk || "")}</p>
         <p>${escapeHtml(job.reason || "")}</p>
-        <p style="margin-top:10px;"><strong>下一步：</strong>${escapeHtml(job.suggested_action || "")}</p>
-        <div class="jo22-score">${Number(job.fit_score) || 0} 分</div>
+        <p style="margin-top:10px;"><strong>${escapeHtml(t("result.nextStep"))}</strong>${escapeHtml(job.suggested_action || "")}</p>
+        <div class="jo22-score">${escapeHtml(t("result.scoreValue", { score: Number(job.fit_score) || 0 }))}</div>
       </article>
     `).join("");
 
@@ -459,28 +464,28 @@
       const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(route.query)}`;
       return `
         <article class="jo22-route-card">
-          <div class="jo22-country">第 ${index + 1} 市场 · ${escapeHtml(route.market)}</div>
+          <div class="jo22-country">${escapeHtml(t("result.routeMarket", { n: index + 1 }))} · ${escapeHtml(route.market)}</div>
           <h4>${escapeHtml(route.role)}</h4>
           <p class="jo22-company">${escapeHtml(route.company)}</p>
           <p>${escapeHtml(route.why)}</p>
           <ul>
-            <li>备选公司：${escapeHtml(route.alternates.join(" / "))}</li>
-            <li>搜索关键词：${escapeHtml(route.query)}</li>
+            <li>${escapeHtml(t("result.altCompanies"))} ${escapeHtml(route.alternates.join(" / "))}</li>
+            <li>${escapeHtml(t("result.searchKeywords"))} ${escapeHtml(route.query)}</li>
           </ul>
-          <a class="jo22-search-link" href="${searchUrl}" target="_blank" rel="noopener noreferrer">搜索公开岗位</a>
+          <a class="jo22-search-link" href="${searchUrl}" target="_blank" rel="noopener noreferrer">${escapeHtml(t("result.searchJobs"))}</a>
         </article>
       `;
     }).join("");
 
     const consumedLabel =
-      meta && meta.consumed_from === "free" ? "免费报告" :
-      meta && meta.consumed_from === "premium" ? "Premium 报告" :
-      meta && meta.consumed_from === "paid" ? "付费点数" : "";
+      meta && meta.consumed_from === "free" ? t("consumed.free") :
+      meta && meta.consumed_from === "premium" ? t("consumed.premium") :
+      meta && meta.consumed_from === "paid" ? t("consumed.paid") : "";
 
     judgementList.innerHTML = [
-      { title: "候选人概况", text: report.candidate_snapshot || "" },
-      { title: "总体建议", text: report.final_advice || "" },
-      { title: "说明", text: report.disclaimer || "" }
+      { title: t("result.judgementCandidate"), text: report.candidate_snapshot || "" },
+      { title: t("result.judgementAdvice"), text: report.final_advice || "" },
+      { title: t("result.judgementNote"), text: report.disclaimer || "" }
     ].filter(item => item.text).map((item) => `
       <div class="jo22-info-item">
         <strong>${escapeHtml(item.title)}</strong>
@@ -502,10 +507,10 @@
     `).join("");
 
     const tags = [];
-    if (market) tags.push(`目标市场：${market}`);
-    if (career) tags.push(`方向：${career}`);
-    tags.push(`最高匹配：${bestScore} 分`);
-    if (consumedLabel) tags.push(`本次使用：${consumedLabel}`);
+    if (market) tags.push(t("result.tagMarket", { v: market }));
+    if (career) tags.push(t("result.tagCareer", { v: career }));
+    tags.push(t("result.tagBest", { score: bestScore }));
+    if (consumedLabel) tags.push(t("result.tagUsed", { label: consumedLabel }));
 
     tagGrid.innerHTML = tags.map((tag) => `<span class="jo22-tag">${escapeHtml(tag)}</span>`).join("");
 
@@ -585,24 +590,24 @@
       return !acc || s > (Number(acc.fit_score) || 0) ? job : acc;
     }, null);
     const lines = [
-      "JapanOffer AI 岗位匹配结果",
+      t("result.copyTitle"),
       "",
-      `最高匹配分：${best ? (Number(best.fit_score) || 0) : 0} 分`,
-      `目标市场：${stored.market || ""}`,
-      `职业方向：${stored.career || ""}`,
+      t("result.copyBest", { score: best ? (Number(best.fit_score) || 0) : 0 }),
+      t("result.copyMarket", { v: stored.market || "" }),
+      t("result.copyCareer", { v: stored.career || "" }),
       "",
-      "岗位评估：",
+      t("result.copySection"),
       ...jobs.map((job, index) =>
-        `${index + 1}. ${job.role || ""} - ${Number(job.fit_score) || 0} 分 - ${job.priority || ""}\n   主要风险：${job.main_risk || ""}\n   匹配原因：${job.reason || ""}\n   下一步：${job.suggested_action || ""}`),
+        `${index + 1}. ${job.role || ""} - ${t("result.scoreValue", { score: Number(job.fit_score) || 0 })} - ${job.priority || ""}\n   ${t("result.copyRisk", { v: job.main_risk || "" })}\n   ${t("result.copyReason", { v: job.reason || "" })}\n   ${t("result.copyNext", { v: job.suggested_action || "" })}`),
       "",
-      "总体建议：",
+      t("result.copyAdvice"),
       report.final_advice || "",
     ];
     if (report.cover_letter_opening) {
       lines.push("", "Cover Letter 开头：", report.cover_letter_opening);
     }
     if (report.disclaimer) {
-      lines.push("", "说明：" + report.disclaimer);
+      lines.push("", t("result.copyNote", { v: report.disclaimer }));
     }
     return lines.join("\n");
   }
@@ -614,18 +619,18 @@
 
     const background = textarea.value.trim();
     if (background.length < 20) {
-      showStatus("先输入一段更完整的中文背景，至少写 20 个字左右。");
+      showStatus(t("status.needBackground"));
       return;
     }
     const jobDesc = jobDescInput.value.trim();
     if (jobDesc.length < 50) {
-      showStatus("请粘贴目标岗位的完整描述（至少 50 个字），AI 需要一个真实岗位来对比。");
+      showStatus(t("status.needJobDesc2"));
       return;
     }
 
     generateButton.disabled = true;
-    generateButton.textContent = "正在生成 AI 匹配结果...";
-    showStatus("正在生成 AI 匹配结果，请稍等…");
+    generateButton.textContent = t("status.generating");
+    showStatus(t("status.generatingWait"));
 
     try {
       const payload = {
@@ -644,7 +649,7 @@
         renderApiResult(result.data.report, result.data, career);
         saveMatchResult(latestResult);
         window.JOAnalyze.refreshCredits();
-        showStatus("AI 匹配结果已生成。");
+        showStatus(t("status.generated"));
         return;
       }
       if (result.status === 401) {
@@ -652,20 +657,20 @@
         return;
       }
       if (window.JOAnalyze.errorKind(result) === "no_credits") {
-        statusMessage.innerHTML = '报告次数已用完。<a href="pricing.html">获取更多报告 →</a>';
+        statusMessage.innerHTML = t("status.noCredits");
         statusMessage.classList.add("jo22-show");
         return;
       }
       if (window.JOAnalyze.errorKind(result) === "rate_limited") {
-        showStatus("生成太频繁，请稍后再试。");
+        showStatus(t("status.rateLimited"));
         return;
       }
-      showStatus("生成失败，请稍后再试。");
+      showStatus(t("status.generateFailed"));
     } catch (e) {
-      showStatus("无法连接服务器，请检查网络后重试。");
+      showStatus(t("status.noNetwork"));
     } finally {
       generateButton.disabled = false;
-      generateButton.textContent = "生成我的岗位匹配";
+      generateButton.textContent = t("form.generate");
     }
   });
 
@@ -675,9 +680,9 @@
 
     try {
       await navigator.clipboard.writeText(text);
-      statusMessage.textContent = "结果已复制。";
+      statusMessage.textContent = t("result.copied");
     } catch {
-      statusMessage.textContent = "复制失败，你可以手动选中页面结果复制。";
+      statusMessage.textContent = t("result.copyFailed");
     }
 
     statusMessage.classList.add("jo22-show");
